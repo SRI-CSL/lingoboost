@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:text="This is the main screen for the app. Eventually this will be where the participant sees their progress and can start a sleep session or testing session."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
+
+    <Button
+        android:text="Start initial training"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/startinitial" />
+
+    <Button
+        android:text="Start test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/starttest" />
+
+    <Button
+        android:text="Start sleep session"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/sleep" />
+</LinearLayout>
