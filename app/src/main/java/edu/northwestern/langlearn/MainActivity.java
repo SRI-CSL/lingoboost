@@ -21,5 +21,15 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(myIntent);
             }
         });
+
+        Button trainButton = (Button) findViewById(R.id.startinitial); //button to start training
+        trainButton.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(MainActivity.this, encodingInstructions.class);
+                MainActivity.this.startActivity(myIntent);
+            }
+        });
     }
 }

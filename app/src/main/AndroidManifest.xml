@@ -15,7 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".sleepMode"></activity>
+        <activity android:name=".sleepMode" />
+        <activity android:name=".initialEncoding" />
+        <activity android:name=".encodingInstructions" />
+        <activity android:name=".encodingTestInstructions" />
+        <activity android:name=".encoding"></activity>
     </application>
 
 </manifest>
