@@ -19,7 +19,9 @@
         <activity android:name=".initialEncoding" />
         <activity android:name=".encodingInstructions" />
         <activity android:name=".encodingTestInstructions" />
-        <activity android:name=".encoding"></activity>
+        <activity android:name=".encoding" />
+        <activity android:name=".wordTest" />
+        <activity android:name=".testIntructions"></activity>
     </application>
 
 </manifest>
