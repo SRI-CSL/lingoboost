@@ -31,5 +31,15 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(myIntent);
             }
         });
+
+        Button testButton = (Button) findViewById(R.id.starttest); //button to start training
+        testButton.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(MainActivity.this, wordTest.class);
+                MainActivity.this.startActivity(myIntent);
+            }
+        });
     }
 }
