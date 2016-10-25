@@ -43,12 +43,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="encoding.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="encoding.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encoding.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1430">
-              <caret line="76" column="36" selection-start-line="76" selection-start-column="36" selection-end-line="76" selection-end-column="36" />
-              <folding />
+            <state relative-caret-position="482">
+              <caret line="125" column="81" selection-start-line="125" selection-start-column="81" selection-end-line="125" selection-end-column="81" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#4073#5911#0" expanded="true" />
+                <element signature="e#5910#5911#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -56,11 +60,9 @@
       <file leaf-file-name="encodingInstructions.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encodingInstructions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
+            <state relative-caret-position="286">
               <caret line="22" column="64" selection-start-line="22" selection-start-column="64" selection-end-line="22" selection-end-column="64" />
-              <folding>
-                <element signature="imports" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -81,8 +83,8 @@
       <file leaf-file-name="words.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/values/words.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+            <state relative-caret-position="-307">
+              <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -118,8 +120,10 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/wordTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="262">
-              <caret line="15" column="45" selection-start-line="15" selection-start-column="41" selection-end-line="15" selection-end-column="45" />
-              <folding />
+              <caret line="155" column="84" selection-start-line="155" selection-start-column="84" selection-end-line="155" selection-end-column="84" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -141,19 +145,21 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="660">
               <caret line="34" column="83" selection-start-line="34" selection-start-column="83" selection-end-line="34" selection-end-column="83" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sleepMode.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sleepMode.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/sleepMode.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3828">
-              <caret line="179" column="8" selection-start-line="179" selection-start-column="8" selection-end-line="179" selection-end-column="8" />
+            <state relative-caret-position="262">
+              <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#5605#5621#0" expanded="true" />
+                <element signature="e#5606#5622#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1850,14 +1856,14 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_test_intructions.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/testIntructions.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encodingTestInstructions.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encoding.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_word_test.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/wordTest.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encodingInstructions.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/words.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/sleepMode.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/words.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/wordTest.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encoding.java" />
       </list>
     </option>
   </component>
@@ -2503,7 +2509,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
           <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2530,7 +2538,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5605#5621#0" expanded="true" />
+            <element signature="e#5606#5622#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2565,7 +2573,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
           <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2592,7 +2602,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5605#5621#0" expanded="true" />
+            <element signature="e#5606#5622#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2627,7 +2637,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
           <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2654,7 +2666,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5605#5621#0" expanded="true" />
+            <element signature="e#5606#5622#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2819,50 +2831,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_test_intructions.xml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_encoding.xml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="1012">
-          <caret line="46" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="47" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/testIntructions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
           <caret line="22" column="5" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encoding.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1430">
-          <caret line="76" column="36" selection-start-line="76" selection-start-column="36" selection-end-line="76" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encodingInstructions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="22" column="64" selection-start-line="22" selection-start-column="64" selection-end-line="22" selection-end-column="64" />
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
@@ -2884,33 +2856,79 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="660">
           <caret line="34" column="83" selection-start-line="34" selection-start-column="83" selection-end-line="34" selection-end-column="83" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/words.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/wordTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="262">
-          <caret line="15" column="45" selection-start-line="15" selection-start-column="41" selection-end-line="15" selection-end-column="45" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/sleepMode.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3828">
-          <caret line="179" column="8" selection-start-line="179" selection-start-column="8" selection-end-line="179" selection-end-column="8" />
+        <state relative-caret-position="262">
+          <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#5605#5621#0" expanded="true" />
+            <element signature="e#5606#5622#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/words.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-307">
+          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encodingInstructions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="22" column="64" selection-start-line="22" selection-start-column="64" selection-end-line="22" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_encoding.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="1012">
+          <caret line="46" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="47" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_test_intructions.xml">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer2">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/wordTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="155" column="84" selection-start-line="155" selection-start-column="84" selection-end-line="155" selection-end-column="84" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/edu/northwestern/langlearn/encoding.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="482">
+          <caret line="125" column="81" selection-start-line="125" selection-start-column="81" selection-end-line="125" selection-end-column="81" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#4073#5911#0" expanded="true" />
+            <element signature="e#5910#5911#0" expanded="true" />
           </folding>
         </state>
       </provider>
