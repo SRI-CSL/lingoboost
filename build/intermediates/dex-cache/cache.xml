@@ -138,21 +138,21 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="2c80afe5603dfd1c19bb48623892457366ccc344">
+        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_65212afa63bd8e0c8734cf8ba26ed26d9d5012e8.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\classes.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
         sha1="09b462bbcb77650284bd6614f1a32f360ef369f8">
         <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-media-compat-24.2.1_51c1b4ca331d4ff22803bd796115ef75ee87c01a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="48d425ffd553990475ea5b2784a27a1f671d789e">
-        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_65212afa63bd8e0c8734cf8ba26ed26d9d5012e8.jar" />
     </item>
 
 </items>
