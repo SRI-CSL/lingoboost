@@ -29,4 +29,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/sleep" />
+
+    <Button
+        android:text="Reset progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/reset" />
+
+    <Button
+        android:text="Test notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ntest" />
+
+    <Button
+        android:text="Participant mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pmode" />
 </LinearLayout>

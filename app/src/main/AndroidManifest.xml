@@ -21,7 +21,15 @@
         <activity android:name=".encodingTestInstructions" />
         <activity android:name=".encoding" />
         <activity android:name=".wordTest" />
-        <activity android:name=".testIntructions"></activity>
+        <activity android:name=".testIntructions" />
+        <activity android:name=".participantMode" />
+
+        <receiver
+            android:name=".alarmActivity"
+            android:enabled="true"
+            android:process=":remote"></receiver>
+
+        <activity android:name=".alertSubject"></activity>
     </application>
 
 </manifest>

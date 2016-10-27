@@ -1,17 +1,27 @@
 package edu.northwestern.langlearn;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
+    SharedPreferences prefs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+         prefs = this.getSharedPreferences(
+                "edu.northwestern.langlearn", Context.MODE_PRIVATE);
+
         Button sleepButton = (Button) findViewById(R.id.sleep); //button to start sleep mode
         sleepButton.setOnClickListener( new View.OnClickListener() {
 
@@ -32,14 +42,68 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button testButton = (Button) findViewById(R.id.starttest); //button to start training
-        testButton.setOnClickListener( new View.OnClickListener() {
+
+
+        Button resetButton = (Button) findViewById(R.id.reset); //button to reset progress
+        resetButton.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, wordTest.class);
+                prefs.edit().putInt("experimentstage", 0).apply();
+                prefs.edit().putInt("learningstage", 0).apply();
+            }
+        });
+
+        Button nTest = (Button) findViewById(R.id.ntest); //button to test notifications
+        nTest.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,
+                        "Scheduled", Toast.LENGTH_LONG).show();
+                AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
+                Intent intent = new Intent(MainActivity.this, alarmActivity.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0,  intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                //alarmMgr.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),10000, pendingIntent);
+                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pendingIntent);
+                //alarmMgr.setAndAllowWhileIdle();
+               // Intent myIntent = new Intent(MainActivity.this, alertSubject.class);
+               // MainActivity.this.startActivity(myIntent);
+            }
+        });
+
+        Button pButton = (Button) findViewById(R.id.pmode); //button to start participant mode
+        pButton.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(MainActivity.this, participantMode.class);
                 MainActivity.this.startActivity(myIntent);
             }
         });
     }
+
+    private void scheduleNotification(Notification notification, int delay) {
+
+        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+    }
+
+    private Notification getNotification(String content) {
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("Scheduled Notification");
+        builder.setContentText(content);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        return builder.build();
+    }
+
+
+
+
 }
