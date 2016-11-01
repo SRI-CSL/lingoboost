@@ -6,7 +6,7 @@
     android:paddingRight="16dp"
     android:orientation="vertical" >
 
-    
+
     <Button
         android:text="Start initial training"
         android:layout_width="match_parent"
