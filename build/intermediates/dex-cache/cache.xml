@@ -7,7 +7,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
-        sha1="969fadfb024c38279453bf8feffb15c6fd4abbee">
+        sha1="76827543bd239109d12ef944ff009992668d7504">
         <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run_5e5af3b4a230705f95703c67336bf8654ac1e4c9.jar" />
     </item>
     <item
@@ -21,21 +21,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-24.2.1_38fd9c120933ce390933a4a3617610e9548de80e.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
         sha1="867dad63c33388ff8c7644b236579355036d075f">
         <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_ef16421d82fa6b8aabaafac0fd6d57925eb76ebb.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-24.2.1_38fd9c120933ce390933a4a3617610e9548de80e.jar" />
     </item>
     <item
         is-multidex="false"
@@ -142,7 +142,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
-        sha1="2c80afe5603dfd1c19bb48623892457366ccc344">
+        sha1="3ca62600d09677971846d295cb97767261b9dc3d">
         <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_65212afa63bd8e0c8734cf8ba26ed26d9d5012e8.jar" />
     </item>
     <item
