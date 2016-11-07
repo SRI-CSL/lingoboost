@@ -42,6 +42,92 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button testButton = (Button) findViewById(R.id.starttest); //button to start word test
+        testButton.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(MainActivity.this,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        wordTest.class);
+                MainActivity.this.startActivity(myIntent);
+            }
+        });
+
 
 
         Button resetButton = (Button) findViewById(R.id.reset); //button to reset progress

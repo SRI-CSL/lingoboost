@@ -3,15 +3,6 @@
 
     <item
         is-multidex="false"
-        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="76827543bd239109d12ef944ff009992668d7504">
-        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run_5e5af3b4a230705f95703c67336bf8654ac1e4c9.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
@@ -30,15 +21,6 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-24.2.1_38fd9c120933ce390933a4a3617610e9548de80e.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\nathan\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\24.2.1\support-annotations-24.2.1.jar"
         jumboMode="true"
         optimize="true"
@@ -48,39 +30,12 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
-        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-24.2.1_60637d0ecff5b007050ff5cfdcc7dff6cd5d8be1.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\jars\libs\internal_impl-24.2.1.jar"
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
         sha1="7e4389bd133359a2ff88623ff1e4ff93d6e6f780">
         <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_f8298971076b6339a0e5b4665f94a70aea1d7164.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
-        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-ui-24.2.1_aa7ff71b5829d55da8b9d7a1a145ef0c12724f5f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
-        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_693ba1309aa0005b9ff79f3857527803f7a91976.jar" />
     </item>
     <item
         is-multidex="false"
@@ -111,6 +66,60 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="102787dfce56c60c917aa07593f2bb0980a83905">
+        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_65212afa63bd8e0c8734cf8ba26ed26d9d5012e8.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="17a1a76afcdb6f14cba1616d698d6390b59f400c">
+        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run_5e5af3b4a230705f95703c67336bf8654ac1e4c9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-24.2.1_38fd9c120933ce390933a4a3617610e9548de80e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="d5c731fc64c03dfe04d51134955b483551c35849">
+        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-24.2.1_60637d0ecff5b007050ff5cfdcc7dff6cd5d8be1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\24.2.1\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="e7f3132168957eefc46229fc32c3bd464642b71e">
+        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-core-ui-24.2.1_aa7ff71b5829d55da8b9d7a1a145ef0c12724f5f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\support-fragment\24.2.1\jars\libs\internal_impl-24.2.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="24.0.3"
+        sha1="5f64d657e838e8375135c0f6057a7ff8fab6a50e">
+        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\internal_impl-24.2.1_693ba1309aa0005b9ff79f3857527803f7a91976.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\24.2.1\jars\classes.jar"
         jumboMode="true"
         optimize="true"
@@ -135,15 +144,6 @@
         revision="24.0.3"
         sha1="b9a1ac78ad7ef3abedc4a4b30cd92bcacb939d1f">
         <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\com.android.support-support-fragment-24.2.1_f25df20f760df1cda3a296233a3d1cf881f9015c.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="24.0.3"
-        sha1="3ca62600d09677971846d295cb97767261b9dc3d">
-        <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_65212afa63bd8e0c8734cf8ba26ed26d9d5012e8.jar" />
     </item>
     <item
         is-multidex="false"
