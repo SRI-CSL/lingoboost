@@ -70,7 +70,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
-        sha1="102787dfce56c60c917aa07593f2bb0980a83905">
+        sha1="bcf689fa9159b72e09b504172508d55e8cc28d9f">
         <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_65212afa63bd8e0c8734cf8ba26ed26d9d5012e8.jar" />
     </item>
     <item
@@ -79,7 +79,7 @@
         jumboMode="true"
         optimize="true"
         revision="24.0.3"
-        sha1="17a1a76afcdb6f14cba1616d698d6390b59f400c">
+        sha1="c8c508fc3027a8ceae1ed4bec853c426903b6bd3">
         <dex dex="C:\Users\nathan\Documents\langlearn\trunk\app\build\intermediates\pre-dexed\debug\instant-run_5e5af3b4a230705f95703c67336bf8654ac1e4c9.jar" />
     </item>
     <item
