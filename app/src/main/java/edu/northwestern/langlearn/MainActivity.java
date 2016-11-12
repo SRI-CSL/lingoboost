@@ -47,83 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        wordTest.class);
+                Intent myIntent = new Intent(MainActivity.this,wordTest.class);
                 MainActivity.this.startActivity(myIntent);
             }
         });
@@ -151,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, alarmActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0,  intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 //alarmMgr.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),10000, pendingIntent);
-                alarmMgr.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pendingIntent);
+                alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pendingIntent);
                 //alarmMgr.setAndAllowWhileIdle();
                // Intent myIntent = new Intent(MainActivity.this, alertSubject.class);
                // MainActivity.this.startActivity(myIntent);
