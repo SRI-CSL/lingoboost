@@ -59,8 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                prefs.edit().putInt("experimentstage", 0).apply();
+                prefs.edit().putInt("experimentstage", 1).apply();
                 prefs.edit().putInt("learningstage", 0).apply();
+                //prefs.edit().putInt("lastTestTime", -1000).apply();
+
+                prefs.edit().putInt("lastTestTime", (int)(((((System.currentTimeMillis()+21600000)/1000)/60)/60)/24)).apply();
             }
         });
 
