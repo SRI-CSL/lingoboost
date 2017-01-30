@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:paddingLeft="16.0dip" android:paddingRight="16.0dip" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="30.0sp" android:textStyle="bold" android:id="@id/startlearning" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Vocabulary test" />
+    <TextView android:textSize="18.0sp" android:id="@id/textView3" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Now you'll be asked to translate all the words. This test is just like the ones you just did, but you'll see each word until you get its translation correct. " />
+    <Button android:id="@id/testbutton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Start" />
+</LinearLayout>

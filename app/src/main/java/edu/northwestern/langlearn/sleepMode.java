@@ -52,8 +52,6 @@ public class sleepMode extends AppCompatActivity implements SensorEventListener,
     float oldy=0;
     float oldz=0;
     long lastUpdate=0;
-    int[] cues={R.raw.church_kanisa, R.raw.evening_maghrib,R.raw.government_hukuma,R.raw.hospital_mustashfa,R.raw.love_hubb,R.raw.night_layl, R.raw.orphan_yatiim,R.raw.people_naas,R.raw.sport_riyada,R.raw.turquoise_feiruzzi}; //list of the sound resoruces. These will be randomly selected and loaded to a mediaplayer for cuing
-   // String[] langcues={"Eis","Müsli","Ungeheuer","Abitur","Auge","Autohaus","Bargeld","Bein","Kraut","Kännchen","Lied","Nasenloch","Obst","Rechteck","Rhabarber","Schifferklavier"};
     String[] langcues;
     MediaPlayer mp;
     private SensorManager sm;
