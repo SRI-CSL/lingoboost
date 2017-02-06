@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@android:color/background_dark" android:paddingLeft="16.0dip" android:paddingRight="16.0dip" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView android:textSize="36.0sp" android:textColor="?android:textColorSecondaryInverse" android:id="@id/iinstr" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Playing white noise! Adjust the volume to a comfortable level and place the phone next to your pillow with the screen down." />
+    <TextView android:id="@id/grav" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="grav" />
+</LinearLayout>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="descriptions">
+        <item>"First you'll learn some German vocabulary. Click Next to continue."</item>
+        <item>Do a vocabulary test before 8 PM today.</item>
+        <item>Set up the phone to play subliminal cues when you go to bed.</item>
+        <item>"Set up the phone to play subliminal cues when you go to bed. You can't start this until 8 PM."</item>
+    </string-array>
+    <string-array name="headers">
+        <item>Start learning</item>
+        <item>Vocabulary test</item>
+        <item>Sleep!</item>
+    </string-array>
+    <string-array name="translations">
+        <item>Bild photo</item>
+        <item>Niederlassung settlement</item>
+        <item>Ritter knight</item>
+        <item>Strauss ostrich</item>
+        <item>Schwester sister</item>
+        <item>Reklame advertising</item>
+        <item>Ampel stop_light</item>
+        <item>Windpocken chickenpox</item>
+        <item>Reihenfolge sequence</item>
+        <item>Gewicht weight</item>
+        <item>Sprechstundenhilfe receptionist</item>
+        <item>Rindfleisch beef</item>
+        <item>Schulter shoulder</item>
+        <item>Verzeihung forgiveness</item>
+        <item>Hustensaft cough_syrup</item>
+        <item>Zaun fence</item>
+        <item>Vertrauen trust</item>
+        <item>Einsamkeit loneliness</item>
+        <item>Kühlschrank refrigerator</item>
+        <item>Sessel armchair</item>
+        <item>Wettbewerb competition</item>
+        <item>Fundament foundation</item>
+        <item>Quark sour_cream</item>
+        <item>Stabhochsprung pole_vaulting</item>
+        <item>Kühltasche cooler</item>
+        <item>Eifersucht jealousy</item>
+        <item>Stolz pride</item>
+        <item>Verstärker amplifier</item>
+        <item>Schublade drawer</item>
+        <item>Chirurg surgeon</item>
+        <item>Netz internet</item>
+        <item>Pflaume plum</item>
+        <item>Angst anxiety</item>
+        <item>Säge saw</item>
+        <item>Abfahrt departure</item>
+        <item>Wunsch wish</item>
+        <item>Strafe penalty</item>
+        <item>Verbrechen crime</item>
+        <item>Stock cane</item>
+        <item>Dorf village</item>
+        <item>Geschenk gift</item>
+        <item>Hafer oat</item>
+        <item>Salat lettuce</item>
+        <item>Kleiderbügel coat_hanger</item>
+        <item>Hals throat</item>
+        <item>Nichte niece</item>
+        <item>Zitrone citrus</item>
+        <item>Rätsel riddle</item>
+        <item>Wasserhahn faucet</item>
+        <item>Wäsche laundry</item>
+        <item>Lanze lance</item>
+        <item>Gemüse vegetables</item>
+        <item>Heimweh homesickness</item>
+        <item>Knoblauch garlic</item>
+        <item>Reinigung dry_cleaners</item>
+        <item>Übersetzer translator</item>
+        <item>Papagei parrot</item>
+        <item>Maiskolben corncob</item>
+        <item>Handgelenk wrist</item>
+        <item>Kneipe pub</item>
+        <item>Erdbeben earthquake</item>
+        <item>Zahnbürste toothbrush</item>
+        <item>Krawatte necktie</item>
+        <item>Zwiebel onion</item>
+        <item>Geständnis confession</item>
+        <item>Eisscholle ice_floe</item>
+        <item>Baum tree</item>
+        <item>Geschirr dishes</item>
+        <item>Bein leg</item>
+        <item>Lied song</item>
+        <item>Vorspeise appetizer</item>
+        <item>Reihenhaus row_house</item>
+        <item>Kaninchen rabbit</item>
+        <item>Blumenkohl cauliflower</item>
+        <item>Sahne cream</item>
+        <item>Schachtel small_box</item>
+        <item>Schweinefleisch pork_meat</item>
+        <item>Beleidigung insult</item>
+        <item>Stift pen</item>
+        <item>Streit argument</item>
+        <item>Fingerhut thimble</item>
+        <item>Korkenzieher corkscrew</item>
+        <item>Beruf career</item>
+        <item>Bürgersteig sidewalk</item>
+        <item>Kreuzung intersection</item>
+        <item>Dünger fertilizer</item>
+        <item>Birne pear</item>
+        <item>Haken hooks</item>
+        <item>Nachbar neighbor</item>
+        <item>Geschichte history</item>
+        <item>Riese giant</item>
+        <item>Kalb calf</item>
+        <item>Nachspeise dessert</item>
+        <item>Briefkasten mailbox</item>
+        <item>Esel donkey</item>
+        <item>Büro office</item>
+    </string-array>
+    <string-array name="translationsold">
+        <item>Abhängigkeit addiction</item>
+        <item>Ufer shoreline</item>
+        <item>Vieh cattle</item>
+        <item>Anruf phone_call</item>
+        <item>Ausflug field_trip</item>
+        <item>Fußgänger pedestrian</item>
+        <item>Geruch odor</item>
+        <item>Hafen harbor</item>
+        <item>Hustensaft cough_syrup</item>
+        <item>Keks cookies</item>
+    </string-array>
+</resources>
