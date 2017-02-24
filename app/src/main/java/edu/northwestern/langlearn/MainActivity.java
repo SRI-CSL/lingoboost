@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Permissions.verifyStoragePermissions(this);
+
         setContentView(R.layout.activity_main);
          prefs = this.getSharedPreferences(
                 "edu.northwestern.langlearn", Context.MODE_PRIVATE);

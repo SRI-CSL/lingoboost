@@ -26,6 +26,9 @@ public class participantMode extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_participant_mode);
+
+        Permissions.verifyStoragePermissions(this);
+
         final Handler handler = new Handler(); //set up a handler that will reinitialize this screen every 10 minutes (to keep updated when the sleep time windows roll around)
         handler.postDelayed(new Runnable() {
             @Override

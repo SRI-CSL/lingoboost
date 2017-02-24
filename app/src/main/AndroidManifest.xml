@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.northwestern.langlearn">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <application
         android:allowBackup="true"
@@ -9,21 +10,21 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".participantMode">
+        <activity android:name=".participantMode" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".sleepMode" />
-        <activity android:name=".initialEncoding" />
-        <activity android:name=".encodingInstructions" />
-        <activity android:name=".encodingTestInstructions" />
-        <activity android:name=".encoding" />
-        <activity android:name=".wordTest" />
-        <activity android:name=".testIntructions" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".sleepMode" android:screenOrientation="portrait" />
+        <activity android:name=".initialEncoding" android:screenOrientation="portrait" />
+        <activity android:name=".encodingInstructions" android:screenOrientation="portrait" />
+        <activity android:name=".encodingTestInstructions" android:screenOrientation="portrait" />
+        <activity android:name=".encoding" android:screenOrientation="portrait" />
+        <activity android:name=".wordTest" android:screenOrientation="portrait" />
+        <activity android:name=".testIntructions" android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity" android:screenOrientation="portrait" />
 
         <receiver
             android:name=".alarmActivity"
