@@ -12,6 +12,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.BatteryManager;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ public class sleepMode extends AppCompatActivity implements SensorEventListener,
     FileWriter logWriter;
     AudioManager am;
     boolean cue;
+    PowerManager.WakeLock wakeLock;
 
     @Override
     public void onBackPressed() { //prevent accidental press of the back button from exiting sleep mode.
@@ -207,6 +209,10 @@ public class sleepMode extends AppCompatActivity implements SensorEventListener,
                                     //we've done all the cues for tonight, reset to vocab test and go back to the participant mode
                                     prefs.edit().putInt("experimentstage", 1).apply(); //go back to vocab mode
                                     Intent myIntent = new Intent(sleepMode.this, participantMode.class);
+
+                                    if (wakeLock.isHeld()) {
+                                        wakeLock.release();
+                                    }
                                     sleepMode.this.startActivity(myIntent);
                                     cue=false;
                                 }
@@ -248,7 +254,16 @@ public class sleepMode extends AppCompatActivity implements SensorEventListener,
         if (!isExternalStorageWritable()) { //if we can't write to the log file, abort
             fileError();
         }
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // Instantiate a partial wake lock to let the screen turn off while still continuing
+        // the activity's work in the background
+
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                "LangLearnSleepModeWakeLock");
+        wakeLock.acquire();
+        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         prefs = this.getSharedPreferences(
                 "edu.northwestern.langlearn", Context.MODE_PRIVATE);
         int stage = prefs.getInt("learningstage", 0);
@@ -290,6 +305,11 @@ public class sleepMode extends AppCompatActivity implements SensorEventListener,
     protected void onStop() {
         super.onStop();
         mp.stop();
+
+        if (wakeLock != null && wakeLock.isHeld()) {
+            wakeLock.release();
+        }
+
         cue=false;
         try {
             logWriter.close();
