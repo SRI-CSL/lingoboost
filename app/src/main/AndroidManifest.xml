@@ -1,46 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.northwestern.langlearn">
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    0
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".participantMode" android:screenOrientation="portrait">
+        <activity
+            android:name=".participantMode"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".sleepMode" android:screenOrientation="portrait" />
-        <activity android:name=".initialEncoding" android:screenOrientation="portrait" />
-        <activity android:name=".encodingInstructions" android:screenOrientation="portrait" />
-        <activity android:name=".encodingTestInstructions" android:screenOrientation="portrait" />
-        <activity android:name=".encoding" android:screenOrientation="portrait" />
-        <activity android:name=".wordTest" android:screenOrientation="portrait" />
-        <activity android:name=".testIntructions" android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity" android:screenOrientation="portrait" />
+        <activity
+            android:name=".sleepMode"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".initialEncoding"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".encodingInstructions"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".encodingTestInstructions"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".encoding"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".wordTest"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".testIntructions"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name=".alarmActivity"
             android:enabled="true"
-            android:process=":remote"></receiver>
+            android:process=":remote" />
         <receiver
             android:name=".scheduleAlarms"
             android:enabled="true"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".alertSubject"></activity>
+        <activity android:name=".alertSubject" />
+
+        <service
+            android:name=".sleepService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
