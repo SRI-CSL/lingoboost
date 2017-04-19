@@ -32,7 +32,7 @@ public class sleepMode extends AppCompatActivity {
                     Intent serviceIntent = new Intent(this, sleepService.class);
                     startService(serviceIntent);
                     PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-                    wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LangLearnSleepLock");
+                    wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
                     wl.acquire();
                 }
             }
