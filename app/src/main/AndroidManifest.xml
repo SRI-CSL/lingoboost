@@ -47,7 +47,7 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait" />
 
-        <receiver
+        <!-- receiver
             android:name=".alarmActivity"
             android:enabled="true"
             android:process=":remote" />
@@ -58,14 +58,14 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </receiver>
+        </receiver -->
 
-        <activity android:name=".alertSubject" />
+        <!-- activity android:name=".alertSubject" / -->
 
-        <service
+        <!-- service
             android:name=".sleepService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"></service -->
     </application>
 
 </manifest>

@@ -48,6 +48,7 @@ public class participantMode extends AppCompatActivity {
         TextView header = (TextView)findViewById(R.id.header);
         TextView text = (TextView)findViewById(R.id.text);
         Button dButton = (Button) findViewById(R.id.debug); //button to go to debug mode
+
         //TODO: take this out in production version
         dButton.setOnClickListener( new View.OnClickListener() {
             @Override
