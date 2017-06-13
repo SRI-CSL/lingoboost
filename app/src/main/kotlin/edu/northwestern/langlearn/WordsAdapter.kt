@@ -7,7 +7,7 @@ import org.json.JSONObject
 data class Word(val norm: String, val audio_url: String, val word: String)
 
 class WordsAdapter {
-    fun ParseJson(jsonStr: String?): Boolean {
+    fun ParseJson(jsonStr: String?): List<Word> {
         val json = jsonStr ?: """
         {
             "words": [
@@ -19,9 +19,8 @@ class WordsAdapter {
             ]
         }
         """
-        val Words: MutableList<Word> = mutableListOf() // emptyArray()
-        // val Words: Array<Word> = Array(0) { idx -> Word(name = "$idx") }
-        // val Words: Array<Word> = Array(0, { idx -> Word(name = "$idx") })
+        val Words: MutableList<Word> = mutableListOf()
+        // val Words: Array<Word> = Array(0) { idx -> Word(name = "$idx") } // Array(0, { idx -> Word(name = "$idx") })
         // val Words: Array<Word> = Array(0) { Word(name = "$it") }
 
         try {
@@ -33,7 +32,7 @@ class WordsAdapter {
                 val url = wordJson.getJSONObject(i).getString("audio_url")
                 val w = wordJson.getJSONObject(i).getString("word")
                 val word = Word(n, url, w)
-                // word.w = w
+                // word.word = w // word is immutable, so we can't do this, not a var
 
                 Log.d(javaClass.simpleName, "$i $word")
                 Words.add(word)
@@ -42,9 +41,6 @@ class WordsAdapter {
             Log.e(javaClass.simpleName, e.message)
         }
 
-        Log.d(javaClass.simpleName, Words.size.toString())
-        Log.d(javaClass.simpleName, Words.isEmpty().toString())
-
-        return true
+        return Words
     }
 }

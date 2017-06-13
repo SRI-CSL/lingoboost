@@ -1,339 +1,339 @@
 {
 	"words": [
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/d3281717a5c57937f287a2d87aede1369442e00d93783f23b83322ed958a3324.mp3",
 			"norm": "kvinnan",
-			"audio_url": "/audiocache/d3281717a5c57937f287a2d87aede1369442e00d93783f23b83322ed958a3324.mp3",
 			"word": "kvinnan"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/b820a279f897bead615aa2304c1ed030df9c6dbd4800a932b72af32b9ae0899e.mp3",
 			"norm": "hej",
-			"audio_url": "/audiocache/b820a279f897bead615aa2304c1ed030df9c6dbd4800a932b72af32b9ae0899e.mp3",
 			"word": "hej"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/9505ea2eba9c5e84d14410e6dc947b101b42eca293a7610d50b7e487fbc3e948.mp3",
 			"norm": "ni",
-			"audio_url": "/audiocache/9505ea2eba9c5e84d14410e6dc947b101b42eca293a7610d50b7e487fbc3e948.mp3",
 			"word": "ni"
 		},
 		{
-			"audio_url": "/audiocache/fc95490414953de22332bc00b9b946b3f7f49727fc0ada943dad61075cb81a62.mp3",
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/fc95490414953de22332bc00b9b946b3f7f49727fc0ada943dad61075cb81a62.mp3",
 			"norm": "de",
 			"word": "de"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/ffab75c5a2cccca4dc2e3371fbb626b1497bb3320ca34c46ee7868a1f87f21f8.mp3",
 			"norm": "mannen",
-			"audio_url": "/audiocache/ffab75c5a2cccca4dc2e3371fbb626b1497bb3320ca34c46ee7868a1f87f21f8.mp3",
 			"word": "mannen"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/544ffad6431d568f44765a1f9bcdfe9e4eb179685929b3bb8022449cf9e424ce.mp3",
 			"norm": "vatten",
-			"audio_url": "/audiocache/544ffad6431d568f44765a1f9bcdfe9e4eb179685929b3bb8022449cf9e424ce.mp3",
 			"word": "vatten"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/6034b733bd84b06335fbf86805cbdb4dd48ab3f80dad5c78f19b7b12b503c284.mp3",
 			"norm": "sa",
-			"audio_url": "/audiocache/6034b733bd84b06335fbf86805cbdb4dd48ab3f80dad5c78f19b7b12b503c284.mp3",
-			"word": "så"
+			"word": "s\u00e5"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/0ad68afadeb62d83d545725d2c71c8ec1865488e5ab217a501c497cfe10ce17a.mp3",
 			"norm": "vi",
-			"audio_url": "/audiocache/0ad68afadeb62d83d545725d2c71c8ec1865488e5ab217a501c497cfe10ce17a.mp3",
 			"word": "vi"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/6839297d2b0b141470c573e169104899572ffc767f84019c761f026bff2c9ae0.mp3",
 			"norm": "kvinnor",
-			"audio_url": "/audiocache/6839297d2b0b141470c573e169104899572ffc767f84019c761f026bff2c9ae0.mp3",
 			"word": "kvinnor"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/ebca5bea5bc1a8306429348521a3af1af192913fbf4adc40112ee74b6b18add9.mp3",
 			"norm": "dricker",
-			"audio_url": "/audiocache/ebca5bea5bc1a8306429348521a3af1af192913fbf4adc40112ee74b6b18add9.mp3",
 			"word": "dricker"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/8090f818398563b140ca2e58f50807ba0bd87206fa101327bfcbc26c53a176bb.mp3",
 			"norm": "ja",
-			"audio_url": "/audiocache/8090f818398563b140ca2e58f50807ba0bd87206fa101327bfcbc26c53a176bb.mp3",
 			"word": "ja"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/7ac74e798fdc5b08067efc3af1c02145a021bf9c69462e297b526a8d24b362f3.mp3",
 			"norm": "brod",
-			"audio_url": "/audiocache/7ac74e798fdc5b08067efc3af1c02145a021bf9c69462e297b526a8d24b362f3.mp3",
-			"word": "bröd"
+			"word": "br\u00f6d"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/6b4d4f365342c7de47aeb094a05f05dce46c05f98dae77080fce847fcc8d3ef9.mp3",
 			"norm": "laser",
-			"audio_url": "/audiocache/6b4d4f365342c7de47aeb094a05f05dce46c05f98dae77080fce847fcc8d3ef9.mp3",
-			"word": "läser"
+			"word": "l\u00e4ser"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/9efc79f822e6e8e8e9b44647740541538c33213354c8ed3d98649cc3512f888d.mp3",
 			"norm": "man",
-			"audio_url": "/audiocache/9efc79f822e6e8e8e9b44647740541538c33213354c8ed3d98649cc3512f888d.mp3",
-			"word": "män"
+			"word": "m\u00e4n"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/326abb46505550d1452783da176ff616e736879f86e7f35778a735990fc36552.mp3",
 			"norm": "da",
-			"audio_url": "/audiocache/326abb46505550d1452783da176ff616e736879f86e7f35778a735990fc36552.mp3",
-			"word": "då"
+			"word": "d\u00e5"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/b3d47712c5675edacc9ad758a0de0cfd12c14852ca78422f287e02bb1b823a2e.mp3",
 			"norm": "snalla",
-			"audio_url": "/audiocache/b3d47712c5675edacc9ad758a0de0cfd12c14852ca78422f287e02bb1b823a2e.mp3",
-			"word": "snälla"
+			"word": "sn\u00e4lla"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/14afea54c8c078714839c2363e8e8179d38a2197ef87845367343530ea303ae4.mp3",
 			"norm": "mycket",
-			"audio_url": "/audiocache/14afea54c8c078714839c2363e8e8179d38a2197ef87845367343530ea303ae4.mp3",
 			"word": "mycket"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/16283f004dbd4ab688208e87ee6c2a863ee29637336d9c2d698e3a3f15367d8b.mp3",
 			"norm": "nej",
-			"audio_url": "/audiocache/16283f004dbd4ab688208e87ee6c2a863ee29637336d9c2d698e3a3f15367d8b.mp3",
 			"word": "nej"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/ee9446faec720ec99b474b1cdc0d46843ec46083fef6076aff59fab93657220d.mp3",
 			"norm": "tack",
-			"audio_url": "/audiocache/ee9446faec720ec99b474b1cdc0d46843ec46083fef6076aff59fab93657220d.mp3",
 			"word": "tack"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/fe2cc51aae1679be8f2ecf418872ee2d9bf5bb36bbb2bf07853a5e8e909cd69e.mp3",
 			"norm": "kyckling",
-			"audio_url": "/audiocache/fe2cc51aae1679be8f2ecf418872ee2d9bf5bb36bbb2bf07853a5e8e909cd69e.mp3",
 			"word": "kyckling"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/bc4d6704a932d2ee8bb58107c5a54e6c65e494bd3a12607393043e2f8515e586.mp3",
 			"norm": "fisk",
-			"audio_url": "/audiocache/bc4d6704a932d2ee8bb58107c5a54e6c65e494bd3a12607393043e2f8515e586.mp3",
 			"word": "fisk"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/232921df47e9e801eb561de929cc3564e8bfb96d2b10f85221b0ed6ade525909.mp3",
 			"norm": "apelsin",
-			"audio_url": "/audiocache/232921df47e9e801eb561de929cc3564e8bfb96d2b10f85221b0ed6ade525909.mp3",
 			"word": "apelsin"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/6fd95cdb24d3849e47594fd95034c0fd6256bf8ec1e2522c1d08bb5991891fdc.mp3",
 			"norm": "agg",
-			"audio_url": "/audiocache/6fd95cdb24d3849e47594fd95034c0fd6256bf8ec1e2522c1d08bb5991891fdc.mp3",
-			"word": "ägg"
+			"word": "\u00e4gg"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/5f38dcf52662b903f21c0db4a321c8be406d4c171decd3cc9c02700942a3023c.mp3",
 			"norm": "kaffe",
-			"audio_url": "/audiocache/5f38dcf52662b903f21c0db4a321c8be406d4c171decd3cc9c02700942a3023c.mp3",
 			"word": "kaffe"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/3620f5f22df20afca57077d4fa6a71a324ec84074a9e6606efc83407416efce3.mp3",
 			"norm": "vin",
-			"audio_url": "/audiocache/3620f5f22df20afca57077d4fa6a71a324ec84074a9e6606efc83407416efce3.mp3",
 			"word": "vin"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/87d64a72b008ea32190a8f83889a84da54198e9fd9d2d1991f222ae7dec2a860.mp3",
 			"norm": "talar",
-			"audio_url": "/audiocache/87d64a72b008ea32190a8f83889a84da54198e9fd9d2d1991f222ae7dec2a860.mp3",
 			"word": "talar"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/73143136ab23952761cbfedc80c7f7793e9263f7ccc8be75f1969c3559121703.mp3",
 			"norm": "alskar",
-			"audio_url": "/audiocache/73143136ab23952761cbfedc80c7f7793e9263f7ccc8be75f1969c3559121703.mp3",
-			"word": "älskar"
+			"word": "\u00e4lskar"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/09b5b41dc3bc474dc90c8e607ebc283640d67647f1937a082686a04fb67a9102.mp3",
 			"norm": "svenska",
-			"audio_url": "/audiocache/09b5b41dc3bc474dc90c8e607ebc283640d67647f1937a082686a04fb67a9102.mp3",
 			"word": "svenska"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/48bcf3d8d2ab16c0a82dde17842e543d281f0f6147b6ac6a5f6594c36ad1ca4a.mp3",
 			"norm": "om",
-			"audio_url": "/audiocache/48bcf3d8d2ab16c0a82dde17842e543d281f0f6147b6ac6a5f6594c36ad1ca4a.mp3",
 			"word": "om"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/7d2e8e67a4955ebbad05a19af8c075bec57e2663666af7e434b3255dd1aad0ec.mp3",
 			"norm": "tycker",
-			"audio_url": "/audiocache/7d2e8e67a4955ebbad05a19af8c075bec57e2663666af7e434b3255dd1aad0ec.mp3",
 			"word": "tycker"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/317cce60f77e5edd42d822894f50e0c1ed666bbb5a9014351d65b46a8ee06472.mp3",
 			"norm": "engelska",
-			"audio_url": "/audiocache/317cce60f77e5edd42d822894f50e0c1ed666bbb5a9014351d65b46a8ee06472.mp3",
 			"word": "engelska"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/d2694215eb2c47f791038a29aff9ec22f7702b79c4aa177fc010a4d5b90ff8dd.mp3",
 			"norm": "inte",
-			"audio_url": "/audiocache/d2694215eb2c47f791038a29aff9ec22f7702b79c4aa177fc010a4d5b90ff8dd.mp3",
 			"word": "inte"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/7c8ce6b9836b790c6b333506a1e472656c5820d78f883b0a331232b87aa5cf47.mp3",
 			"norm": "halla",
-			"audio_url": "/audiocache/7c8ce6b9836b790c6b333506a1e472656c5820d78f883b0a331232b87aa5cf47.mp3",
-			"word": "hallå"
+			"word": "hall\u00e5"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/defba076ac17f4c2e6a693e2fac1b131df5f4337aa6fea7453d997886a1648b9.mp3",
 			"norm": "natt",
-			"audio_url": "/audiocache/defba076ac17f4c2e6a693e2fac1b131df5f4337aa6fea7453d997886a1648b9.mp3",
 			"word": "natt"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/f859013f3dda725c7a2b4c63609fdf01fc88c0b5df34fe917ceab09b91a4ebaa.mp3",
 			"norm": "ursakta",
-			"audio_url": "/audiocache/f859013f3dda725c7a2b4c63609fdf01fc88c0b5df34fe917ceab09b91a4ebaa.mp3",
-			"word": "ursäkta"
+			"word": "urs\u00e4kta"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/21f91b231b2933460f49c61bc9f08ff89508c56941bb2876df3537ea8b838e65.mp3",
 			"norm": "varsagod",
-			"audio_url": "/audiocache/21f91b231b2933460f49c61bc9f08ff89508c56941bb2876df3537ea8b838e65.mp3",
-			"word": "varsågod"
+			"word": "vars\u00e5god"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/5134584ab3312bb7e91fc0012c71a5fe908a2ba20d24be51fdc45bf84287b391.mp3",
 			"norm": "morgon",
-			"audio_url": "/audiocache/5134584ab3312bb7e91fc0012c71a5fe908a2ba20d24be51fdc45bf84287b391.mp3",
 			"word": "morgon"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/ce7d9c91b585b1d50f84534b94fe9df4b154b102892a47bafc23a8d545f838b5.mp3",
 			"norm": "god",
-			"audio_url": "/audiocache/ce7d9c91b585b1d50f84534b94fe9df4b154b102892a47bafc23a8d545f838b5.mp3",
 			"word": "god"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/8eba8234e14550ba66c0d6055c19e5d8f77de5fa50f6422463b3b643591069c9.mp3",
 			"norm": "har",
-			"audio_url": "/audiocache/8eba8234e14550ba66c0d6055c19e5d8f77de5fa50f6422463b3b643591069c9.mp3",
 			"word": "har"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/a2a218d27a12d4e13a8fd1e7686118b5b6620f9e292fda4e0672f5cb4e33a797.mp3",
 			"norm": "det",
-			"audio_url": "/audiocache/a2a218d27a12d4e13a8fd1e7686118b5b6620f9e292fda4e0672f5cb4e33a797.mp3",
 			"word": "det"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/ec56a662a48fc3657e767bcd17c5c64bc225de898cd8823d7eb2c98e3ec22925.mp3",
 			"norm": "pojken",
-			"audio_url": "/audiocache/ec56a662a48fc3657e767bcd17c5c64bc225de898cd8823d7eb2c98e3ec22925.mp3",
 			"word": "pojken"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/3ed65be9d716923c5a8f5de2e9a20c859cfe42227ac22c9a48a3754368331dce.mp3",
 			"norm": "meny",
-			"audio_url": "/audiocache/3ed65be9d716923c5a8f5de2e9a20c859cfe42227ac22c9a48a3754368331dce.mp3",
 			"word": "meny"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/3f043de16ffcdbf284b701a4b56d0c41ea5e93373333fe8c4302960d6b251c7a.mp3",
 			"norm": "barnet",
-			"audio_url": "/audiocache/3f043de16ffcdbf284b701a4b56d0c41ea5e93373333fe8c4302960d6b251c7a.mp3",
 			"word": "barnet"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/f62df37999eb4625257d8abdb127fc55446879cbc5d88edd3889e8cca659b798.mp3",
 			"norm": "bok",
-			"audio_url": "/audiocache/f62df37999eb4625257d8abdb127fc55446879cbc5d88edd3889e8cca659b798.mp3",
 			"word": "bok"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/eee439428943e8583a9c6c94f1588a0e40b4aa2586e7d00b5d072608dda2bfed.mp3",
 			"norm": "flickan",
-			"audio_url": "/audiocache/eee439428943e8583a9c6c94f1588a0e40b4aa2586e7d00b5d072608dda2bfed.mp3",
 			"word": "flickan"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/b21d9659d077522e2f270d4b435a88321507b719c9fc7da09035e6180ddd3daf.mp3",
 			"norm": "brev",
-			"audio_url": "/audiocache/b21d9659d077522e2f270d4b435a88321507b719c9fc7da09035e6180ddd3daf.mp3",
 			"word": "brev"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/27a9b1e9e9b6e078c9a37545fa899b420e48f3704d5ae2c027c72238aa3d823f.mp3",
 			"norm": "pojkar",
-			"audio_url": "/audiocache/27a9b1e9e9b6e078c9a37545fa899b420e48f3704d5ae2c027c72238aa3d823f.mp3",
 			"word": "pojkar"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/d7c77bbf1ac0788853be827027cc62d1f3e3e1e4dff535f94998818ada763f2a.mp3",
 			"norm": "mjolk",
-			"audio_url": "/audiocache/d7c77bbf1ac0788853be827027cc62d1f3e3e1e4dff535f94998818ada763f2a.mp3",
-			"word": "mjölk"
+			"word": "mj\u00f6lk"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/b53ef017babd1aaf90513c61bc868dd2b1b669251e4b179dfb241f6ac6458cb0.mp3",
 			"norm": "ris",
-			"audio_url": "/audiocache/b53ef017babd1aaf90513c61bc868dd2b1b669251e4b179dfb241f6ac6458cb0.mp3",
 			"word": "ris"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/487e600fe1eb0c285a494af11145744a11b8952cc98a691a16d034c9cdfa7333.mp3",
 			"norm": "smorgas",
-			"audio_url": "/audiocache/487e600fe1eb0c285a494af11145744a11b8952cc98a691a16d034c9cdfa7333.mp3",
-			"word": "smörgås"
+			"word": "sm\u00f6rg\u00e5s"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/ec8b228fc8bba6718d5d93a7108662bf1d4c8516da846141951018934dcadcf7.mp3",
 			"norm": "du",
-			"audio_url": "/audiocache/ec8b228fc8bba6718d5d93a7108662bf1d4c8516da846141951018934dcadcf7.mp3",
 			"word": "du"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/45fbeb139766a28ade87bad98df4e21530fcae4d28ec2c05bb5139a2bbac51c8.mp3",
 			"norm": "flickor",
-			"audio_url": "/audiocache/45fbeb139766a28ade87bad98df4e21530fcae4d28ec2c05bb5139a2bbac51c8.mp3",
 			"word": "flickor"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/a49bc5e806dcc4d50862bd3364448bfac2621c4c50e3499ff2c73ba1b9877742.mp3",
 			"norm": "barn",
-			"audio_url": "/audiocache/a49bc5e806dcc4d50862bd3364448bfac2621c4c50e3499ff2c73ba1b9877742.mp3",
 			"word": "barn"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/8d938c237b3abc446bdb11454d0bf5278da1195da3dffc57217eb9082fb2bfe5.mp3",
 			"norm": "ar",
-			"audio_url": "/audiocache/8d938c237b3abc446bdb11454d0bf5278da1195da3dffc57217eb9082fb2bfe5.mp3",
-			"word": "är"
+			"word": "\u00e4r"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/2f482a720a5252c28f64b58af470049a2341148c489a547a4606a9e5dcf1ff4d.mp3",
 			"norm": "hon",
-			"audio_url": "/audiocache/2f482a720a5252c28f64b58af470049a2341148c489a547a4606a9e5dcf1ff4d.mp3",
 			"word": "hon"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/13cb7a2fb25e0912d9fb24ed92c560a7f48176b16095baa037451b715a72665f.mp3",
 			"norm": "en",
-			"audio_url": "/audiocache/13cb7a2fb25e0912d9fb24ed92c560a7f48176b16095baa037451b715a72665f.mp3",
 			"word": "en"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/a1234416d4454c366510768c8c935330828dab159b15450d322a9902b3f73469.mp3",
 			"norm": "man",
-			"audio_url": "/audiocache/a1234416d4454c366510768c8c935330828dab159b15450d322a9902b3f73469.mp3",
 			"word": "man"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/72fffea770568fe8415e5af9b79bd778840ef5d13d82b179b76170673b8db602.mp3",
 			"norm": "pojke",
-			"audio_url": "/audiocache/72fffea770568fe8415e5af9b79bd778840ef5d13d82b179b76170673b8db602.mp3",
 			"word": "pojke"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/e8cc7d872947bee386bd589005f795bc8daad396e8a55777a905ea84999c1448.mp3",
 			"norm": "han",
-			"audio_url": "/audiocache/e8cc7d872947bee386bd589005f795bc8daad396e8a55777a905ea84999c1448.mp3",
 			"word": "han"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/3ba247bd5be706089409a5a4daeb580228fd32cd9b4a9cb40f2d48966d5a9d02.mp3",
 			"norm": "jag",
-			"audio_url": "/audiocache/3ba247bd5be706089409a5a4daeb580228fd32cd9b4a9cb40f2d48966d5a9d02.mp3",
 			"word": "jag"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/2e5f5dd52a93e140f3c4a27ccace4df1aebfe1828f52c3df01f669f468c3c203.mp3",
 			"norm": "flicka",
-			"audio_url": "/audiocache/2e5f5dd52a93e140f3c4a27ccace4df1aebfe1828f52c3df01f669f468c3c203.mp3",
 			"word": "flicka"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/d35f40415c9649b1fd2ea24504c2c45818a91883c49a5d66484162a189f28b53.mp3",
 			"norm": "kvinna",
-			"audio_url": "/audiocache/d35f40415c9649b1fd2ea24504c2c45818a91883c49a5d66484162a189f28b53.mp3",
 			"word": "kvinna"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/352a7643b8f066b86efdd68e2eddc882035137f0afa3bcecf73bb4aba091a94e.mp3",
 			"norm": "och",
-			"audio_url": "/audiocache/352a7643b8f066b86efdd68e2eddc882035137f0afa3bcecf73bb4aba091a94e.mp3",
 			"word": "och"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/1d72aa77b54641c6e2f62144cf9b19c7ab6a714856921bea0c85d89386834635.mp3",
 			"norm": "ater",
-			"audio_url": "/audiocache/1d72aa77b54641c6e2f62144cf9b19c7ab6a714856921bea0c85d89386834635.mp3",
-			"word": "äter"
+			"word": "\u00e4ter"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/3ef2d0e9cf7150b7f3dfff7ca88c339457576f8c0f1b91e10f8c5dc7d495bd6b.mp3",
 			"norm": "tidning",
-			"audio_url": "/audiocache/3ef2d0e9cf7150b7f3dfff7ca88c339457576f8c0f1b91e10f8c5dc7d495bd6b.mp3",
 			"word": "tidning"
 		},
 		{
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/ebd6a8588d42f2f88903ff2a099e6b16138ef94646264dc6304b56af16e3cc50.mp3",
 			"norm": "ett",
-			"audio_url": "/audiocache/ebd6a8588d42f2f88903ff2a099e6b16138ef94646264dc6304b56af16e3cc50.mp3",
 			"word": "ett"
 		},
 		{
-		"norm": "apple",
-		"audio_url": "/audiocache/1c772c546f1dd62cc2e6052167cf7320a74750900b73228dc703e64f4455190e.mp3",
-		"word": "äpple"
-	}
+			"audio_url": "https://cortical.csl.sri.com/langlearn/audiocache/1c772c546f1dd62cc2e6052167cf7320a74750900b73228dc703e64f4455190e.mp3",
+			"norm": "apple",
+			"word": "\u00e4pple"
+		}
 	]
 }
