@@ -43,7 +43,7 @@ public class sleepMode extends AppCompatActivity {
 
         WordsAdapter wA = new WordsAdapter();
 
-        Boolean r = wA.ParseJson();
+        Boolean r = wA.ParseJson(null);
 
         Log.d("sleepMode", r.toString());
 
@@ -58,7 +58,10 @@ public class sleepMode extends AppCompatActivity {
 
             String json = new String(buffer, "UTF-8");
 
-            Log.d("sleepMode", json);
+            // Log.d("sleepMode", json);
+
+            Boolean re = wA.ParseJson(json);
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }

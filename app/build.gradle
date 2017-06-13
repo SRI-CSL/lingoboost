@@ -6,7 +6,7 @@ android {
     buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "edu.northwestern.langlearn"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile 'com.squareup.okio:okio:1.13.0'
 }
 repositories {
     mavenCentral()
