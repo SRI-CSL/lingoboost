@@ -70,7 +70,7 @@ public class participantMode extends AppCompatActivity {
                 }
             });
         }
-        else if (stage==1 && (today-lastTest) >= DAYS_PER_TEST) { //we need to do the vocab test. Do this only if more than DAYS_PER_TEST days have elapsed since the last test, to allow for testing every other day
+        else if (stage==1 && (today-lastTest) >= DAYS_PER_TEST) { // we need to do the vocab test. Do this only if more than DAYS_PER_TEST days have elapsed since the last test, to allow for testing every other day
             header.setText(headers[1]);
             text.setText(descriptions[1]);
 
@@ -84,7 +84,7 @@ public class participantMode extends AppCompatActivity {
             });
         }
 
-        else { //we need to do the sleep period
+        else { // we need to do the sleep period
             Calendar c = Calendar.getInstance();
             int hour = c.get(Calendar.HOUR_OF_DAY);
 
@@ -96,7 +96,7 @@ public class participantMode extends AppCompatActivity {
                 pButton.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent myIntent = new Intent(participantMode.this, sleepMode.class);
+                        Intent myIntent = new Intent(participantMode.this, SleepMode.class);
 
                         participantMode.this.startActivity(myIntent);
                     }

@@ -6,7 +6,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    0
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".sleepMode"
+            android:name=".SleepMode"
             android:screenOrientation="portrait" />
         <activity
             android:name=".initialEncoding"

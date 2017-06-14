@@ -25,12 +25,12 @@ public class MainActivity extends AppCompatActivity {
          prefs = this.getSharedPreferences(
                 "edu.northwestern.langlearn", Context.MODE_PRIVATE);
 
-        Button sleepButton = (Button) findViewById(R.id.sleep); //button to start sleep mode
+        Button sleepButton = (Button) findViewById(R.id.sleep); // button to start sleep mode
         sleepButton.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, sleepMode.class);
+                Intent myIntent = new Intent(MainActivity.this, SleepMode.class);
                 MainActivity.this.startActivity(myIntent);
             }
         });

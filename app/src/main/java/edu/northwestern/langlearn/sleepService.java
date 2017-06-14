@@ -159,7 +159,7 @@ public class sleepService extends Service implements SensorEventListener, OnInit
     private void sleepFinished() {
         prefs.edit().putInt("experimentstage", 1).apply(); //go back to vocab mode
 
-        Intent sleepFinishedIntent = new Intent(sleepMode.SLEEP_FINISHED_INTENT);
+        Intent sleepFinishedIntent = new Intent(SleepMode.SLEEP_FINISHED_INTENT);
         LocalBroadcastManager.getInstance(this).sendBroadcast(sleepFinishedIntent);
         stopSelf();
     }
