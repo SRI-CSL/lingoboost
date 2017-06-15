@@ -23,45 +23,39 @@ import java.util.List;
 import org.jetbrains.anko.ToastsKt;
 
 
-public class SleepMode extends AppCompatActivity {
+public class SleepMode extends AppCompatActivity implements OnCompletionListener {
     //    private int MY_DATA_CHECK_CODE = 0;
     //    private boolean ttsInitialized = false;
     public static final String SLEEP_FINISHED_INTENT = "com.sri.csl.langlearn.SLEEP_FINISHED";
 
-
     private PowerManager.WakeLock wl;
+
     private MediaPlayer mediaPlayer;
-
-    private OnCompletionListener onCompletionListener = new OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-    };
-
 
     public void updateJSONWords(String json) {
         Log.d("SleepMode", json);
         ToastsKt.longToast(SleepMode.this, "Words Updated");
     }
 
+    public void onCompletion(MediaPlayer mp) {
+        mediaPlayer.release();
+        mediaPlayer = null;
+        Log.d("SleeMode", "nediaPlayer completion");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_mode);
 
+        // mediaPlayer = MediaPlayer.create(SleepMode.this, R.raw.kvinnan);
+        // mediaPlayer.start();
+        // mediaPlayer.setOnCompletionListener(onCompletionListener);
 
-         // mediaPlayer = MediaPlayer.create(SleepMode.this, R.raw.kvinnan);
-         // mediaPlayer.start();
-         // mediaPlayer.setOnCompletionListener(onCompletionListener);
+        WordsProvider wordsP = new WordsProvider();
+        // List<Word> w = wordsP.ParseJson(null);
 
-
-        WordsAdapter wA = new WordsAdapter();
-        // List<Word> w = wA.ParseJson(null);
-
-        wA.fetchJSONWords("https://cortical.csl.sri.com/langlearn/user/corticalre", this);
+        wordsP.fetchJSONWords("https://cortical.csl.sri.com/langlearn/user/corticalre", this);
 
 
         try {
@@ -73,7 +67,7 @@ public class SleepMode extends AppCompatActivity {
             is.close();
 
             String json = new String(buffer, "UTF-8");
-            List<Word> words = wA.parseJSONWords(json);
+            List<Word> words = wordsP.parseJSONWords(json);
 
 
 
@@ -93,7 +87,8 @@ public class SleepMode extends AppCompatActivity {
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
             mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(onCompletionListener);
+//            mediaPlayer.setOnCompletionListener(onCompletionListener);
+            mediaPlayer.setOnCompletionListener(this);
 
         } catch (IOException ex) {
             ex.printStackTrace();
