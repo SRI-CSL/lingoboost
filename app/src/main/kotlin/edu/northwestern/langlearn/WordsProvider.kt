@@ -12,10 +12,10 @@ import org.jetbrains.anko.uiThread
 
 data class Word(val norm: String, val audio_url: String, val word: String)
 
-class WordsProvider {
-    fun fetchJSONWords(url: String, sleepModeActivity: SleepMode): Unit {
+class WordsProvider(val jsonUrl: String) {
+    fun fetchJSONWords(sleepModeActivity: SleepMode): Unit {
         doAsync {
-            val json = URL(url).readText()
+            val json = URL(jsonUrl).readText()
 
             Log.d(javaClass.simpleName, json.length.toString())
             uiThread { sleepModeActivity.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
