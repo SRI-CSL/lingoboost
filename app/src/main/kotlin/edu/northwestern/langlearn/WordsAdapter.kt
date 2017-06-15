@@ -4,11 +4,26 @@ import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
 
+import java.net.URL
+
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+//import org.jetbrains.anko.longToast // can't do this, not an activity
+
 data class Word(val norm: String, val audio_url: String, val word: String)
 
 class WordsAdapter {
-    fun ParseJson(jsonStr: String?): List<Word> {
-        val json = jsonStr ?: """
+    fun fetchJSONWords(url: String, sleepModeActivity: SleepMode): Unit {
+        doAsync {
+            val json = URL(url).readText()
+
+            Log.d(javaClass.simpleName, json.length.toString())
+            uiThread { sleepModeActivity.updateJSONWords(json) }
+        }
+    }
+
+    fun parseJSONWords(wordsJSON: String?): List<Word> {
+        val json = wordsJSON ?: """
         {
             "words": [
                 {

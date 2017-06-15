@@ -6,18 +6,22 @@ import android.os.PowerManager;
 //import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.net.Uri;
+//import android.net.Uri;
 
 
 import android.media.MediaPlayer;
 import android.media.AudioManager;
-import android.media.MediaPlayer.OnPreparedListener;
+//import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnCompletionListener;
 
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+
+import org.jetbrains.anko.ToastsKt;
+
 
 public class SleepMode extends AppCompatActivity {
     //    private int MY_DATA_CHECK_CODE = 0;
@@ -37,6 +41,12 @@ public class SleepMode extends AppCompatActivity {
     };
 
 
+    public void updateJSONWords(String json) {
+        Log.d("SleepMode", json);
+        ToastsKt.longToast(SleepMode.this, "Words Updated");
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +61,8 @@ public class SleepMode extends AppCompatActivity {
         WordsAdapter wA = new WordsAdapter();
         // List<Word> w = wA.ParseJson(null);
 
+        wA.fetchJSONWords("https://cortical.csl.sri.com/langlearn/user/corticalre", this);
+
 
         try {
             InputStream is = getResources().openRawResource(R.raw.corticalre);
@@ -61,7 +73,7 @@ public class SleepMode extends AppCompatActivity {
             is.close();
 
             String json = new String(buffer, "UTF-8");
-            List<Word> words = wA.ParseJson(json);
+            List<Word> words = wA.parseJSONWords(json);
 
 
 
@@ -78,9 +90,7 @@ public class SleepMode extends AppCompatActivity {
 
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//            mediaPlayer.setDataSource(getApplicationContext(), mpUrl);
             mediaPlayer.setDataSource(url);
-
             mediaPlayer.prepare();
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(onCompletionListener);
