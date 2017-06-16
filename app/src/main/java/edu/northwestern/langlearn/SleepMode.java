@@ -1,22 +1,25 @@
 package edu.northwestern.langlearn;
 
 //import android.content.Intent;
-import android.os.Bundle;
-import android.os.PowerManager;
 //import android.speech.tts.TextToSpeech;
+//import android.net.Uri;
+//import android.os.PowerManager;
+
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-//import android.net.Uri;
 
+
+//import android.media.MediaPlayer.OnPreparedListener;
 
 import android.media.MediaPlayer;
 import android.media.AudioManager;
-//import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnCompletionListener;
 
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -26,19 +29,38 @@ import org.jetbrains.anko.ToastsKt;
 public class SleepMode extends AppCompatActivity implements OnCompletionListener {
     //    private int MY_DATA_CHECK_CODE = 0;
     //    private boolean ttsInitialized = false;
-    public static final String SLEEP_FINISHED_INTENT = "com.sri.csl.langlearn.SLEEP_FINISHED";
+    //    private PowerManager.WakeLock wl;
 
-    private PowerManager.WakeLock wl;
+    public static final String SLEEP_FINISHED_INTENT = "com.sri.csl.langlearn.SLEEP_FINISHED";
 
     private WordsProvider wordsProvider;
     private MediaPlayer mediaPlayer;
     private String jsonWords;
+    private List<Word> words;
+    private Handler handler = new Handler();
+
+    private int wordsIndex = 0;
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (wordsIndex < words.size()) {
+                ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+                playAudioUrl();
+                wordsIndex++;
+                handler.postDelayed(this, 5000);
+            }
+        }
+    };
 
     public void updateJSONWords(String json) {
-        Log.d("SleepMode", json);
         this.jsonWords = json;
+        this.words = wordsProvider.parseJSONWords(jsonWords);
         ToastsKt.longToast(SleepMode.this, "Words Updated");
-        playAudioUrl();
+
+        Log.d("SleepMode", "words.size: " + words.size());
+
+        handler.postDelayed(runnable, 5000);
     }
 
     public void onCompletion(MediaPlayer mp) {
@@ -51,14 +73,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_mode);
-
-        // mediaPlayer = MediaPlayer.create(SleepMode.this, R.raw.kvinnan);
-        // mediaPlayer.start();
-        // mediaPlayer.setOnCompletionListener(onCompletionListener);
-
         wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/corticalre");
-        // List<Word> w = wordsP.ParseJson(null);
-
         wordsProvider.fetchJSONWords(this);
 
         //        Intent checkTTSIntent = new Intent();
@@ -77,7 +92,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
     @Override
     protected void onDestroy() {
-        Log.d("sleepMode", "onDestroy() called");
+        Log.d("sleepMode", "onDestroy");
+
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+            handler = null;
+        }
 
         if (mediaPlayer != null) {
             mediaPlayer.release();
@@ -94,22 +114,9 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
     private void playAudioUrl() {
         try {
-            // InputStream is = getResources().openRawResource(R.raw.corticalre);
-            // int size = is.available();
-            // byte[ ] buffer = new byte[ size ];
-            // int num  = is.read(buffer);
+            String url = words.get(wordsIndex).getAudio_url();
 
-            // is.close();
-
-            // String json = new String(buffer, "UTF-8");
-
-            List<Word> words = wordsProvider.parseJSONWords(jsonWords);
-
-            Log.d("SleepMode", "words.size: " + words.size());
-
-            String url = words.get(0).getAudio_url();
-
-            Log.d("SleepMode", words.get(0).getAudio_url());
+            Log.d("SleepMode", words.get(wordsIndex).getAudio_url());
 
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -117,10 +124,29 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
             mediaPlayer.prepare();
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(this);
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void loadWordsJsonRes() {
+        try {
+            InputStream is = getResources().openRawResource(R.raw.corticalre);
+            int size = is.available();
+            byte[ ] buffer = new byte[ size ];
+            int num  = is.read(buffer);
+
+            is.close();
+            jsonWords = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void playMP3Raw() {
+         mediaPlayer = MediaPlayer.create(SleepMode.this, R.raw.kvinnan);
+         mediaPlayer.start();
+         mediaPlayer.setOnCompletionListener(this);
     }
 
     // prevent accidental press of the back button from exiting sleep mode.
