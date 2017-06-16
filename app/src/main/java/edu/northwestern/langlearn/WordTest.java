@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,15 +19,12 @@ import android.widget.Toast;
 
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
-public class wordTest extends AppCompatActivity implements OnInitListener {
+public class WordTest extends AppCompatActivity implements OnInitListener {
     private int MY_DATA_CHECK_CODE = 0;
     private TextToSpeech myTTS;
 
@@ -57,10 +53,10 @@ public class wordTest extends AppCompatActivity implements OnInitListener {
     }
 
     void fileError() {
-        Toast.makeText(wordTest.this,
+        Toast.makeText(WordTest.this,
                 "Logfile error. Unplug the phone and try again. If problem persists, contact nathanww@u.northwestern.edu", Toast.LENGTH_LONG).show();
-        Intent myIntent = new Intent(wordTest.this, participantMode.class);
-        wordTest.this.startActivity(myIntent);
+        Intent myIntent = new Intent(WordTest.this, ParticipantMode.class);
+        WordTest.this.startActivity(myIntent);
     }
 
     void logTimestamp(String message) { //write something to the log file with a timestamp.
@@ -202,65 +198,66 @@ public class wordTest extends AppCompatActivity implements OnInitListener {
         checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
         startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
         Button submitButton = (Button) findViewById(R.id.nextbutton); //button to speak again
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText rField = (EditText) findViewById(R.id.response);
-                String response = rField.getText().toString().toLowerCase();
-                //check to see if they've entered anything
-                if (response.length() >= 3) {
-                    if (!feedbackState) { //this is the first feedback
 
-                        if (equalsLenient(response)) { //correct
-                            correctsound.start();
-                            correct[myPointer]++;
-                        } else {
-                            incorrectsound.start();
-                        }
-
-                        logTimestamp("Entered word=" + currentWord + ",response=" + response + ", judgement=" + response.equals(currentWord));
-                        TextView english = (TextView) findViewById(R.id.englishword);
-                        english.setVisibility(View.VISIBLE);
-                        View subject = (View) findViewById(R.id.response);
-                        subject.setVisibility(View.GONE);
-
-                    } else {
-
-                        if (minitest) {
-                            myPointer = myPointer + 1;
-                            if (myPointer <= tPointer && myPointer < words.length) {
-                                updateTrans();
-                            } else {
-                                Intent myIntent = new Intent(wordTest.this, encoding.class);
-                                myIntent.putExtra("tPointer", tPointer + 1);
-                                wordTest.this.startActivity(myIntent);
-                            }
-                        } else { //regular standalone test
-                            myPointer = getNextWord(myPointer);
-                            if (myPointer == -1) {
-
-                                prefs.edit().putInt("experimentstage", 2).apply(); //we've completed the test, tell the system the next step is the sleep.
-
-                                Intent myIntent = new Intent(wordTest.this, participantMode.class);
-                                myIntent.putExtra("status", "Learning Complete");
-                                wordTest.this.startActivity(myIntent);
-                            } else {
-                                updateTrans();
-                            }
-
-                        }
-
-                    }
-                    feedbackState = !feedbackState;
-
-                } else {//they haven't entered anything, just clear the textbox
-                    // EditText rField   = (EditText)findViewById(R.id.response);
-                    updateTrans();
-                    Toast.makeText(wordTest.this,
-                            "If you don't know this word, take a guess!", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
+        //        submitButton.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View v) {
+        //                EditText rField = (EditText) findViewById(R.id.response);
+        //                String response = rField.getText().toString().toLowerCase();
+        //                //check to see if they've entered anything
+        //                if (response.length() >= 3) {
+        //                    if (!feedbackState) { //this is the first feedback
+        //
+        //                        if (equalsLenient(response)) { //correct
+        //                            correctsound.start();
+        //                            correct[myPointer]++;
+        //                        } else {
+        //                            incorrectsound.start();
+        //                        }
+        //
+        //                        logTimestamp("Entered word=" + currentWord + ",response=" + response + ", judgement=" + response.equals(currentWord));
+        //                        TextView english = (TextView) findViewById(R.id.englishword);
+        //                        english.setVisibility(View.VISIBLE);
+        //                        View subject = (View) findViewById(R.id.response);
+        //                        subject.setVisibility(View.GONE);
+        //
+        //                    } else {
+        //
+        //                        if (minitest) {
+        //                            myPointer = myPointer + 1;
+        //                            if (myPointer <= tPointer && myPointer < words.length) {
+        //                                updateTrans();
+        //                            } else {
+        //                                Intent myIntent = new Intent(WordTest.this, encoding.class);
+        //                                myIntent.putExtra("tPointer", tPointer + 1);
+        //                                WordTest.this.startActivity(myIntent);
+        //                            }
+        //                        } else { //regular standalone test
+        //                            myPointer = getNextWord(myPointer);
+        //                            if (myPointer == -1) {
+        //
+        //                                prefs.edit().putInt("experimentstage", 2).apply(); //we've completed the test, tell the system the next step is the sleep.
+        //
+        //                                Intent myIntent = new Intent(WordTest.this, ParticipantMode.class);
+        //                                myIntent.putExtra("status", "Learning Complete");
+        //                                WordTest.this.startActivity(myIntent);
+        //                            } else {
+        //                                updateTrans();
+        //                            }
+        //
+        //                        }
+        //
+        //                    }
+        //                    feedbackState = !feedbackState;
+        //
+        //                } else {//they haven't entered anything, just clear the textbox
+        //                    // EditText rField   = (EditText)findViewById(R.id.response);
+        //                    updateTrans();
+        //                    Toast.makeText(WordTest.this,
+        //                            "If you don't know this word, take a guess!", Toast.LENGTH_LONG).show();
+        //                }
+        //            }
+        //        });
     }
 
     @Override

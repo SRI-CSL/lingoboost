@@ -4,6 +4,10 @@
     <TextView android:textSize="30.0sp" android:textStyle="bold" android:id="@id/welcomeheader" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="To do:" />
     <TextView android:textSize="30.0sp" android:textStyle="bold" android:id="@id/header" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="" />
     <TextView android:textSize="18.0sp" android:id="@id/text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="" />
-    <Button android:id="@id/pbutton" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Start" />
-    <Button android:id="@id/debug" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Debug mode" />
+
+    <Button
+        android:id="@id/debug"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Debug Mode" />
 </LinearLayout>

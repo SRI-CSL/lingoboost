@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical" android:paddingLeft="16.0dip" android:paddingRight="16.0dip" android:layout_width="fill_parent" android:layout_height="fill_parent"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView android:textSize="30.0sp" android:textStyle="bold" android:id="@id/startlearning" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Start learning" />
-    <TextView android:textSize="18.0sp" android:id="@id/textView3" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="We'll start by showing you some German words and their English translations. Make sure your volume is turned up since the german words will be spoken!\n\nThis will take about 15 minutes. You should do all the words in one sitting." />
-    <Button android:id="@id/button" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Start" />
-</LinearLayout>

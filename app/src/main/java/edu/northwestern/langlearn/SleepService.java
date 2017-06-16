@@ -29,7 +29,7 @@ import java.util.Locale;
 
 import static android.os.Environment.getExternalStorageDirectory;
 
-public class sleepService extends Service implements SensorEventListener, OnInitListener {
+public class SleepService extends Service implements SensorEventListener, OnInitListener {
     int ONSET_DELAY = 30 * 60 * 1000; //delay in ms before sounds actually start happening, 30 min seems like a good approximation
     int BACKOFF_TIME = 60000; //backoff time if motion detected
     float MIN_CUE_VOLUME = 0.08f; //lowest the cue volume can go in response to feedback
@@ -55,6 +55,11 @@ public class sleepService extends Service implements SensorEventListener, OnInit
     Thread sleepTalk;
     private TextToSpeech myTTS;
 
+
+    public static final String SLEEP_FINISHED_INTENT = "com.sri.csl.langlearn.SLEEP_FINISHED";
+
+
+
     public float getBatteryLevel() { //from http://stackoverflow.com/questions/15746709/get-battery-level-only-once-using-android-sdk
         Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
@@ -77,9 +82,8 @@ public class sleepService extends Service implements SensorEventListener, OnInit
     }
 
     void fileError() {
-        Toast.makeText(this,
-                "Logfile error. Unplug the phone and try again. If problem persists, contact nathanww@u.northwestern.edu", Toast.LENGTH_LONG).show();
-        Intent myIntent = new Intent(this, participantMode.class);
+        Toast.makeText(this, "Logfile error. Unplug the phone and try again. If problem persists, contact nathanww@u.northwestern.edu", Toast.LENGTH_LONG).show();
+        Intent myIntent = new Intent(this, ParticipantMode.class);
         stopSelf();
     }
 
@@ -88,7 +92,7 @@ public class sleepService extends Service implements SensorEventListener, OnInit
         String current = sdf.format(new Date());
         try {
             String m = current + ":" + message;
-            Log.d("sleepService", m);
+            Log.d("SleepService", m);
             logWriter.write(m);
             logWriter.write("\n");
             logWriter.flush();
@@ -147,7 +151,7 @@ public class sleepService extends Service implements SensorEventListener, OnInit
                         }
                     }
                     //we've done all the cues for tonight, reset to vocab test and go back to the participant mode
-                    sleepService.this.sleepFinished();
+                    SleepService.this.sleepFinished();
                     cue = false;
                 }
             }
@@ -159,7 +163,7 @@ public class sleepService extends Service implements SensorEventListener, OnInit
     private void sleepFinished() {
         prefs.edit().putInt("experimentstage", 1).apply(); //go back to vocab mode
 
-        Intent sleepFinishedIntent = new Intent(SleepMode.SLEEP_FINISHED_INTENT);
+        Intent sleepFinishedIntent = new Intent(SLEEP_FINISHED_INTENT);
         LocalBroadcastManager.getInstance(this).sendBroadcast(sleepFinishedIntent);
         stopSelf();
     }

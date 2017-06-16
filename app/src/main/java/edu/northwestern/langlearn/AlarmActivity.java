@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-public class alarmActivity extends BroadcastReceiver {
+public class AlarmActivity extends BroadcastReceiver {
 
     int DAYS_PER_TEST=1; //do a test every <x> days, here used to control whether the alarm should actually go off or not on each day.
 
@@ -27,7 +27,7 @@ public class alarmActivity extends BroadcastReceiver {
 
 
             if (stage < 2 && (today-lastTest) >= DAYS_PER_TEST) { //don't alarm if vocab test has been completed, or if today is not a testing day.
-                Intent newIntent = new Intent(context, alertSubject.class);
+                Intent newIntent = new Intent(context, AlertSubject.class);
                 newIntent.putExtra("alarm_message", message);
                 newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(newIntent);

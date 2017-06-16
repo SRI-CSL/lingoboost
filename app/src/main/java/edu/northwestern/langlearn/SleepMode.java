@@ -31,8 +31,6 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     //    private boolean ttsInitialized = false;
     //    private PowerManager.WakeLock wl;
 
-    public static final String SLEEP_FINISHED_INTENT = "com.sri.csl.langlearn.SLEEP_FINISHED";
-
     private WordsProvider wordsProvider;
     private MediaPlayer mediaPlayer;
     private String jsonWords;
@@ -106,7 +104,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
         super.onDestroy();
 
-        //        Intent serviceIntent = new Intent(this, sleepService.class);
+        //        Intent serviceIntent = new Intent(this, SleepService.class);
         //        stopService(serviceIntent);
         //        wl.release();
         //        finish();
@@ -162,7 +160,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     //                if (!ttsInitialized) {
     //                    ttsInitialized = true;
     //
-    //                    Intent serviceIntent = new Intent(this, sleepService.class);
+    //                    Intent serviceIntent = new Intent(this, SleepService.class);
     //                    startService(serviceIntent);
     //                    PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
     //                    wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
@@ -178,7 +176,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     //    }
 
     //    private void sleepFinished() {
-    //        Intent myIntent = new Intent(this, participantMode.class);
+    //        Intent myIntent = new Intent(this, ParticipantMode.class);
     //        startActivity(myIntent);
     //    }
 }

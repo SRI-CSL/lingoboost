@@ -14,8 +14,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!--activity
+            android:name=".ParticipantMode"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-->
         <activity
-            android:name=".participantMode"
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,34 +35,19 @@
         <activity
             android:name=".SleepMode"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".initialEncoding"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".encodingInstructions"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".encodingTestInstructions"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".encoding"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".wordTest"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".testIntructions"
+        <!-- activity
+            android:name=".WordTest"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" /-->
 
         <!-- receiver
-            android:name=".alarmActivity"
+            android:name=".AlarmActivity"
             android:enabled="true"
             android:process=":remote" />
         <receiver
-            android:name=".scheduleAlarms"
+            android:name=".ScheduleAlarms"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
@@ -61,10 +55,10 @@
             </intent-filter>
         </receiver -->
 
-        <!-- activity android:name=".alertSubject" / -->
+        <!-- activity android:name=".AlertSubject" / -->
 
         <!-- service
-            android:name=".sleepService"
+            android:name=".SleepService"
             android:enabled="true"
             android:exported="true"></service -->
     </application>

@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class alertSubject extends AppCompatActivity {
+public class AlertSubject extends AppCompatActivity {
     MediaPlayer beep;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,8 @@ public class alertSubject extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 beep.stop();
-                Intent myIntent = new Intent(alertSubject.this, participantMode.class);
-                alertSubject.this.startActivity(myIntent);
+                Intent myIntent = new Intent(AlertSubject.this, ParticipantMode.class);
+                AlertSubject.this.startActivity(myIntent);
             }
         });
     }
