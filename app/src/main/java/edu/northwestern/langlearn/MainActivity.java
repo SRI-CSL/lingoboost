@@ -24,9 +24,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         prefs = this.getSharedPreferences("edu.northwestern.langlearn", Context.MODE_PRIVATE);
 
-        Button sleepButton = (Button) findViewById(R.id.sleep); // button to start sleep mode
+        Button sleepButton = (Button)findViewById(R.id.sleep); // button to start sleep mode
+        Button settingsButton = (Button)findViewById(R.id.settings);
 
-        sleepButton.setOnClickListener( new View.OnClickListener() {
+        sleepButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -35,6 +36,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, MyPreferencesActivity.class);
+                startActivity(i);
+            }
+        });
 
         //        Button resetButton = (Button) findViewById(R.id.reset); //button to reset progress
         //        resetButton.setOnClickListener( new View.OnClickListener() {

@@ -35,6 +35,9 @@
         <activity
             android:name=".SleepMode"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".MyPreferencesActivity"
+            android:screenOrientation="portrait" />
         <!-- activity
             android:name=".WordTest"
             android:screenOrientation="portrait" />
