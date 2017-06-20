@@ -13,15 +13,16 @@ public class LanglearnPreferencesActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         MyPreferenceFragment frag = new MyPreferenceFragment();
 
-        frag.ctx = getBaseContext();
+        // frag.ctx = getBaseContext();
         getFragmentManager().beginTransaction().replace(android.R.id.content, frag).commit();
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment
     {
-        private Context ctx;
+        // private Context ctx;
 
         @Override
         public void onCreate(final Bundle savedInstanceState)
@@ -30,14 +31,13 @@ public class LanglearnPreferencesActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.preferences);
         }
 
-//        @Override
-//        public void onDestroy() {
-//            SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(ctx);
-//            String user = sP.getString("user", "NA");
-//
-//            Log.d("PreferencesActivity", user);
-//            super.onDestroy();
-//        }
+        // @Override
+        // public void onDestroy() {
+        //     SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(ctx);
+        //     String user = sP.getString("user", "NA");
+        //
+        //     Log.d("PreferencesActivity", user);
+        //     super.onDestroy();
+        // }
     }
-
 }
