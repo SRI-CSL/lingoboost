@@ -17,23 +17,7 @@ import android.widget.Button;
 import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
-//    private SharedPreferences prefs;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case 1:
-                SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String strUserName = sP.getString("user", "NA");
-
-                Log.d("MainActivity", strUserName);
-
-                break;
-        }
-    }
-
+    private static final int THIRTY_MINUTE_SETTINGS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
         Permissions.verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
-
-//        prefs = this.getSharedPreferences("edu.northwestern.langlearn", Context.MODE_PRIVATE);
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
@@ -53,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", getBaseContext().toString());
         Log.d("MainActivity", strUserName);
 
-//        boolean bAppUpdates = sP.getBoolean("applicationUpdates", false);
-//        String downloadType = sP.getString("downloadType", "1");
+        // boolean bAppUpdates = sP.getBoolean("playWHitenoise", true);
+        // String downloadType = sP.getString("inactivityDelay", "1");
 
         Button sleepButton = (Button)findViewById(R.id.sleep); // button to start sleep mode
         Button settingsButton = (Button)findViewById(R.id.settings);
@@ -71,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, MyPreferencesActivity.class);
+                Intent i = new Intent(MainActivity.this, LanglearnPreferencesActivity.class);
 //                startActivity(i);
                 startActivityForResult(i, 1);
             }
@@ -109,7 +91,23 @@ public class MainActivity extends AppCompatActivity {
         //        });
     }
 
-        //    private void scheduleNotification(Notification notification, int delay) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case THIRTY_MINUTE_SETTINGS:
+                SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                String user = sP.getString("user", "NA");
+
+                Log.d("MainActivity", user);
+                break;
+        }
+    }
+
+
+
+    //    private void scheduleNotification(Notification notification, int delay) {
         //
         //        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         //        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);

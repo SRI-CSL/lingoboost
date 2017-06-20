@@ -6,8 +6,10 @@ package edu.northwestern.langlearn;
 //import android.os.PowerManager;
 //import android.media.MediaPlayer.OnPreparedListener;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -53,21 +55,26 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         ToastsKt.longToast(SleepMode.this, "Words Updated");
 
         Log.d("SleepMode", "words.size: " + words.size());
-
         handler.postDelayed(runnable, 5000);
     }
 
     public void onCompletion(MediaPlayer mp) {
+        Log.d("SleeMode", "nediaPlayer completion");
         mediaPlayer.release();
         mediaPlayer = null;
-        Log.d("SleeMode", "nediaPlayer completion");
+        playWhiteNoiseRaw();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_mode);
-        wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/corticalre");
+        playWhiteNoiseRaw();
+
+        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String user = sP.getString("user", "NA");
+
+        wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user); // corticalre
         wordsProvider.fetchJSONWords(this);
 
         //        Intent checkTTSIntent = new Intent();
@@ -107,6 +114,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     }
 
     private void playAudioUrl() {
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+
         try {
             String url = words.get(wordsIndex).getAudio_url();
 
@@ -121,6 +134,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void playWhiteNoiseRaw() {
+        mediaPlayer = MediaPlayer.create(SleepMode.this, R.raw.bnoise);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     private void loadWordsJsonRes() {
@@ -140,7 +159,6 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private void playMP3Raw() {
          mediaPlayer = MediaPlayer.create(SleepMode.this, R.raw.kvinnan);
          mediaPlayer.start();
-         mediaPlayer.setOnCompletionListener(this);
     }
 
     // prevent accidental press of the back button from exiting sleep mode.

@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class MyPreferencesActivity extends PreferenceActivity {
+public class LanglearnPreferencesActivity extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +30,14 @@ public class MyPreferencesActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.preferences);
         }
 
-        @Override
-        public void onDestroy() {
-            SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(ctx);
-            String user = sP.getString("user", "NA");
-
-            Log.d("PreferencesActivity", user);
-            super.onDestroy();
-        }
+//        @Override
+//        public void onDestroy() {
+//            SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(ctx);
+//            String user = sP.getString("user", "NA");
+//
+//            Log.d("PreferencesActivity", user);
+//            super.onDestroy();
+//        }
     }
 
 }

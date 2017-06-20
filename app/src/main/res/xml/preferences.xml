@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-  <EditTextPreference android:title="Your Name"
+  <EditTextPreference android:title="User"
                       android:key="user"
-                      android:summary="Please provide your username" />
-  <CheckBoxPreference android:title="Application Updates"
-                      android:defaultValue="false"
-                      android:summary="This option if selected will allow the application to check for latest versions."
-                      android:key="applicationUpdates" />
-  <ListPreference     android:title="Download Details"
-                      android:summary="Select the kind of data that you would like to download"
-                      android:key="downloadType"
+                      android:summary="Please provide a user" />
+  <CheckBoxPreference android:title="Play White Noise"
+                      android:defaultValue="true"
+                      android:summary="This option if selected will play whitenoise between words."
+                      android:key="playWHitenoise" />
+  <ListPreference     android:title="Inactivity Delay"
+                      android:summary="Select the inactibity period before word play"
+                      android:key="inactivityDelay"
                       android:defaultValue="1"
-                      android:entries="@array/listArray"
-                      android:entryValues="@array/listValues" />
+                      android:entries="@array/delayListArray"
+                      android:entryValues="@array/delayListValues" />
+  <ListPreference     android:title="Request Type"
+                      android:summary="Select the request type"
+                      android:key="requestType"
+                      android:defaultValue="1"
+                      android:entries="@array/requestListArray"
+                      android:entryValues="@array/requestListValues" />
 </PreferenceScreen>
