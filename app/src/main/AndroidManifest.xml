@@ -14,21 +14,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--activity
-            android:name=".ParticipantMode"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity-->
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -36,16 +27,28 @@
             android:name=".SleepMode"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LanglearnPreferencesActivity"
-            android:screenOrientation="portrait" />
-        <!-- activity
+            android:name=".PrefActivity" />
+        <!--
+        activity
+            android:name=".ParticipantMode"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity
+        -->
+        <!--
+        activity
             android:name=".WordTest"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" /-->
-
-        <!-- receiver
+            android:screenOrientation="portrait" /
+        -->
+        <!--
+        receiver
             android:name=".AlarmActivity"
             android:enabled="true"
             android:process=":remote" />
@@ -56,14 +59,16 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </receiver -->
+        </receiver
+        -->
 
         <!-- activity android:name=".AlertSubject" / -->
 
-        <!-- service
+        <!--
+             service
             android:name=".SleepService"
             android:enabled="true"
-            android:exported="true"></service -->
+            android:exported="true"></service
+        -->
     </application>
-
 </manifest>

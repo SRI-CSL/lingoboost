@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Permissions.verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
+        // Permissions.verifyStoragePermissions(this);
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, LanglearnPreferencesActivity.class);
+                Intent i = new Intent(MainActivity.this, PrefActivity.class);
                 // startActivity(i);
                 startActivityForResult(i, 1);
             }
