@@ -29,6 +29,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
     private WordsProvider wordsProvider;
     private MediaPlayer mediaPlayer;
+    private MediaPlayer whiteNoisePlayer;
     private String jsonWords;
     private List<Word> words;
     private Handler handler = new Handler();
@@ -58,9 +59,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
     public void onCompletion(MediaPlayer mp) {
         Log.d("SleeMode", "nediaPlayer completion");
-        mediaPlayer.release();
-        mediaPlayer = null;
-        playWhiteNoiseRaw();
+        destroyWordsPlayer();
     }
 
     @Override
@@ -95,24 +94,32 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         }
 
         if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+
+            destroyWordsPlayer();
+        }
+
+        if (whiteNoisePlayer != null) {
+            whiteNoisePlayer.stop();
+            whiteNoisePlayer.release();
+            whiteNoisePlayer = null;
         }
 
         super.onDestroy();
-
-        //        Intent serviceIntent = new Intent(this, SleepService.class);
-        //        stopService(serviceIntent);
-        //        wl.release();
-        //        finish();
+        // Intent serviceIntent = new Intent(this, SleepService.class);
+        // stopService(serviceIntent);
+        // wl.release();
+        // finish();
     }
 
     private void playAudioUrl() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+        // if (whiteNoisePlayer.isPlaying()) {
+        //     whiteNoisePlayer.stop();
+        //     whiteNoisePlayer.release();
+        //     whiteNoisePlayer = null;
+        // }
 
         try {
             String url = words.get(wordsIndex).getAudio_url();
@@ -131,9 +138,16 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     }
 
     private void playWhiteNoiseRaw() {
-        mediaPlayer = MediaPlayer.create(SleepMode.this, R.raw.bnoise);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+        whiteNoisePlayer = MediaPlayer.create(SleepMode.this, R.raw.bnoise3);
+        whiteNoisePlayer.setVolume(0.1f, 0.1f);
+        whiteNoisePlayer.seekTo(45000);
+        whiteNoisePlayer.setLooping(true);
+        whiteNoisePlayer.start();
+    }
+
+    private void destroyWordsPlayer() {
+        mediaPlayer.release();
+        mediaPlayer = null;
     }
 
     private void loadWordsJsonRes() {

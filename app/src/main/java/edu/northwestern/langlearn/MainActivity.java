@@ -29,9 +29,12 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         sP.edit().putString("user", "corticalre").apply();
-        String strUserName = sP.getString("user", "NA");
+        sP.edit().putString("volumeWhiteNoise", "0.1").apply();
+
+        String user = sP.getString("user", "NA");
+
         Log.d("MainActivity", getBaseContext().toString());
-        Log.d("MainActivity", strUserName);
+        Log.d("MainActivity", user);
 
         // boolean bAppUpdates = sP.getBoolean("playWHitenoise", true);
         // String downloadType = sP.getString("inactivityDelay", "1");
