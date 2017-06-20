@@ -25,8 +25,6 @@ import org.jetbrains.anko.ToastsKt;
 
 
 public class SleepMode extends AppCompatActivity implements OnCompletionListener {
-    //    private int MY_DATA_CHECK_CODE = 0;
-    //    private boolean ttsInitialized = false;
     //    private PowerManager.WakeLock wl;
 
     private WordsProvider wordsProvider;
@@ -76,10 +74,6 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
         wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user); // corticalre
         wordsProvider.fetchJSONWords(this);
-
-        //        Intent checkTTSIntent = new Intent();
-        //        checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-        //        startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
 
         //        BroadcastReceiver receiver = new BroadcastReceiver() {
         //            @Override
@@ -170,27 +164,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
     //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     //        if (requestCode == MY_DATA_CHECK_CODE) {
-    //            if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
-    //                if (!ttsInitialized) {
-    //                    ttsInitialized = true;
-    //
     //                    Intent serviceIntent = new Intent(this, SleepService.class);
     //                    startService(serviceIntent);
     //                    PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
     //                    wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
     //                    wl.acquire();
-    //                }
-    //            }
-    //            else {
-    //                Intent installTTSIntent = new Intent();
-    //                installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
-    //                startActivity(installTTSIntent);
-    //            }
     //        }
     //    }
 
-    //    private void sleepFinished() {
-    //        Intent myIntent = new Intent(this, ParticipantMode.class);
-    //        startActivity(myIntent);
-    //    }
 }
