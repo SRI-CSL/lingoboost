@@ -34,16 +34,18 @@ public class ParticipantMode extends AppCompatActivity {
         }, 30000);
         String[] headers = getResources().getStringArray(R.array.headers);
         String[] descriptions = getResources().getStringArray(R.array.descriptions);
+
         SharedPreferences prefs = this.getSharedPreferences(
                 "edu.northwestern.langlearn", Context.MODE_PRIVATE);
         int stage = prefs.getInt("experimentstage", 0);
-        int lastTest=prefs.getInt("lastTestTime", -1000);
-        int today=(int)((((System.currentTimeMillis()/1000)/60)/60)/24);
+        int lastTest = prefs.getInt("lastTestTime", -1000);
+        int today=(int)((((System.currentTimeMillis() / 1000) / 60) / 60) / 24);
+
         Log.e("timediff",today+","+lastTest+","+(today-lastTest));
 
         TextView header = (TextView)findViewById(R.id.header);
         TextView text = (TextView)findViewById(R.id.text);
-        Button dButton = (Button) findViewById(R.id.debug); //button to go to debug mode
+        Button dButton = (Button)findViewById(R.id.debug); //button to go to debug mode
 
         dButton.setOnClickListener( new View.OnClickListener() {
             @Override

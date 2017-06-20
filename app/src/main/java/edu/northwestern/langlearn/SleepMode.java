@@ -4,24 +4,20 @@ package edu.northwestern.langlearn;
 //import android.speech.tts.TextToSpeech;
 //import android.net.Uri;
 //import android.os.PowerManager;
+//import android.media.MediaPlayer.OnPreparedListener;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-
-//import android.media.MediaPlayer.OnPreparedListener;
-
 import android.media.MediaPlayer;
 import android.media.AudioManager;
 import android.media.MediaPlayer.OnCompletionListener;
 
-
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.List;
-
 
 import org.jetbrains.anko.ToastsKt;
 

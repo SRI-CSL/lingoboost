@@ -1,20 +1,39 @@
 package edu.northwestern.langlearn;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Context;
+//import android.app.AlarmManager;
+//import android.app.Notification;
+//import android.app.PendingIntent;
+//import android.content.Context;
+//import android.os.SystemClock;
+//import android.widget.Toast;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
-    private SharedPreferences prefs;
+//    private SharedPreferences prefs;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case 1:
+                SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                String strUserName = sP.getString("user", "NA");
+
+                Log.d("MainActivity", strUserName);
+
+                break;
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +41,20 @@ public class MainActivity extends AppCompatActivity {
 
         Permissions.verifyStoragePermissions(this);
         setContentView(R.layout.activity_main);
-        prefs = this.getSharedPreferences("edu.northwestern.langlearn", Context.MODE_PRIVATE);
+
+//        prefs = this.getSharedPreferences("edu.northwestern.langlearn", Context.MODE_PRIVATE);
+
+        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        sP.edit().putString("user", "corticalre").apply();
+
+        String strUserName = sP.getString("user", "NA");
+
+        Log.d("MainActivity", getBaseContext().toString());
+        Log.d("MainActivity", strUserName);
+
+//        boolean bAppUpdates = sP.getBoolean("applicationUpdates", false);
+//        String downloadType = sP.getString("downloadType", "1");
 
         Button sleepButton = (Button)findViewById(R.id.sleep); // button to start sleep mode
         Button settingsButton = (Button)findViewById(R.id.settings);
@@ -40,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, MyPreferencesActivity.class);
-                startActivity(i);
+//                startActivity(i);
+                startActivityForResult(i, 1);
             }
         });
 
