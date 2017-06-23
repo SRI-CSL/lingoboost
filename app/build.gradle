@@ -26,15 +26,15 @@ android {
     lintOptions {
         abortOnError false
     }
-    sourceSets { main { java.srcDirs = ['src/main/java', 'src/main/kotlin'] } }
+    sourceSets { main { java.srcDirs = [ 'src/main/java', 'src/main/kotlin' ] } }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.0'
-    //    compile 'com.android.support:multidex:1.0.0'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version" compile "org.jetbrains.anko:anko-common:$anko_version" compile 'com.google.android.gms:play-services:8.4.0'
-    // 11.0.1 is the latest but wants the google-services.json and throws errors, google_app_id is invalid
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.anko:anko-common:$anko_version"
+    compile 'com.google.android.gms:play-services:8.4.0'
 }
 repositories {
     mavenCentral()
