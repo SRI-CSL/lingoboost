@@ -2,7 +2,7 @@ package edu.northwestern.langlearn;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
@@ -24,9 +24,11 @@ public class ActivityRecognizedService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.d("ActivityRecogition", "Handling intent in ActivityRecognizedService");
+
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-            handleDetectedActivities( result.getProbableActivities() );
+            handleDetectedActivities(result.getProbableActivities());
         }
     }
 
@@ -61,8 +63,8 @@ public class ActivityRecognizedService extends IntentService {
                     Log.e( "ActivityRecogition", "Walking: " + activity.getConfidence() );
                     if( activity.getConfidence() >= 75 ) {
                         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-                        builder.setContentText( "Are you walking?" );
-                        builder.setSmallIcon( R.mipmap.ic_launcher );
+                        builder.setContentText("Are you walking?");
+                        builder.setSmallIcon(R.mipmap.ic_launcher);
                         builder.setContentTitle( getString( R.string.app_name ) );
                         NotificationManagerCompat.from(this).notify(0, builder.build());
                     }

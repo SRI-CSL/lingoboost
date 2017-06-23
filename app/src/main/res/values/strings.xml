@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">LangLearn</string>
+    <!--<string name="google_app_id">LangLearn</string>--><!-- needed with google-services.json -->
 
 </resources>

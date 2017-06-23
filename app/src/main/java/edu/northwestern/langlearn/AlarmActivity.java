@@ -26,12 +26,12 @@ public class AlarmActivity extends BroadcastReceiver {
             int today=(int)((((System.currentTimeMillis()/1000)/60)/60)/24);
 
 
-            if (stage < 2 && (today-lastTest) >= DAYS_PER_TEST) { //don't alarm if vocab test has been completed, or if today is not a testing day.
-                Intent newIntent = new Intent(context, AlertSubject.class);
-                newIntent.putExtra("alarm_message", message);
-                newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(newIntent);
-            }
+            // if (stage < 2 && (today-lastTest) >= DAYS_PER_TEST) { //don't alarm if vocab test has been completed, or if today is not a testing day.
+            //     Intent newIntent = new Intent(context, AlertSubject.class);
+            //     newIntent.putExtra("alarm_message", message);
+            //     newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //     context.startActivity(newIntent);
+            // }
         } catch (Exception e) {
             e.printStackTrace();
 

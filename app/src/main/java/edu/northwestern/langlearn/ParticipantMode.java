@@ -21,17 +21,17 @@ public class ParticipantMode extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_participant_mode);
+        // setContentView(R.layout.activity_participant_mode);
 
         Permissions.verifyStoragePermissions(this);
 
-        final Handler handler = new Handler(); //set up a handler that will reinitialize this screen every 10 minutes (to keep updated when the sleep time windows roll around)
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ParticipantMode.super.recreate();
-            }
-        }, 30000);
+        // final Handler handler = new Handler(); //set up a handler that will reinitialize this screen every 10 minutes (to keep updated when the sleep time windows roll around)
+        // handler.postDelayed(new Runnable() {
+        //     @Override
+        //     public void run() {
+        //         ParticipantMode.super.recreate();
+        //     }
+        // }, 30000);
         String[] headers = getResources().getStringArray(R.array.headers);
         String[] descriptions = getResources().getStringArray(R.array.descriptions);
 
@@ -43,17 +43,17 @@ public class ParticipantMode extends AppCompatActivity {
 
         Log.e("timediff",today+","+lastTest+","+(today-lastTest));
 
-        TextView header = (TextView)findViewById(R.id.header);
-        TextView text = (TextView)findViewById(R.id.text);
-        Button dButton = (Button)findViewById(R.id.debug); //button to go to debug mode
+        // TextView header = (TextView)findViewById(R.id.header);
+        // TextView text = (TextView)findViewById(R.id.text);
+        // Button dButton = (Button)findViewById(R.id.debug); //button to go to debug mode
 
-        dButton.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent = new Intent(ParticipantMode.this, MainActivity.class);
-                ParticipantMode.this.startActivity(myIntent);
-            }
-        });
+        // dButton.setOnClickListener( new View.OnClickListener() {
+        //     @Override
+        //     public void onClick(View v) {
+        //         Intent myIntent = new Intent(ParticipantMode.this, MainActivity.class);
+        //         ParticipantMode.this.startActivity(myIntent);
+        //     }
+        // });
 
         //        if (stage == 0) { //first run, we need to do the initial encoding
         //            header.setText(headers[0]);
