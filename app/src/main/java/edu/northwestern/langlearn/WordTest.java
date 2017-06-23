@@ -43,7 +43,6 @@ public class WordTest extends AppCompatActivity implements OnInitListener {
     // SharedPreferences prefs;
     // FileWriter logWriter;
     //
-    // //functions for writing the log data. TODO: consolidate these into a single class that can be used across activities
     // public boolean isExternalStorageWritable() { //check to make sure we can store data on the SD card.
     //     String state = Environment.getExternalStorageState();
     //     if (Environment.MEDIA_MOUNTED.equals(state)) {

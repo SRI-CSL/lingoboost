@@ -81,31 +81,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
 
 
-
-
-        //        Button resetButton = (Button) findViewById(R.id.reset); //button to reset progress
-        //        resetButton.setOnClickListener( new View.OnClickListener() {
-        //
-        //            @Override
-        //            public void onClick(View v) {
-        //                prefs.edit().putInt("lastTestTime", (int)(((((System.currentTimeMillis() + 21600000) / 1000) / 60) / 60) / 24)).apply();
-        //            }
-        //        });
-
-        //        Button nTest = (Button) findViewById(R.id.ntest); //button to test notifications
-        //        nTest.setOnClickListener( new View.OnClickListener() {
-        //
-        //            @Override
-        //            public void onClick(View v) {
-        //                Toast.makeText(MainActivity.this, "Scheduled", Toast.LENGTH_LONG).show();
-        //                AlarmManager alarmMgr = (AlarmManager)getSystemService(ALARM_SERVICE);
-        //                Intent intent = new Intent(MainActivity.this, AlarmActivity.class);
-        //                PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0,  intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        //                //alarmMgr.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 10000, pendingIntent);
-        //                alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+10000, pendingIntent);
-        //            }
-        //        });
+        // prefs.edit().putInt("lastTestTime", (int)(((((System.currentTimeMillis() + 21600000) / 1000) / 60) / 60) / 24)).apply();
+        // Toast.makeText(MainActivity.this, "Scheduled", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -138,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
-
     //    private void scheduleNotification(Notification notification, int delay) {
     //
     //        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
@@ -147,15 +123,5 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     //        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     //
     //        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-    //        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-    //        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-    //    }
-
-    //    private Notification getNotification(String content) {
-    //        Notification.Builder builder = new Notification.Builder(this);
-    //        builder.setContentTitle("Scheduled Notification");
-    //        builder.setContentText(content);
-    //        builder.setSmallIcon(R.mipmap.ic_launcher);
-    //        return builder.build();
     //    }
 }

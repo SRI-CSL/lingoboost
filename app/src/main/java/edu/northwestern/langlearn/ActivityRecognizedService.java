@@ -1,9 +1,11 @@
 package edu.northwestern.langlearn;
 
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+// import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
@@ -33,41 +35,44 @@ public class ActivityRecognizedService extends IntentService {
     }
 
     private void handleDetectedActivities(List<DetectedActivity> probableActivities) {
-        for( DetectedActivity activity : probableActivities ) {
-            switch( activity.getType() ) {
+        String type = "Unknown";
+        String msg = "";
+
+        for (DetectedActivity activity : probableActivities) {
+            switch (activity.getType()) {
                 case DetectedActivity.IN_VEHICLE: {
                     Log.e( "ActivityRecogition", "In Vehicle: " + activity.getConfidence() );
+                    type = "In Vehicle";
                     break;
                 }
                 case DetectedActivity.ON_BICYCLE: {
                     Log.e( "ActivityRecogition", "On Bicycle: " + activity.getConfidence() );
+                    type = "On Bicycle";
                     break;
                 }
                 case DetectedActivity.ON_FOOT: {
                     Log.e( "ActivityRecogition", "On Foot: " + activity.getConfidence() );
+                    type = "On Foot";
                     break;
                 }
                 case DetectedActivity.RUNNING: {
                     Log.e( "ActivityRecogition", "Running: " + activity.getConfidence() );
+                    type = "Running";
                     break;
                 }
                 case DetectedActivity.STILL: {
                     Log.e( "ActivityRecogition", "Still: " + activity.getConfidence() );
+                    type = "Still";
                     break;
                 }
                 case DetectedActivity.TILTING: {
                     Log.e( "ActivityRecogition", "Tilting: " + activity.getConfidence() );
+                    type = "Tilting";
                     break;
                 }
                 case DetectedActivity.WALKING: {
                     Log.e( "ActivityRecogition", "Walking: " + activity.getConfidence() );
-                    if( activity.getConfidence() >= 75 ) {
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-                        builder.setContentText("Are you walking?");
-                        builder.setSmallIcon(R.mipmap.ic_launcher);
-                        builder.setContentTitle( getString( R.string.app_name ) );
-                        NotificationManagerCompat.from(this).notify(0, builder.build());
-                    }
+                    type = "Walking";
                     break;
                 }
                 case DetectedActivity.UNKNOWN: {
@@ -75,6 +80,23 @@ public class ActivityRecognizedService extends IntentService {
                     break;
                 }
             }
+
+            if (activity.getConfidence() > 0) {
+                msg += type + ": " + activity.getConfidence() + ", ";
+            }
         }
+
+        // ToastsKt.longToast(ActivityRecognizedService.this, msg); // doesn't work in the service!
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+
+        msg = msg.substring(0, msg.length() - 2);
+        builder.setContentTitle("Activity Recognized");
+        builder.setContentText(msg);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+
+        notificationManager.notify(0, builder.build());
+        // NotificationManagerCompat.from(this).notify(0, builder.build());
     }
 }
