@@ -8,11 +8,15 @@ package edu.northwestern.langlearn;
 //import android.widget.Toast;
 
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,11 +27,66 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "MainActivity";
     private static final int SETTINGS = 1;
 
     private GoogleApiClient googleApiClient;
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Bundle bundle = intent.getExtras();
+
+            Log.d(TAG, "Activity Received");
+
+            Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+
+            if (extra instanceof HashMap) {
+                @SuppressWarnings("unchecked")
+                Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+
+                Log.d(TAG, "Activity Size: " + activity.size());
+                Log.d(TAG, "Activity Size: " + activity.toString());
+            }
+
+            // if (bundle != null) {
+            //     @SuppressWarnings("unchecked")
+            //     Map<String, Integer> activity = (HashMap<String, Integer>)bundle.getSerializable(ActivityRecognizedService.ACTIVITY);
+            //
+            //     Log.d(TAG, "Activity Size: " + activity.size());
+            //     Log.d(TAG, "Activity Size: " + activity.toString());
+            // }
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
