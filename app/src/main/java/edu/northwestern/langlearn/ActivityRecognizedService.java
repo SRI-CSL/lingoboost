@@ -11,17 +11,36 @@ import android.util.Log;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 public class ActivityRecognizedService extends IntentService {
+    private static final String TAG = "ARService";
+    private List<Map> activityList;
 
     public ActivityRecognizedService() {
         super("ActivityRecognizedService");
+        // init();
     }
 
     public ActivityRecognizedService(String name) {
         super(name);
+        // init();
+    }
+
+    @Override
+    public void onCreate() {
+        Log.d(TAG, "onCreate");
+        activityList = new ArrayList<>();
+        super.onCreate();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
     }
 
     @Override
@@ -34,49 +53,52 @@ public class ActivityRecognizedService extends IntentService {
         }
     }
 
+    // @Override
+    // public IBinder onBind() {
+    //
+    // }
+
+    // private void init() {
+    //     activityList = new ArrayList<>();
+    // }
+
     private void handleDetectedActivities(List<DetectedActivity> probableActivities) {
+        Map<String, Integer> activityMap = new HashMap<>();
         String type = "Unknown";
         String msg = "";
 
         for (DetectedActivity activity : probableActivities) {
             switch (activity.getType()) {
                 case DetectedActivity.IN_VEHICLE: {
-                    Log.e( "ActivityRecogition", "In Vehicle: " + activity.getConfidence() );
+                    Log.e(TAG, "In Vehicle: " + activity.getConfidence());
                     type = "In Vehicle";
                     break;
-                }
-                case DetectedActivity.ON_BICYCLE: {
-                    Log.e( "ActivityRecogition", "On Bicycle: " + activity.getConfidence() );
+                } case DetectedActivity.ON_BICYCLE: {
+                    Log.e(TAG, "On Bicycle: " + activity.getConfidence());
                     type = "On Bicycle";
                     break;
-                }
-                case DetectedActivity.ON_FOOT: {
-                    Log.e( "ActivityRecogition", "On Foot: " + activity.getConfidence() );
+                } case DetectedActivity.ON_FOOT: {
+                    Log.e(TAG, "On Foot: " + activity.getConfidence());
                     type = "On Foot";
                     break;
-                }
-                case DetectedActivity.RUNNING: {
-                    Log.e( "ActivityRecogition", "Running: " + activity.getConfidence() );
+                } case DetectedActivity.RUNNING: {
+                    Log.e(TAG, "Running: " + activity.getConfidence());
                     type = "Running";
                     break;
-                }
-                case DetectedActivity.STILL: {
-                    Log.e( "ActivityRecogition", "Still: " + activity.getConfidence() );
+                } case DetectedActivity.STILL: {
+                    Log.e(TAG, "Still: " + activity.getConfidence());
                     type = "Still";
                     break;
-                }
-                case DetectedActivity.TILTING: {
-                    Log.e( "ActivityRecogition", "Tilting: " + activity.getConfidence() );
+                } case DetectedActivity.TILTING: {
+                    Log.e(TAG, "Tilting: " + activity.getConfidence());
                     type = "Tilting";
                     break;
-                }
-                case DetectedActivity.WALKING: {
-                    Log.e( "ActivityRecogition", "Walking: " + activity.getConfidence() );
+                } case DetectedActivity.WALKING: {
+                    Log.e(TAG, "Walking: " + activity.getConfidence());
                     type = "Walking";
                     break;
-                }
-                case DetectedActivity.UNKNOWN: {
-                    Log.e( "ActivityRecogition", "Unknown: " + activity.getConfidence() );
+                } case DetectedActivity.UNKNOWN: {
+                    Log.e(TAG, "Unknown: " + activity.getConfidence());
                     break;
                 }
             }
@@ -84,6 +106,8 @@ public class ActivityRecognizedService extends IntentService {
             if (activity.getConfidence() > 0) {
                 msg += type + ": " + activity.getConfidence() + ", ";
             }
+
+            activityMap.put(type, activity.getConfidence());
         }
 
         // ToastsKt.longToast(ActivityRecognizedService.this, msg); // doesn't work in the service!
@@ -98,5 +122,11 @@ public class ActivityRecognizedService extends IntentService {
 
         notificationManager.notify(0, builder.build());
         // NotificationManagerCompat.from(this).notify(0, builder.build());
+
+        if (activityList.size() > 100) {
+            activityList.clear();
+        }
+
+        activityList.add(activityMap);
     }
 }

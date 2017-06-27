@@ -24,14 +24,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private static final int THIRTY_MINUTE_SETTINGS = 1;
+    private static final String TAG = "MainActivity";
+    private static final int SETTINGS = 1;
 
     private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
         // Permissions.verifyStoragePermissions(this);
 
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         String user = sP.getString("user", "NA");
 
-        Log.d("MainActivity", getBaseContext().toString());
-        Log.d("MainActivity", user);
+        Log.d(TAG, getBaseContext().toString());
+        Log.d(TAG, user);
 
         // boolean bAppUpdates = sP.getBoolean("playWHitenoise", true);
         // String downloadType = sP.getString("inactivityDelay", "1");
@@ -56,14 +56,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .build();
         googleApiClient.connect();
 
-
-
-
         Button sleepButton = (Button)findViewById(R.id.sleep); // button to start sleep mode
         Button settingsButton = (Button)findViewById(R.id.settings);
 
         sleepButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, SleepMode.class);
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, PrefActivity.class);
                 // startActivity(i);
-                startActivityForResult(i, 1);
+                startActivityForResult(i, SETTINGS);
             }
         });
 
@@ -90,11 +86,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case THIRTY_MINUTE_SETTINGS:
+            case SETTINGS:
                 SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                 String user = sP.getString("user", "NA");
 
-                Log.d("MainActivity", user);
+                Log.d(TAG, "Settings User: " + user);
                 break;
         }
     }
