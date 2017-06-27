@@ -34,9 +34,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "MainActivity";
     private static final int SETTINGS = 1;
-
     private GoogleApiClient googleApiClient;
-
     private BroadcastReceiver receiver = new BroadcastReceiver() {
 
         @Override
@@ -53,6 +51,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             }
         }
     };
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Intent intent = new Intent( this, ActivityRecognizedService.class );
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 4000, pendingIntent);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
 
     @Override
     protected void onStart() {
@@ -150,21 +163,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 Log.d(TAG, "Settings User: " + user);
                 break;
         }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Intent intent = new Intent( this, ActivityRecognizedService.class );
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 4000, pendingIntent);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
     /**
