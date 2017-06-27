@@ -40,9 +40,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Bundle bundle = intent.getExtras();
-
-            Log.d(TAG, "Activity Received");
+            Log.d(TAG, "onReceive");
 
             Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
 
@@ -50,17 +48,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 @SuppressWarnings("unchecked")
                 Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
 
-                Log.d(TAG, "Activity Size: " + activity.size());
-                Log.d(TAG, "Activity Size: " + activity.toString());
+                Log.d(TAG, "Activity: " + activity.toString());
             }
-
-            // if (bundle != null) {
-            //     @SuppressWarnings("unchecked")
-            //     Map<String, Integer> activity = (HashMap<String, Integer>)bundle.getSerializable(ActivityRecognizedService.ACTIVITY);
-            //
-            //     Log.d(TAG, "Activity Size: " + activity.size());
-            //     Log.d(TAG, "Activity Size: " + activity.toString());
-            // }
         }
     };
 
@@ -168,15 +157,4 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
-
-
-    //    private void scheduleNotification(Notification notification, int delay) {
-    //
-    //        Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-    //        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-    //        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-    //        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-    //
-    //        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-    //    }
 }
