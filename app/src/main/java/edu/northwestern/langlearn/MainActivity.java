@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
 
@@ -55,30 +56,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "onStart");
         super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
     }
 
     @Override
     protected void onStop() {
+        Log.d(TAG, "onStop");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         super.onStop();
     }
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume");
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
     }
 
     @Override
     protected void onPause() {
+        Log.d(TAG, "onPause");
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // Permissions.verifyStoragePermissions(this);
@@ -96,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // boolean bAppUpdates = sP.getBoolean("playWHitenoise", true);
         // String downloadType = sP.getString("inactivityDelay", "1");
 
+        if (!checkPlayServices()) {
+            return;
+        }
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(ActivityRecognition.API)
@@ -156,5 +165,27 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
+
+    /**
+     * Method to check whether to check Google Play Services is up to date.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(this);
+
+        if (result != ConnectionResult.SUCCESS) {
+            int PLAY_SERVICES_REQUEST_CODE = 101;
+
+            // Google Play Services app is not available or version is not up to date. Error the error condition here
+            if (googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(this, result, PLAY_SERVICES_REQUEST_CODE).show();
+            }
+
+            // Google Play Services app is not available or version is not up to date. Error the error condition here
+            return false;
+        }
+
+        return true;
     }
 }
