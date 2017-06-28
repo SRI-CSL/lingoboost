@@ -32,8 +32,8 @@ public class ActivityRecognizedService extends IntentService {
 
     @Override
     public void onCreate() {
-        super.onCreate();
         Log.d(TAG, "onCreate");
+        super.onCreate();
         setIntentRedelivery(true);
     }
 
@@ -66,35 +66,35 @@ public class ActivityRecognizedService extends IntentService {
         for (DetectedActivity activity : probableActivities) {
             switch (activity.getType()) {
                 case DetectedActivity.IN_VEHICLE: {
-                    Log.e(TAG, "In Vehicle: " + activity.getConfidence());
+                    // Log.e(TAG, "In Vehicle: " + activity.getConfidence());
                     type = "In Vehicle";
                     break;
                 } case DetectedActivity.ON_BICYCLE: {
-                    Log.e(TAG, "On Bicycle: " + activity.getConfidence());
+                    // Log.e(TAG, "On Bicycle: " + activity.getConfidence());
                     type = "On Bicycle";
                     break;
                 } case DetectedActivity.ON_FOOT: {
-                    Log.e(TAG, "On Foot: " + activity.getConfidence());
+                    // Log.e(TAG, "On Foot: " + activity.getConfidence());
                     type = "On Foot";
                     break;
                 } case DetectedActivity.RUNNING: {
-                    Log.e(TAG, "Running: " + activity.getConfidence());
+                    // Log.e(TAG, "Running: " + activity.getConfidence());
                     type = "Running";
                     break;
                 } case DetectedActivity.STILL: {
-                    Log.e(TAG, "Still: " + activity.getConfidence());
+                    // Log.e(TAG, "Still: " + activity.getConfidence());
                     type = "Still";
                     break;
                 } case DetectedActivity.TILTING: {
-                    Log.e(TAG, "Tilting: " + activity.getConfidence());
+                    // Log.e(TAG, "Tilting: " + activity.getConfidence());
                     type = "Tilting";
                     break;
                 } case DetectedActivity.WALKING: {
-                    Log.e(TAG, "Walking: " + activity.getConfidence());
+                    // Log.e(TAG, "Walking: " + activity.getConfidence());
                     type = "Walking";
                     break;
                 } case DetectedActivity.UNKNOWN: {
-                    Log.e(TAG, "Unknown: " + activity.getConfidence());
+                    // Log.e(TAG, "Unknown: " + activity.getConfidence());
                     break;
                 }
             }

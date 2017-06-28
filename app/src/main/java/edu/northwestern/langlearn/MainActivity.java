@@ -34,26 +34,14 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "MainActivity";
     private static final int SETTINGS = 1;
+    @Nullable
     private GoogleApiClient googleApiClient;
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive");
-
-            Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
-
-            if (extra instanceof HashMap) {
-                @SuppressWarnings("unchecked")
-                Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
-
-                Log.d(TAG, "Activity: " + activity.toString());
-            }
-        }
-    };
+    @Nullable
+    private BroadcastReceiver receiver;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG, "onConnected");
         Intent intent = new Intent( this, ActivityRecognizedService.class );
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 4000, pendingIntent);
@@ -81,24 +69,39 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onStop();
     }
 
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume");
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
-    }
+    // @Override
+    // protected void onResume() {
+    //     Log.d(TAG, "onResume");
+    //     super.onResume();
+    //     LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
+    // }
 
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "onPause");
-        super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-    }
+    // @Override
+    // protected void onPause() {
+    //     Log.d(TAG, "onPause");
+    //     super.onPause();
+    //     LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    // }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        receiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "onReceive");
+
+                Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+
+                if (extra instanceof HashMap) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                    Log.d(TAG, "Activity: " + activity.toString());
+                }
+            }
+        };
         setContentView(R.layout.activity_main);
         // Permissions.verifyStoragePermissions(this);
 
@@ -107,10 +110,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         sP.edit().putString("user", "corticalre").apply();
         sP.edit().putString("volumeWhiteNoise", "0.1").apply();
 
-        String user = sP.getString("user", "NA");
-
-        Log.d(TAG, getBaseContext().toString());
-        Log.d(TAG, user);
+        // String user = sP.getString("user", "NA");
+        //
+        // Log.d(TAG, getBaseContext().toString());
+        // Log.d(TAG, user);
 
         // boolean bAppUpdates = sP.getBoolean("playWHitenoise", true);
         // String downloadType = sP.getString("inactivityDelay", "1");

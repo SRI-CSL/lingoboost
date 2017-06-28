@@ -8,6 +8,8 @@ import java.net.URL
 
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.net.UnknownHostException
+
 //import org.jetbrains.anko.longToast // can't do this, not an activity
 
 data class Word(val norm: String, val audio_url: String, val word: String)
@@ -15,10 +17,14 @@ data class Word(val norm: String, val audio_url: String, val word: String)
 class WordsProvider(val jsonUrl: String) {
     fun fetchJSONWords(sleepModeActivity: SleepMode): Unit {
         doAsync {
-            val json = URL(jsonUrl).readText()
+            try {
+                val json = URL(jsonUrl).readText()
 
-            Log.d(javaClass.simpleName, json.length.toString())
-            uiThread { sleepModeActivity.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
+                Log.d(javaClass.simpleName, json.length.toString())
+                uiThread { sleepModeActivity.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
+            } catch (e: UnknownHostException) {
+                Log.e(javaClass.simpleName, e.message)
+            }
         }
     }
 

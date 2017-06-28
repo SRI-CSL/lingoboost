@@ -1,15 +1,15 @@
 package edu.northwestern.langlearn;
 
-//import android.content.Intent;
-//import android.speech.tts.TextToSpeech;
-//import android.net.Uri;
-//import android.os.PowerManager;
-//import android.media.MediaPlayer.OnPreparedListener;
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -19,22 +19,26 @@ import android.media.MediaPlayer.OnCompletionListener;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jetbrains.anko.ToastsKt;
 
 
 public class SleepMode extends AppCompatActivity implements OnCompletionListener {
-    //    private PowerManager.WakeLock wl;
+    private static final String TAG = "SleepMode";
 
+    // private PowerManager.WakeLock wl;
     private WordsProvider wordsProvider;
     private MediaPlayer mediaPlayer;
     private MediaPlayer whiteNoisePlayer;
     private String jsonWords;
     private List<Word> words;
     private Handler handler = new Handler();
-
     private int wordsIndex = 0;
+    @Nullable
+    private BroadcastReceiver receiver;
 
     private Runnable runnable = new Runnable() {
         @Override
@@ -49,22 +53,53 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     };
 
     public void updateJSONWords(String json) {
+        Log.d(TAG, "updateJSONWords");
         this.jsonWords = json;
         this.words = wordsProvider.parseJSONWords(jsonWords);
         ToastsKt.longToast(SleepMode.this, "Words Updated");
-
-        Log.d("SleepMode", "words.size: " + words.size());
+        Log.d(TAG, "words.size: " + words.size());
         handler.postDelayed(runnable, 5000);
     }
 
     public void onCompletion(MediaPlayer mp) {
-        Log.d("SleeMode", "nediaPlayer completion");
+        Log.d(TAG, "onCompletion");
         destroyWordsPlayer();
     }
 
     @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
+        receiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "onReceive");
+
+                Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+
+                if (extra instanceof HashMap) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                    Log.d(TAG, "Activity: " + activity.toString());
+                }
+            }
+        };
+
         setContentView(R.layout.activity_sleep_mode);
         playWhiteNoiseRaw();
 
@@ -73,20 +108,11 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
         wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user); // corticalre
         wordsProvider.fetchJSONWords(this);
-
-        //        BroadcastReceiver receiver = new BroadcastReceiver() {
-        //            @Override
-        //            public void onReceive(Context context, Intent intent) {
-        //                sleepMode.this.sleepFinished();
-        //            }
-        //        };
-
-        //        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(SLEEP_FINISHED_INTENT));
     }
 
     @Override
     protected void onDestroy() {
-        Log.d("sleepMode", "onDestroy");
+        Log.d(TAG, "onDestroy");
 
         if (handler != null) {
             handler.removeCallbacks(runnable);
@@ -115,17 +141,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     }
 
     private void playAudioUrl() {
-        // if (whiteNoisePlayer.isPlaying()) {
-        //     whiteNoisePlayer.stop();
-        //     whiteNoisePlayer.release();
-        //     whiteNoisePlayer = null;
-        // }
+        Log.d(TAG, "playAudioUrl");
 
         try {
             String url = words.get(wordsIndex).getAudio_url();
 
-            Log.d("SleepMode", words.get(wordsIndex).getAudio_url());
-
+            Log.d(TAG, words.get(wordsIndex).getAudio_url());
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(url);
@@ -138,6 +159,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     }
 
     private void playWhiteNoiseRaw() {
+        Log.d(TAG, "playWhiteNoiseRaw");
         whiteNoisePlayer = MediaPlayer.create(SleepMode.this, R.raw.bnoise3);
         whiteNoisePlayer.setVolume(0.1f, 0.1f);
         whiteNoisePlayer.seekTo(45000);
@@ -146,6 +168,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     }
 
     private void destroyWordsPlayer() {
+        Log.d(TAG, "destroyWordsPlayer");
         mediaPlayer.release();
         mediaPlayer = null;
     }
