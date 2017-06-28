@@ -1,12 +1,5 @@
 package edu.northwestern.langlearn;
 
-//import android.app.AlarmManager;
-//import android.app.Notification;
-//import android.app.PendingIntent;
-//import android.content.Context;
-//import android.os.SystemClock;
-//import android.widget.Toast;
-
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -43,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
 
-        // Intent intent = new Intent(this, ActivityRecognizedService.class);
         Intent intent = new Intent(this, ActivityRecognizedIntentServices.class);
 
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -62,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
-        // LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
         LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
     }
 
@@ -97,12 +88,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "onReceive");
 
-                // Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
                 Object extra = intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
 
                 if (extra instanceof HashMap) {
                     @SuppressWarnings("unchecked")
-                    // Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
                     Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
                     Log.d(TAG, "Activity: " + activity.toString());
                 }

@@ -5,11 +5,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 
-/**
- * Created by ttm on 2/24/17.
- */
-
-class Permissions {
+public class Permissions {
 
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
