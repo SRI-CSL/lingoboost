@@ -42,7 +42,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.d(TAG, "onConnected");
-        Intent intent = new Intent( this, ActivityRecognizedService.class );
+
+        // Intent intent = new Intent(this, ActivityRecognizedService.class);
+        Intent intent = new Intent(this, ActivityRecognizedIntentServices.class);
+
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 4000, pendingIntent);
     }
@@ -59,7 +62,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
+        // LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
     }
 
     @Override
@@ -93,11 +97,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "onReceive");
 
-                Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                // Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                Object extra = intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
 
                 if (extra instanceof HashMap) {
                     @SuppressWarnings("unchecked")
-                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                    // Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
                     Log.d(TAG, "Activity: " + activity.toString());
                 }
             }
@@ -168,9 +174,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
     }
 
-    /**
-     * Method to check whether to check Google Play Services is up to date.
-     */
     private boolean checkPlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(this);

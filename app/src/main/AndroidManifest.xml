@@ -29,7 +29,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".PrefActivity" />
-        <service android:name=".ActivityRecognizedService" />
+        <service android:name=".ActivityRecognizedIntentServices" />
+        <!--<service android:name=".ActivityRecognizedService" />-->
 
         <!--
         activity

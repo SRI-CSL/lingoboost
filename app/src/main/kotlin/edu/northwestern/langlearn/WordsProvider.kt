@@ -53,7 +53,6 @@ class WordsProvider(val jsonUrl: String) {
                 val url = wordJson.getJSONObject(i).getString("audio_url")
                 val w = wordJson.getJSONObject(i).getString("word")
                 val word = Word(n, url, w)
-                // word.word = w // word is immutable, so we can't do this, not a var
 
                 Log.d(javaClass.simpleName, "$i $word")
                 Words.add(word)

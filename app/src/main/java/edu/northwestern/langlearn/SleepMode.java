@@ -70,7 +70,8 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
+        // LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
     }
 
     @Override
@@ -90,11 +91,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "onReceive");
 
-                Object extra = intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                Object extra = intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
 
                 if (extra instanceof HashMap) {
                     @SuppressWarnings("unchecked")
-                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                    // Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedService.ACTIVITY);
+                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
                     Log.d(TAG, "Activity: " + activity.toString());
                 }
             }

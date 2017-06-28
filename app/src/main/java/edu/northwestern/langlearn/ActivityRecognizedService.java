@@ -14,10 +14,8 @@ import android.util.Log;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
-// import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-// import java.util.Map;
 
 public class ActivityRecognizedService extends IntentService {
     public static final String ACTIVITY_NOTIFICATION = "com.sri.csl.langlearn.receiver";
@@ -50,10 +48,11 @@ public class ActivityRecognizedService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d("ActivityRecogition", "Handling intent in ActivityRecognizedService");
+        Log.d(TAG, "Handling intent in ActivityRecognizedService");
 
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
+
             handleDetectedActivities(result.getProbableActivities());
         }
     }
@@ -105,8 +104,6 @@ public class ActivityRecognizedService extends IntentService {
             }
         }
 
-        // ToastsKt.longToast(ActivityRecognizedService.this, msg); // doesn't work in the service!
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -114,13 +111,13 @@ public class ActivityRecognizedService extends IntentService {
         builder.setContentTitle("Activity Recognized");
         builder.setContentText(msg);
         builder.setSmallIcon(R.mipmap.ic_launcher);
-
         notificationManager.notify(0, builder.build()); // NotificationManagerCompat.from(this).notify(0, builder.build());
         publishResults(activityMap);
     }
 
     private void publishResults(HashMap<String, Integer> activityMap) {
         Intent intent = new Intent(ACTIVITY_NOTIFICATION);
+
         intent.putExtra(ACTIVITY, activityMap);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
