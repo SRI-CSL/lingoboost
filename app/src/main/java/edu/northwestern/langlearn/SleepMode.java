@@ -35,6 +35,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private String jsonWords;
     private List<Word> words;
     private Handler handler = new Handler();
+    private long delayMillis = 0;
     private int wordsIndex = 0;
     @Nullable
     private BroadcastReceiver receiver;
@@ -46,7 +47,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
                 ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
                 playAudioUrl();
                 wordsIndex++;
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, delayMillis);
             }
         }
     };
@@ -57,7 +58,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         this.words = wordsProvider.parseJSONWords(jsonWords);
         ToastsKt.longToast(SleepMode.this, "Words Updated");
         Log.d(TAG, "words.size: " + words.size());
-        handler.postDelayed(runnable, 5000);
+        handler.postDelayed(runnable, delayMillis);
     }
 
     public void onCompletion(MediaPlayer mp) {
@@ -69,7 +70,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
     }
 
     @Override
@@ -104,7 +105,9 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String user = sP.getString("user", "NA");
+        String delayListValue = sP.getString("inactivityDelay", "1");
 
+        setDelayMillisFromPrefs(delayListValue);
         wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user); // corticalre
         wordsProvider.fetchJSONWords(this);
     }
@@ -191,6 +194,24 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
          mediaPlayer.start();
     }
 
+    private void setDelayMillisFromPrefs(String delayListValue) {
+        long minutes;
+
+        switch (delayListValue) {
+            case "2":
+                minutes = 45;
+                break;
+            case "3":
+                minutes = 15;
+                break;
+            default:
+                minutes = 30;
+        }
+
+        delayMillis = minutes * 60 * 1000;
+        Log.d(TAG, "delayMillis: " + delayMillis);
+    }
+
     // prevent accidental press of the back button from exiting sleep mode.
     // @Override
     // public void onBackPressed() {
@@ -198,14 +219,14 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     //    // super.onBackPressed();
     // }
 
-    //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //        if (requestCode == MY_DATA_CHECK_CODE) {
-    //                    Intent serviceIntent = new Intent(this, SleepService.class);
-    //                    startService(serviceIntent);
-    //                    PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-    //                    wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
-    //                    wl.acquire();
-    //        }
-    //    }
+    // protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //     if (requestCode == MY_DATA_CHECK_CODE) {
+    //                 Intent serviceIntent = new Intent(this, SleepService.class);
+    //                 startService(serviceIntent);
+    //                 PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+    //                 wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
+    //                 wl.acquire();
+    //     }
+    // }
 
 }

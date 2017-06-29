@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver), new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
     }
 
     @Override
@@ -110,8 +110,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         // Log.d(TAG, getBaseContext().toString());
         // Log.d(TAG, user);
 
-        // boolean bAppUpdates = sP.getBoolean("playWHitenoise", true);
-        // String downloadType = sP.getString("inactivityDelay", "1");
+        // boolean playWHitenoise = sP.getBoolean("playWHitenoise", true);
 
         if (!checkPlayServices()) {
             return;
