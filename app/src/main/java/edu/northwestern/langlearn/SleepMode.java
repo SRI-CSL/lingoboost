@@ -27,6 +27,7 @@ import org.jetbrains.anko.ToastsKt;
 
 public class SleepMode extends AppCompatActivity implements OnCompletionListener {
     private static final String TAG = "SleepMode";
+    private static final int BASE_STILL_ACCEPTANCE_CONFIDENCE = 60;
 
     // private PowerManager.WakeLock wl;
     private WordsProvider wordsProvider;
@@ -37,18 +38,20 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private Handler handler = new Handler();
     private long delayMillis = 0;
     private int wordsIndex = 0;
+    private HashMap<String, Integer> lastActivity;
     @Nullable
     private BroadcastReceiver receiver;
 
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (wordsIndex < words.size()) {
-                ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
-                playAudioUrl();
-                wordsIndex++;
-                handler.postDelayed(this, delayMillis);
-            }
+            checkAndPlayWordsIfStill();
+            // if (wordsIndex < words.size()) {
+            //     ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+            //     playAudioUrl();
+            //     wordsIndex++;
+            //     handler.postDelayed(this, delayMillis);
+            // }
         }
     };
 
@@ -63,7 +66,9 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "onCompletion");
+        wordsIndex++;
         destroyWordsPlayer();
+        checkAndPlayWordsIfStill();
     }
 
     @Override
@@ -84,28 +89,15 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        receiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "onReceive");
-
-                Object extra = intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
-
-                if (extra instanceof HashMap) {
-                    @SuppressWarnings("unchecked")
-                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
-                    Log.d(TAG, "Activity: " + activity.toString());
-                }
-            }
-        };
-
         setContentView(R.layout.activity_sleep_mode);
+        createReceiver();
         playWhiteNoiseRaw();
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String user = sP.getString("user", "NA");
         String delayListValue = sP.getString("inactivityDelay", "1");
+
+        sP.edit().putBoolean("toastActivityRecognized", false).apply();
 
         setDelayMillisFromPrefs(delayListValue);
         wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user); // corticalre
@@ -194,6 +186,24 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
          mediaPlayer.start();
     }
 
+    @SuppressWarnings("unchecked")
+    private void createReceiver() {
+        receiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "onReceive");
+
+                Object extra = intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
+
+                if (extra instanceof HashMap) {
+                    lastActivity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
+                    Log.d(TAG, "Activity: " + lastActivity.toString());
+                }
+            }
+        };
+    }
+
     private void setDelayMillisFromPrefs(String delayListValue) {
         long minutes;
 
@@ -204,28 +214,42 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
             case "3":
                 minutes = 15;
                 break;
-            default:
-                minutes = 30;
+            default: // "1"
+                // minutes = 30;
+                minutes = 1;
         }
 
         delayMillis = minutes * 60 * 1000;
         Log.d(TAG, "delayMillis: " + delayMillis);
     }
 
+    private void checkAndPlayWordsIfStill() {
+        Log.d(TAG, "checkAndPlayWordsIfStill");
+
+        if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
+                lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
+            if (wordsIndex < words.size()) {
+                ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+                playAudioUrl();
+            }
+        } else {
+            handler.postDelayed(runnable, delayMillis);
+        }
+    }
+
     // prevent accidental press of the back button from exiting sleep mode.
     // @Override
     // public void onBackPressed() {
-    //    return;
     //    // super.onBackPressed();
     // }
 
     // protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     //     if (requestCode == MY_DATA_CHECK_CODE) {
-    //                 Intent serviceIntent = new Intent(this, SleepService.class);
-    //                 startService(serviceIntent);
-    //                 PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-    //                 wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
-    //                 wl.acquire();
+    //             Intent serviceIntent = new Intent(this, SleepService.class);
+    //             startService(serviceIntent);
+    //             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+    //             wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
+    //             wl.acquire();
     //     }
     // }
 

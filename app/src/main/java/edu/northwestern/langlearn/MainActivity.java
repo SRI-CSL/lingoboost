@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private static final int SETTINGS = 1;
     @Nullable
     private GoogleApiClient googleApiClient;
+    private PendingIntent activityPendingIntent;
     @Nullable
     private BroadcastReceiver receiver;
 
@@ -38,8 +39,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         Intent intent = new Intent(this, ActivityRecognizedIntentServices.class);
 
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 4000, pendingIntent);
+        activityPendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(googleApiClient, 4000, activityPendingIntent);
     }
 
     @Override
@@ -82,33 +83,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-        receiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "onReceive");
-
-                Object extra = intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
-
-                if (extra instanceof HashMap) {
-                    @SuppressWarnings("unchecked")
-                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
-                    Log.d(TAG, "Activity: " + activity.toString());
-                }
-            }
-        };
         setContentView(R.layout.activity_main);
+        createReceiver();
         // Permissions.verifyStoragePermissions(this);
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        sP.edit().putString("user", "corticalre").apply();
         sP.edit().putString("volumeWhiteNoise", "0.1").apply();
+        sP.edit().putBoolean("toastActivityRecognized", true).apply();
 
-        // String user = sP.getString("user", "NA");
-        //
-        // Log.d(TAG, getBaseContext().toString());
-        // Log.d(TAG, user);
+        if (sP.getString("user", "NA") == "NA") {
+            Log.d(TAG, "Setting the defualt user in prefs");
+            sP.edit().putString("user", "corticalre").apply();
+        }
 
         // boolean playWHitenoise = sP.getBoolean("playWHitenoise", true);
 
@@ -145,7 +132,22 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         // prefs.edit().putInt("lastTestTime", (int)(((((System.currentTimeMillis() + 21600000) / 1000) / 60) / 60) / 24)).apply();
-        // Toast.makeText(MainActivity.this, "Scheduled", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+
+        if (googleApiClient != null) {
+            Log.d(TAG, "Unregister and disconnect the GoogleApiClient");
+            ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(googleApiClient, activityPendingIntent);
+            googleApiClient.unregisterConnectionCallbacks(this);
+            googleApiClient.disconnect();
+            googleApiClient = null;
+            activityPendingIntent = null;
+        }
+
+        super.onDestroy();
     }
 
     @Override
@@ -179,5 +181,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         return true;
+    }
+
+    private void createReceiver() {
+        receiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "onReceive");
+
+                Object extra = intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
+
+                if (extra instanceof HashMap) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
+                    Log.d(TAG, "Activity: " + activity.toString());
+                }
+
+            }
+        };
     }
 }

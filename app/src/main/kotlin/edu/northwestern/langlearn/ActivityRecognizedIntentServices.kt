@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.preference.PreferenceManager
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.NotificationCompat
 import android.util.Log
@@ -20,13 +21,20 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
 
         const val ACTIVITY_NOTIFICATION = "com.sri.csl.langlearn.receiver"
         const val ACTIVITY = "activity";
-        const val CONFIDENCE_BASE_REPORTING_LEVEL = 0;
+        const val CONFIDENCE_BASE_TRACK_LEVEL = 0;
+        const val STILL = "Still"
     }
+
+    private var toastActivityRecognized: Boolean = true
 
     override fun onCreate() {
         Log.d(TAG, "onCreate")
         super.onCreate()
         setIntentRedelivery(true)
+
+        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
+
+        toastActivityRecognized = sP.getBoolean("toastActivityRecognized", true)
     }
 
     override fun onDestroy() {
@@ -56,19 +64,19 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
                 DetectedActivity.ON_BICYCLE -> type = "On Bicycle"
                 DetectedActivity.ON_FOOT -> type = "On Foot"
                 DetectedActivity.RUNNING -> type = "Running"
-                DetectedActivity.STILL -> type = "Still"
+                DetectedActivity.STILL -> type = ActivityRecognizedIntentServices.STILL
                 DetectedActivity.TILTING -> type = "Tilting"
                 DetectedActivity.WALKING -> type = "Walking"
                 DetectedActivity.UNKNOWN -> type = "Unknown"
             }
 
-            if (activity.getConfidence() > CONFIDENCE_BASE_REPORTING_LEVEL) {
+            if (activity.getConfidence() > CONFIDENCE_BASE_TRACK_LEVEL) {
                 msg = """${if (!msg.isEmpty()) "$msg, " else ""}$type: ${activity.getConfidence()}"""
                 activityMap.put(type, activity.getConfidence())
             }
         }
 
-        doAsync {
+        if (toastActivityRecognized) doAsync {
             uiThread { longToast(msg) }
         }
 
