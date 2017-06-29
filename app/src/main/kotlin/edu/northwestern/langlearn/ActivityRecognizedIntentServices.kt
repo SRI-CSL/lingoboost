@@ -25,7 +25,8 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
         const val STILL = "Still"
     }
 
-    private var toastActivityRecognized: Boolean = true
+    var toastActivityRecognized: Boolean = true
+        private set
 
     override fun onCreate() {
         Log.d(TAG, "onCreate")

@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jetbrains.anko.ToastsKt;
 
@@ -35,23 +34,19 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private MediaPlayer whiteNoisePlayer;
     private String jsonWords;
     private List<Word> words;
-    private Handler handler = new Handler();
+    private Handler playWordsIfStillHandler = new Handler();
+    private Handler pauseBetweenWordsHandler = new Handler();
     private long delayMillis = 0;
+    private long delayBetweenWords = 5000; // 5s
     private int wordsIndex = 0;
     private HashMap<String, Integer> lastActivity;
     @Nullable
     private BroadcastReceiver receiver;
 
-    private Runnable runnable = new Runnable() {
+    private Runnable checkPlayWordsIfStillRunner = new Runnable() {
         @Override
         public void run() {
             checkAndPlayWordsIfStill();
-            // if (wordsIndex < words.size()) {
-            //     ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
-            //     playAudioUrl();
-            //     wordsIndex++;
-            //     handler.postDelayed(this, delayMillis);
-            // }
         }
     };
 
@@ -61,14 +56,14 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         this.words = wordsProvider.parseJSONWords(jsonWords);
         ToastsKt.longToast(SleepMode.this, "Words Updated");
         Log.d(TAG, "words.size: " + words.size());
-        handler.postDelayed(runnable, delayMillis);
+        playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
     }
 
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "onCompletion");
         wordsIndex++;
         destroyWordsPlayer();
-        checkAndPlayWordsIfStill();
+        pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
     }
 
     @Override
@@ -108,9 +103,14 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
 
-        if (handler != null) {
-            handler.removeCallbacks(runnable);
-            handler = null;
+        if (playWordsIfStillHandler != null) {
+            playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+            playWordsIfStillHandler = null;
+        }
+
+        if (pauseBetweenWordsHandler != null) {
+            pauseBetweenWordsHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+            pauseBetweenWordsHandler = null;
         }
 
         if (mediaPlayer != null) {
@@ -128,8 +128,6 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         }
 
         super.onDestroy();
-        // Intent serviceIntent = new Intent(this, SleepService.class);
-        // stopService(serviceIntent);
         // wl.release();
         // finish();
     }
@@ -215,8 +213,8 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
                 minutes = 15;
                 break;
             default: // "1"
-                // minutes = 30;
-                minutes = 1;
+                minutes = 30;
+                // minutes = 1; // local testing
         }
 
         delayMillis = minutes * 60 * 1000;
@@ -226,14 +224,15 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
 
-        if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
-                lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
+        // lastActivity == null means no activity made it to this activity, so it most likely is Still: 100 per Google docs
+        if (lastActivity == null || (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
+                lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE)) {
             if (wordsIndex < words.size()) {
                 ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
                 playAudioUrl();
             }
         } else {
-            handler.postDelayed(runnable, delayMillis);
+            playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
         }
     }
 

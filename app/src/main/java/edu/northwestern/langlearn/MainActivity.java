@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
+
+        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        sP.edit().putBoolean("toastActivityRecognized", true).apply();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
     }
 
@@ -90,14 +94,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         sP.edit().putString("volumeWhiteNoise", "0.1").apply();
-        sP.edit().putBoolean("toastActivityRecognized", true).apply();
 
         if (sP.getString("user", "NA") == "NA") {
             Log.d(TAG, "Setting the defualt user in prefs");
             sP.edit().putString("user", "corticalre").apply();
         }
-
-        // boolean playWHitenoise = sP.getBoolean("playWHitenoise", true);
 
         if (!checkPlayServices()) {
             return;
