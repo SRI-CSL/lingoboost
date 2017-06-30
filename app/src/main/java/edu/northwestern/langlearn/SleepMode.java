@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.jetbrains.anko.ToastsKt;
+import org.jetbrains.annotations.NotNull;
 
 public class SleepMode extends AppCompatActivity implements OnCompletionListener {
     private static final String TAG = "SleepMode";
@@ -38,6 +39,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private Handler pauseBetweenWordsHandler = new Handler();
     private long delayMillis = 0;
     private long delayBetweenWords = 5000; // 5s
+    private float rightAndLeftWhiteNoiseVolume = 0.1f;
     private int wordsIndex = 0;
     private HashMap<String, Integer> lastActivity;
     @Nullable
@@ -86,15 +88,17 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_mode);
         createReceiver();
-        playWhiteNoiseRaw();
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String user = sP.getString("user", "NA");
         String delayListValue = sP.getString("inactivityDelay", "1");
+        String whiteNoiseVolume = sP.getString("volumeWhiteNoise", "0.1");
 
         sP.edit().putBoolean("toastActivityRecognized", false).apply();
 
         setDelayMillisFromPrefs(delayListValue);
+        setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
+        playWhiteNoiseRaw();
         wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user); // corticalre
         wordsProvider.fetchJSONWords(this);
     }
@@ -132,6 +136,24 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         // finish();
     }
 
+    private void checkAndPlayWordsIfStill() {
+        Log.d(TAG, "checkAndPlayWordsIfStill");
+
+        // lastActivity == null means no activity made it to this activity, so it most likely is Still: 100 per Google docs
+        if (lastActivity == null || (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
+                lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE)) {
+            if (wordsIndex >= words.size()) {
+                Log.d(TAG, "Repeating the words list, reached the end");
+                wordsIndex = 0;
+            }
+
+            ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+            playAudioUrl();
+        } else {
+            playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+        }
+    }
+
     private void playAudioUrl() {
         Log.d(TAG, "playAudioUrl");
 
@@ -153,7 +175,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private void playWhiteNoiseRaw() {
         Log.d(TAG, "playWhiteNoiseRaw");
         whiteNoisePlayer = MediaPlayer.create(SleepMode.this, R.raw.bnoise3);
-        whiteNoisePlayer.setVolume(0.1f, 0.1f);
+        whiteNoisePlayer.setVolume(rightAndLeftWhiteNoiseVolume, rightAndLeftWhiteNoiseVolume);
         whiteNoisePlayer.seekTo(45000);
         whiteNoisePlayer.setLooping(true);
         whiteNoisePlayer.start();
@@ -224,21 +246,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         Log.d(TAG, "delayMillis: " + delayMillis);
     }
 
-    private void checkAndPlayWordsIfStill() {
-        Log.d(TAG, "checkAndPlayWordsIfStill");
-
-        // lastActivity == null means no activity made it to this activity, so it most likely is Still: 100 per Google docs
-        if (lastActivity == null || (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
-                lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE)) {
-            if (wordsIndex >= words.size()) {
-                Log.d(TAG, "Repeating the words list, reached the end");
-                wordsIndex = 0;
-            }
-
-            ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
-            playAudioUrl();
-        } else {
-            playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+    private void setWhiteNoiseVolumeFromPrefs(@NotNull String volume) {
+        try {
+            rightAndLeftWhiteNoiseVolume = Float.parseFloat(volume);
+            Log.d(TAG, "rightAndLeftWhiteNoiseVolume: " + rightAndLeftWhiteNoiseVolume);
+        } catch (NumberFormatException ex) {
+            Log.w(TAG, ex.getMessage());
         }
     }
 
