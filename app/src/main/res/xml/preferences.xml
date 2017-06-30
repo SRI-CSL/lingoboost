@@ -11,15 +11,9 @@
                       android:summary="This option changes the volume of the background white noise."
                       android:key="volumeWhiteNoise" />
   <ListPreference     android:title="Inactivity Delay"
-                      android:summary="Select the inactibity period before word play"
+                      android:summary="Select the inactivity period before word play"
                       android:key="inactivityDelay"
                       android:defaultValue="1"
                       android:entries="@array/delayListArray"
                       android:entryValues="@array/delayListValues" />
-  <ListPreference     android:title="Request Type"
-                      android:summary="Select the request type"
-                      android:key="requestType"
-                      android:defaultValue="1"
-                      android:entries="@array/requestListArray"
-                      android:entryValues="@array/requestListValues" />
 </PreferenceScreen>

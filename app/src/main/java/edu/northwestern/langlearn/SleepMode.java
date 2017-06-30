@@ -28,6 +28,9 @@ import org.jetbrains.annotations.NotNull;
 public class SleepMode extends AppCompatActivity implements OnCompletionListener {
     public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
     public static final long DEFAULT_BETWEEN_WORDS_DELAY_MILLIS = 5000; // 5s
+    public static final boolean PLAY_ONLY_WHITE_NOISE_SHAM = false;
+    public static final String JSON_ERROR_MESSAGE = "";
+    public static final boolean PLAY_WHITE_NOISE = true;
 
     private static final String TAG = "SleepMode";
     private static final int BASE_STILL_ACCEPTANCE_CONFIDENCE = 60;
@@ -42,6 +45,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private Handler pauseBetweenWordsHandler = new Handler();
     private long delayMillis = DEFAULT_START_WORDS_DELAY_MILLIS;
     private long delayBetweenWords = DEFAULT_BETWEEN_WORDS_DELAY_MILLIS;
+    private String jsonErrorMessage = JSON_ERROR_MESSAGE;
     private float rightAndLeftWhiteNoiseVolume = 0.1f;
     private int wordsIndex = 0;
     private HashMap<String, Integer> lastActivity;
@@ -72,7 +76,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
         ToastsKt.longToast(SleepMode.this, "Words Updated");
         Log.d(TAG, "words.size: " + words.size());
-        playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+
+        if (!wordsProvider.getJsonSham()) {
+            playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+        } else {
+            Log.i(TAG, "Playing only white noise, sham was true");
+        }
     }
 
     public void onCompletion(MediaPlayer mp) {
@@ -107,12 +116,17 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         String user = sP.getString("user", "NA");
         String delayListValue = sP.getString("inactivityDelay", "1");
         String whiteNoiseVolume = sP.getString("volumeWhiteNoise", "0.1");
+        boolean playWhiteNoise = sP.getBoolean("playWHitenoise", PLAY_WHITE_NOISE);
 
         sP.edit().putBoolean("toastActivityRecognized", false).apply();
 
         setDelayMillisFromPrefs(delayListValue);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
-        playWhiteNoiseRaw();
+
+        if (playWhiteNoise) {
+            playWhiteNoiseRaw();
+        }
+
         wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user);
         wordsProvider.fetchJSONWords(this);
     }

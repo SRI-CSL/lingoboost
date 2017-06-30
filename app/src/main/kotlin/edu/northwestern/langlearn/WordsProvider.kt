@@ -18,7 +18,9 @@ class WordsProvider(val jsonUrl: String) {
         private set
     var jsonWordDelay: Long = SleepMode.DEFAULT_BETWEEN_WORDS_DELAY_MILLIS
         private set
-    var jsonSham: Boolean = false
+    var jsonSham: Boolean = SleepMode.PLAY_ONLY_WHITE_NOISE_SHAM
+        private set
+    var jsonError: String = SleepMode.JSON_ERROR_MESSAGE
         private set
 
     fun fetchJSONWords(sleepModeActivity: SleepMode): Unit {
@@ -73,6 +75,14 @@ class WordsProvider(val jsonUrl: String) {
             val sham = jsonObj.getBoolean("sham")
 
             jsonSham = sham
+        } catch (e: JSONException) {
+            Log.i(javaClass.simpleName, e.message)
+        }
+
+        try {
+            val error = jsonObj.getString("error")
+
+            jsonError = error
         } catch (e: JSONException) {
             Log.i(javaClass.simpleName, e.message)
         }

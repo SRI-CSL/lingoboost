@@ -14,18 +14,6 @@
         <item>4</item>
     </string-array>
 
-    <string-array name="requestListArray">
-        <item>today</item>
-        <item>since</item>
-        <item>all</item>
-    </string-array>
-
-    <string-array name="requestListValues">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
     <string-array name="descriptions">
         <item>"First you'll learn some German vocabulary. Click Next to continue."</item>
         <item>Do a vocabulary test before 8 PM today.</item>
