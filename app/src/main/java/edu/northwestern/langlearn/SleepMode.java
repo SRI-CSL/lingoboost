@@ -212,6 +212,9 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
             case "3":
                 minutes = 15;
                 break;
+            case "4":
+                minutes = 5;
+                break;
             default: // "1"
                 minutes = 30;
                 // minutes = 1; // local testing
@@ -227,10 +230,13 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         // lastActivity == null means no activity made it to this activity, so it most likely is Still: 100 per Google docs
         if (lastActivity == null || (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
                 lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE)) {
-            if (wordsIndex < words.size()) {
-                ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
-                playAudioUrl();
+            if (wordsIndex >= words.size()) {
+                Log.d(TAG, "Repeating the words list, reached the end");
+                wordsIndex = 0;
             }
+
+            ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+            playAudioUrl();
         } else {
             playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
         }

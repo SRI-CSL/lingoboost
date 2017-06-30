@@ -4,12 +4,14 @@
         <item>30m</item>
         <item>45m</item>
         <item>15m</item>
+        <item>5m</item>
     </string-array>
 
     <string-array name="delayListValues">
         <item>1</item>
         <item>2</item>
         <item>3</item>
+        <item>4</item>
     </string-array>
 
     <string-array name="requestListArray">
