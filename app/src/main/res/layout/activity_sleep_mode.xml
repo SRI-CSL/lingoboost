@@ -6,7 +6,7 @@
         android:id="@id/iinstr"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Adjust the volume to a comfortable level and place the phone next to your pillow with the screen down"
+        android:text="Adjust the volume to a comfortable level and place the phone next to your pillow with the screen up"
         android:textColor="?android:textColorSecondaryInverse"
         android:textSize="36.0sp" />
 
