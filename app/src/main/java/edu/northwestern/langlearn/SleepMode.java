@@ -26,6 +26,9 @@ import org.jetbrains.anko.ToastsKt;
 import org.jetbrains.annotations.NotNull;
 
 public class SleepMode extends AppCompatActivity implements OnCompletionListener {
+    public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
+    public static final long DEFAULT_BETWEEN_WORDS_DELAY_MILLIS = 5000; // 5s
+
     private static final String TAG = "SleepMode";
     private static final int BASE_STILL_ACCEPTANCE_CONFIDENCE = 60;
 
@@ -37,8 +40,8 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private List<Word> words;
     private Handler playWordsIfStillHandler = new Handler();
     private Handler pauseBetweenWordsHandler = new Handler();
-    private long delayMillis = 0;
-    private long delayBetweenWords = 5000; // 5s
+    private long delayMillis = DEFAULT_START_WORDS_DELAY_MILLIS;
+    private long delayBetweenWords = DEFAULT_BETWEEN_WORDS_DELAY_MILLIS;
     private float rightAndLeftWhiteNoiseVolume = 0.1f;
     private int wordsIndex = 0;
     private HashMap<String, Integer> lastActivity;
@@ -54,8 +57,19 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
 
     public void updateJSONWords(String json) {
         Log.d(TAG, "updateJSONWords");
-        this.jsonWords = json;
-        this.words = wordsProvider.parseJSONWords(jsonWords);
+        jsonWords = json;
+        words = wordsProvider.parseJSONWords(jsonWords);
+
+        if (wordsProvider.getJsonStartDelay() != DEFAULT_START_WORDS_DELAY_MILLIS) {
+            delayMillis = wordsProvider.getJsonStartDelay();
+            Log.d(TAG, "delayMillis: " + delayMillis);
+        }
+
+        if (wordsProvider.getJsonWordDelay() != DEFAULT_BETWEEN_WORDS_DELAY_MILLIS) {
+            delayBetweenWords = wordsProvider.getJsonWordDelay();
+            Log.d(TAG, "delayBetweenWords: " + delayBetweenWords);
+        }
+
         ToastsKt.longToast(SleepMode.this, "Words Updated");
         Log.d(TAG, "words.size: " + words.size());
         playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
@@ -99,7 +113,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         setDelayMillisFromPrefs(delayListValue);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
         playWhiteNoiseRaw();
-        wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user); // corticalre
+        wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user);
         wordsProvider.fetchJSONWords(this);
     }
 
@@ -139,7 +153,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
 
-        // lastActivity == null means no activity made it to this activity, so it most likely is Still: 100 per Google docs
+        // lastActivity == null means no activity recognized made it to this activity, so it most likely is Still: 100 per Google docs
         if (lastActivity == null || (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
                 lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE)) {
             if (wordsIndex >= words.size()) {
