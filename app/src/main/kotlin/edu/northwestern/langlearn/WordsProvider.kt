@@ -25,6 +25,8 @@ class WordsProvider(val jsonUrl: String) {
 
     fun fetchJSONWords(sleepModeActivity: SleepMode): Unit {
         doAsync {
+            var errorMsg: String? = ""
+
             try {
                 val json = URL(jsonUrl).readText()
 
@@ -32,8 +34,14 @@ class WordsProvider(val jsonUrl: String) {
                 uiThread { sleepModeActivity.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
             } catch (e: UnknownHostException) {
                 Log.e(javaClass.simpleName, e.message)
+                errorMsg = e.message
             } catch (e: FileNotFoundException) {
                 Log.e(javaClass.simpleName, e.message)
+                errorMsg = e.message
+            }
+
+            if (errorMsg?.isNotEmpty() ?: true) {
+                uiThread { sleepModeActivity.openMessageActivity(errorMsg ?: "The exception message was null") }
             }
         }
     }

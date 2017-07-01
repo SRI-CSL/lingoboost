@@ -31,6 +31,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     public static final boolean PLAY_ONLY_WHITE_NOISE_SHAM = false;
     public static final String JSON_ERROR_MESSAGE = "";
     public static final boolean PLAY_WHITE_NOISE = true;
+    public static final String MESSAGE_INTENT_EXTRA = "message";
 
     private static final String TAG = "SleepMode";
     private static final int BASE_STILL_ACCEPTANCE_CONFIDENCE = 60;
@@ -82,6 +83,17 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         } else {
             Log.i(TAG, "Playing only white noise, sham was true");
         }
+
+        if (!wordsProvider.getJsonError().isEmpty()) {
+            openMessageActivity(wordsProvider.getJsonError());
+        }
+    }
+
+    public void openMessageActivity(@NotNull String messsage) {
+        Intent msgIntent = new Intent(SleepMode.this, MessageActivity.class);
+
+        msgIntent.putExtra(MESSAGE_INTENT_EXTRA, messsage);
+        startActivity(msgIntent);
     }
 
     public void onCompletion(MediaPlayer mp) {
