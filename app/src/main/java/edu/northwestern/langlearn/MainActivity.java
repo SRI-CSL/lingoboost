@@ -94,24 +94,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        try {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        } catch (NullPointerException npe) {
-        }
-
+        enableUpNavigationInToolbar();
+        checkSharedPreferences();
         createReceiver();
         // Permissions.verifyStoragePermissions(this);
-
-        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
-        sP.edit().putString("volumeWhiteNoise", "0.1").apply();
-
-        if (sP.getString("user", "NA") == "NA") {
-            Log.d(TAG, "Setting the defualt user in prefs");
-            sP.edit().putString("user", "corticalre").apply();
-        }
 
         if (!checkPlayServices()) {
             return;
@@ -145,8 +131,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 startActivityForResult(i, SETTINGS);
             }
         });
-
-        // prefs.edit().putInt("lastTestTime", (int)(((((System.currentTimeMillis() + 21600000) / 1000) / 60) / 60) / 24)).apply();
     }
 
     @Override
@@ -173,8 +157,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             case SETTINGS:
                 SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                 String user = sP.getString("user", "NA");
+                boolean resetLastPraticed = sP.getBoolean("resetLastPraticed", false);
 
                 Log.d(TAG, "Settings User: " + user);
+
+                if (resetLastPraticed) {
+                    sP.edit().putString("lastPracticeTime", "NA").apply();
+                    Log.d(TAG, "Settings lastPracticeTime: NA");
+                    sP.edit().putBoolean("resetLastPraticed", false).apply();
+                }
+
                 break;
         }
     }
@@ -198,6 +190,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         return true;
     }
 
+    private void checkSharedPreferences() {
+        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+
+        sP.edit().putString("volumeWhiteNoise", "0.1").apply();
+        Log.d(TAG, "lastPracticeTime: " + sP.getString("lastPracticeTime", "NA"));
+
+        if (sP.getString("user", "NA").equalsIgnoreCase("NA")) {
+            Log.d(TAG, "Setting the defualt user in prefs");
+            sP.edit().putString("user", "corticalre").apply();
+        }
+    }
+
     private void createReceiver() {
         receiver = new BroadcastReceiver() {
 
@@ -210,10 +214,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 if (extra instanceof HashMap) {
                     @SuppressWarnings("unchecked")
                     Map<String, Integer> activity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
+
                     Log.d(TAG, "Activity: " + activity.toString());
                 }
 
             }
         };
+    }
+
+    private void enableUpNavigationInToolbar() {
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        } catch (NullPointerException npe) {
+            Log.d(TAG, "Unable to display the back navigation through the support action bar");
+        }
     }
 }

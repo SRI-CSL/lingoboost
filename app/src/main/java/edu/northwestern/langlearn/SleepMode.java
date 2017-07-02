@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,11 +20,13 @@ import android.media.MediaPlayer.OnCompletionListener;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.jetbrains.anko.ToastsKt;
-import org.jetbrains.annotations.NotNull;
 
 public class SleepMode extends AppCompatActivity implements OnCompletionListener {
     public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
@@ -89,7 +92,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         }
     }
 
-    public void openMessageActivity(@NotNull String messsage) {
+    public void openMessageActivity(@NonNull String messsage) {
         Intent msgIntent = new Intent(SleepMode.this, MessageActivity.class);
 
         msgIntent.putExtra(MESSAGE_INTENT_EXTRA, messsage);
@@ -100,6 +103,13 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         Log.d(TAG, "onCompletion");
         wordsIndex++;
         destroyWordsPlayer();
+
+        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.US);
+        String dateToStr = format.format(new Date());
+
+        sP.edit().putString("lastPracticeTime", dateToStr).apply();
+        Log.d(TAG, "lastPracticeTime: " + dateToStr);
         pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
     }
 
@@ -128,10 +138,10 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         String user = sP.getString("user", "NA");
         String delayListValue = sP.getString("inactivityDelay", "1");
         String whiteNoiseVolume = sP.getString("volumeWhiteNoise", "0.1");
-        boolean playWhiteNoise = sP.getBoolean("playWHitenoise", PLAY_WHITE_NOISE);
+        boolean playWhiteNoise = sP.getBoolean("playWhitenoise", PLAY_WHITE_NOISE);
+        String lastPracticeTime = sP.getString("lastPracticeTime", "NA");
 
         sP.edit().putBoolean("toastActivityRecognized", false).apply();
-
         setDelayMillisFromPrefs(delayListValue);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
 
@@ -139,7 +149,12 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
             playWhiteNoiseRaw();
         }
 
-        wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user);
+        if (lastPracticeTime.equalsIgnoreCase("NA")) {
+            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user);
+        } else {
+            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime.replace(" ", "'T'"));
+        }
+
         wordsProvider.fetchJSONWords(this);
     }
 
@@ -286,7 +301,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         Log.d(TAG, "delayMillis: " + delayMillis);
     }
 
-    private void setWhiteNoiseVolumeFromPrefs(@NotNull String volume) {
+    private void setWhiteNoiseVolumeFromPrefs(@NonNull String volume) {
         try {
             rightAndLeftWhiteNoiseVolume = Float.parseFloat(volume);
             Log.d(TAG, "rightAndLeftWhiteNoiseVolume: " + rightAndLeftWhiteNoiseVolume);

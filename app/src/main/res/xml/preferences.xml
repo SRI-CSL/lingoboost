@@ -6,7 +6,7 @@
   <CheckBoxPreference android:title="Play White Noise"
                       android:defaultValue="true"
                       android:summary="This option if selected will play whitenoise between words."
-                      android:key="playWHitenoise" />
+                      android:key="playWhitenoise" />
   <EditTextPreference android:title="White Noise Volume"
                       android:summary="This option changes the volume of the background white noise."
                       android:key="volumeWhiteNoise" />
@@ -16,4 +16,8 @@
                       android:defaultValue="1"
                       android:entries="@array/delayListArray"
                       android:entryValues="@array/delayListValues" />
+  <CheckBoxPreference android:title="Reset Last Practiced Date"
+                      android:defaultValue="false"
+                      android:summary="This option if selected will request all words"
+                      android:key="resetLastPraticed" />
 </PreferenceScreen>
