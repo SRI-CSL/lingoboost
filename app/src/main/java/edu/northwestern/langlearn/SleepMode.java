@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
@@ -39,7 +40,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private static final String TAG = "SleepMode";
     private static final int BASE_STILL_ACCEPTANCE_CONFIDENCE = 60;
 
-    // private PowerManager.WakeLock wl;
+    private PowerManager.WakeLock wl;
     private WordsProvider wordsProvider;
     private MediaPlayer mediaPlayer;
     private MediaPlayer whiteNoisePlayer;
@@ -81,15 +82,21 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         ToastsKt.longToast(SleepMode.this, "Words Updated");
         Log.d(TAG, "words.size: " + words.size());
 
+        if (!wordsProvider.getJsonError().isEmpty()) {
+            openMessageActivity(wordsProvider.getJsonError());
+            return;
+        }
+
         if (!wordsProvider.getJsonSham()) {
             playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
         } else {
             Log.i(TAG, "Playing only white noise, sham was true");
         }
 
-        if (!wordsProvider.getJsonError().isEmpty()) {
-            openMessageActivity(wordsProvider.getJsonError());
-        }
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+
+        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
+        wl.acquire();
     }
 
     public void openMessageActivity(@NonNull String messsage) {
@@ -124,6 +131,11 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     protected void onStop() {
         Log.d(TAG, "onStop");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+
+        if (wl != null) {
+            wl.release();
+        }
+
         super.onStop();
     }
 
@@ -141,7 +153,6 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         boolean playWhiteNoise = sP.getBoolean("playWhitenoise", PLAY_WHITE_NOISE);
         String lastPracticeTime = sP.getString("lastPracticeTime", "NA");
 
-        sP.edit().putBoolean("toastActivityRecognized", false).apply();
         setDelayMillisFromPrefs(delayListValue);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
 
@@ -187,7 +198,6 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         }
 
         super.onDestroy();
-        // wl.release();
         // finish();
     }
 
@@ -202,7 +212,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
                 wordsIndex = 0;
             }
 
-            ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+            // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
             playAudioUrl();
         } else {
             playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
@@ -309,21 +319,4 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
             Log.w(TAG, ex.getMessage());
         }
     }
-
-    // prevent accidental press of the back button from exiting sleep mode.
-    // @Override
-    // public void onBackPressed() {
-    //    // super.onBackPressed();
-    // }
-
-    // protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //     if (requestCode == MY_DATA_CHECK_CODE) {
-    //             Intent serviceIntent = new Intent(this, SleepService.class);
-    //             startService(serviceIntent);
-    //             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-    //             wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
-    //             wl.acquire();
-    //     }
-    // }
-
 }

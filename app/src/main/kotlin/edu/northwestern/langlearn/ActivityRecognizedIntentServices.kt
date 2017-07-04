@@ -25,7 +25,9 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
         const val STILL = "Still"
     }
 
-    var toastActivityRecognized: Boolean = true
+    var toastActivityRecognized: Boolean = false
+        private set
+    var activityNotifications: Boolean = false
         private set
 
     override fun onCreate() {
@@ -36,6 +38,7 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
         toastActivityRecognized = sP.getBoolean("toastActivityRecognized", true)
+        activityNotifications = sP.getBoolean("activityNotifications", false)
     }
 
     override fun onDestroy() {
@@ -81,13 +84,16 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
             uiThread { longToast(msg) }
         }
 
-        val builder = NotificationCompat.Builder(this)
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (activityNotifications) {
+            val builder = NotificationCompat.Builder(this)
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        builder.setContentTitle("Activity Recognized")
-        builder.setContentText(msg)
-        builder.setSmallIcon(R.mipmap.ic_launcher)
-        notificationManager.notify(0, builder.build()) // NotificationManagerCompat.from(this).notify(0, builder.build());
+            builder.setContentTitle("Activity Recognized")
+            builder.setContentText(msg)
+            builder.setSmallIcon(R.mipmap.ic_launcher)
+            notificationManager.notify(0, builder.build()) // NotificationManagerCompat.from(this).notify(0, builder.build());
+        }
+
         publishResults(activityMap)
     }
 

@@ -61,10 +61,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     protected void onStart() {
         Log.d(TAG, "onStart");
         super.onStart();
-
-        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
-        sP.edit().putBoolean("toastActivityRecognized", true).apply();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
     }
 
