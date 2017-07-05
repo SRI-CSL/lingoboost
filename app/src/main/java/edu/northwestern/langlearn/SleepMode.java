@@ -56,7 +56,6 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     private HashMap<String, Integer> lastActivity;
     @Nullable
     private BroadcastReceiver receiver;
-
     private Runnable checkPlayWordsIfStillRunner = new Runnable() {
         @Override
         public void run() {
@@ -112,7 +111,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         destroyWordsPlayer();
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.US);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
         String dateToStr = format.format(new Date());
 
         sP.edit().putString("lastPracticeTime", dateToStr).apply();
@@ -163,7 +162,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         if (lastPracticeTime.equalsIgnoreCase("NA")) {
             wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user);
         } else {
-            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime.replace(" ", "'T'"));
+            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime); //.replace(" ", "'T'"));
         }
 
         wordsProvider.fetchJSONWords(this);
