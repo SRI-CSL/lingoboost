@@ -189,8 +189,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void checkSharedPreferences() {
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        sP.edit().putString("volumeWhiteNoise", "0.1").apply();
         Log.d(TAG, "lastPracticeTime: " + sP.getString("lastPracticeTime", "NA"));
+
+        if (sP.getString("volumeWhiteNoise", "NA").equalsIgnoreCase("NA")) {
+            sP.edit().putString("volumeWhiteNoise", "0.5").apply();
+        }
 
         if (sP.getString("user", "NA").equalsIgnoreCase("NA")) {
             Log.d(TAG, "Setting the defualt user in prefs");
