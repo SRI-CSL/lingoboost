@@ -35,6 +35,7 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
     public static final boolean PLAY_ONLY_WHITE_NOISE_SHAM = false;
     public static final String JSON_ERROR_MESSAGE = "";
     public static final boolean PLAY_WHITE_NOISE = true;
+    public static final String INACTIVITY_OPTION_PREF_DEFAULT = "1";
     public static final String MESSAGE_INTENT_EXTRA = "message";
 
     private static final String TAG = "SleepMode";
@@ -114,8 +115,8 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
         String dateToStr = format.format(new Date());
 
-        sP.edit().putString("lastPracticeTime", dateToStr).apply();
-        Log.d(TAG, "lastPracticeTime: " + dateToStr);
+        sP.edit().putString(MainActivity.LAST_PRACTICE_TIME_PREF, dateToStr).apply();
+        Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
         pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
     }
 
@@ -146,11 +147,11 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         createReceiver();
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String user = sP.getString("user", "NA");
-        String delayListValue = sP.getString("inactivityDelay", "1");
-        String whiteNoiseVolume = sP.getString("volumeWhiteNoise", "0.1");
-        boolean playWhiteNoise = sP.getBoolean("playWhitenoise", PLAY_WHITE_NOISE);
-        String lastPracticeTime = sP.getString("lastPracticeTime", "NA");
+        String user = sP.getString(MainActivity.USER_PREF, "NA");
+        String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
+        String whiteNoiseVolume = sP.getString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
+        boolean playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
+        String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
 
         setDelayMillisFromPrefs(delayListValue);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);

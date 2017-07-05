@@ -25,6 +25,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    public static final String USER_PREF = "user";
+    public static final String LAST_PRACTICE_TIME_PREF = "lastPracticeTime";
+    public static final String RESET_LAST_PRACTICED_PREF = "resetLastPraticed";
+    public static final String VOLUME_WHITE_NOISE_PREF = "volumeWhiteNoise";
+    public static final String PLAY_WHITE_NOISE_PREF = "playWhitenoise";
+    public static final String WHITE_NOISE_VOLUME_PREF_DEFAULT = "0.5";
+    public static final String INACTIVITY_DELAY_PREF = "inactivityDelay";
+    public static final String NA_PREF = "NA";
+
     private static final String TAG = "MainActivity";
     private static final int SETTINGS = 1;
     @Nullable
@@ -152,15 +161,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         switch (requestCode) {
             case SETTINGS:
                 SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String user = sP.getString("user", "NA");
-                boolean resetLastPraticed = sP.getBoolean("resetLastPraticed", false);
+                String user = sP.getString(USER_PREF, NA_PREF);
+                boolean resetLastPraticed = sP.getBoolean(RESET_LAST_PRACTICED_PREF, false);
 
                 Log.d(TAG, "Settings User: " + user);
 
                 if (resetLastPraticed) {
-                    sP.edit().putString("lastPracticeTime", "NA").apply();
-                    Log.d(TAG, "Settings lastPracticeTime: NA");
-                    sP.edit().putBoolean("resetLastPraticed", false).apply();
+                    sP.edit().putString(LAST_PRACTICE_TIME_PREF, NA_PREF).apply();
+                    Log.d(TAG, "Settings " + LAST_PRACTICE_TIME_PREF + ": " + NA_PREF);
+                    sP.edit().putBoolean(RESET_LAST_PRACTICED_PREF, false).apply();
                 }
 
                 break;
@@ -189,15 +198,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private void checkSharedPreferences() {
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        Log.d(TAG, "lastPracticeTime: " + sP.getString("lastPracticeTime", "NA"));
+        Log.d(TAG, LAST_PRACTICE_TIME_PREF + ": " + sP.getString("lastPracticeTime", NA_PREF));
 
-        if (sP.getString("volumeWhiteNoise", "NA").equalsIgnoreCase("NA")) {
-            sP.edit().putString("volumeWhiteNoise", "0.5").apply();
+        if (sP.getString(VOLUME_WHITE_NOISE_PREF, "NA").equalsIgnoreCase(NA_PREF)) {
+            sP.edit().putString(VOLUME_WHITE_NOISE_PREF, WHITE_NOISE_VOLUME_PREF_DEFAULT).apply();
         }
 
-        if (sP.getString("user", "NA").equalsIgnoreCase("NA")) {
-            Log.d(TAG, "Setting the defualt user in prefs");
-            sP.edit().putString("user", "corticalre").apply();
+        if (sP.getString(USER_PREF, "NA").equalsIgnoreCase(NA_PREF)) {
+            Log.d(TAG, "Setting the defualt " + USER_PREF + " in prefs");
+            sP.edit().putString(USER_PREF, "corticalre").apply();
         }
     }
 
