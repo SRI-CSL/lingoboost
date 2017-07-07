@@ -270,7 +270,6 @@ class LogDocumentsProvider : DocumentsProvider() {
         var buffer = ByteArray(1024)
 
         try {
-
             while (true) {
                 size = ins.read(buffer, 0, 1024)
 
