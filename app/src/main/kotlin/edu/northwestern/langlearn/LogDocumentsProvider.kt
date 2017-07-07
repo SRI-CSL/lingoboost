@@ -72,7 +72,7 @@ class LogDocumentsProvider : DocumentsProvider() {
         val parent = getFileForDocId(parentDocumentId!!)
 
         for (file in parent.listFiles()) {
-            includeFile(result, null, file)
+            includeByFile(result, file)
         }
 
         return result
@@ -84,7 +84,8 @@ class LogDocumentsProvider : DocumentsProvider() {
         // Create a cursor with the requested projection, or the default projection.
         val result = MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION)
 
-        includeFile(result, documentId, null)
+        if (documentId != null) includeByDocId(result, documentId)
+
         return result;
     }
 
@@ -190,16 +191,21 @@ class LogDocumentsProvider : DocumentsProvider() {
     }
 
     @Throws(FileNotFoundException::class)
-    private fun includeFile(result: MatrixCursor, docId: String?, file: File?) {
-        var docId = docId
-        var file = file
+    private fun includeByDocId(result: MatrixCursor, docId: String) {
+        val file = getFileForDocId(docId)
 
-        if (docId == null) {
-            docId = getDocIdForFile(file!!)
-        } else {
-            file = getFileForDocId(docId)
-        }
+        return include(result, docId, file)
+    }
 
+    @Throws(FileNotFoundException::class)
+    private fun includeByFile(result: MatrixCursor, file: File) {
+        val docId = getDocIdForFile(file)
+
+        return include(result, docId, file)
+    }
+
+    @Throws(FileNotFoundException::class)
+    private fun include(result: MatrixCursor, docId: String, file: File) {
         var flags = 0
 
         // if (file.isDirectory) {
@@ -213,11 +219,6 @@ class LogDocumentsProvider : DocumentsProvider() {
 
         val displayName = file.name
         val mimeType = getTypeForFile(file)
-
-        if (mimeType.startsWith("image/")) {
-            flags = flags or Document.FLAG_SUPPORTS_THUMBNAIL
-        }
-
         val row = result.newRow()
 
         row.add(Document.COLUMN_DOCUMENT_ID, docId)
