@@ -26,14 +26,23 @@
             android:name=".SleepMode"
             android:screenOrientation="portrait"/>
         <activity android:name=".PrefActivity"/>
-
-        <service android:name=".ActivityRecognizedIntentServices"/>
-
         <activity
             android:name=".MessageActivity"
             android:label="@string/title_activity_message"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <service android:name=".ActivityRecognizedIntentServices" />
+        <provider
+            android:name="edu.northwestern.langlearn.LogDocumentsProvider"
+            android:authorities="edu.northwestern.langlearn.documents"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:permission="android.permission.MANAGE_DOCUMENTS">
+            <intent-filter>
+                <action
+                    android:name="android.content.action.DOCUMENTS_PROVIDER"/>
+            </intent-filter>
+        </provider>
     </application>
 
 </manifest>
