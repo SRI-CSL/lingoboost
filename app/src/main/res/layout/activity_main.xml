@@ -6,17 +6,18 @@
     android:paddingRight="16dp"
     android:orientation="vertical" >
 
-
     <Button
-        android:text="Start sleep session"
+        android:id="@+id/sleep"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sleep" />
+        android:text="Start sleep session"/>
 
     <Button
         android:id="@+id/settings"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Settings" />
+        android:text="Settings"/>
 
 </LinearLayout>

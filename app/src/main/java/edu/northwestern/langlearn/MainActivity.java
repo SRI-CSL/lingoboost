@@ -80,20 +80,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onStop();
     }
 
-    // @Override
-    // protected void onResume() {
-    //     Log.d(TAG, "onResume");
-    //     super.onResume();
-    //     LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedService.ACTIVITY_NOTIFICATION));
-    // }
-
-    // @Override
-    // protected void onPause() {
-    //     Log.d(TAG, "onPause");
-    //     super.onPause();
-    //     LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-    // }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
@@ -102,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         enableUpNavigationInToolbar();
         checkSharedPreferences();
         createReceiver();
-        // Permissions.verifyStoragePermissions(this);
 
         if (!checkPlayServices()) {
             return;
