@@ -100,7 +100,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .build();
         googleApiClient.connect();
 
-        Button sleepButton = (Button)findViewById(R.id.sleep); // button to start sleep mode
+        Button sleepButton = (Button)findViewById(R.id.sleep);
+        Button testButton = (Button)findViewById(R.id.testwords);
         Button settingsButton = (Button)findViewById(R.id.settings);
 
         sleepButton.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +111,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
                 startActivity(i);
             }
+        });
+
+        testButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent tIntent = new Intent(MainActivity.this, TestActivity.class);
+
+                    startActivity(tIntent);
+                }
         });
 
         settingsButton.setOnClickListener(new View.OnClickListener() {

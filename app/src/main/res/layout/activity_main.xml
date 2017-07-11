@@ -16,8 +16,8 @@
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0"/>
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
     <Button
         android:id="@+id/testwords"
@@ -29,8 +29,8 @@
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="#c0c0c0"/>
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
 
     <Button
         android:id="@+id/settings"
