@@ -37,7 +37,7 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
 
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
-        toastActivityRecognized = sP.getBoolean("toastActivityRecognized", true)
+        toastActivityRecognized = sP.getBoolean("toastActivityRecognized", false)
         activityNotifications = sP.getBoolean("activityNotifications", false)
     }
 

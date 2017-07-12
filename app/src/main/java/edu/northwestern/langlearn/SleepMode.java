@@ -21,6 +21,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,7 +29,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jetbrains.anko.ToastsKt;
-import org.jetbrains.annotations.NotNull;
 
 public class SleepMode extends AppCompatActivity implements WordsProviderUpdate, OnCompletionListener {
     public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
@@ -65,7 +65,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
     };
 
-    public void updateJSONWords(@NotNull String json) {
+    public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
         jsonWords = json;
         words = wordsProvider.parseJSONWords(jsonWords);
@@ -100,7 +100,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         wl.acquire();
     }
 
-    @NotNull
+    @NonNull
     @Override
     public AppCompatActivity getWordsProviderUpdateActivity() {
         return this;
@@ -273,6 +273,16 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void playMP3Raw() {
          mediaPlayer = MediaPlayer.create(SleepMode.this, R.raw.kvinnan);
          mediaPlayer.start();
+    }
+
+    private void writeFileLog(String toLog) {
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep.txt", Context.MODE_PRIVATE));
+            outputStreamWriter.write(toLog);
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 
     @SuppressWarnings("unchecked")

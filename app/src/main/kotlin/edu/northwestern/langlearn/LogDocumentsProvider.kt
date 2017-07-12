@@ -44,7 +44,7 @@ class LogDocumentsProvider : DocumentsProvider() {
 
         baseDir = context!!.getFilesDir(); // If baseDir could be null this is where to deal with it since everything below depends on it not being null.
         Log.v(TAG, baseDir.getPath().toString())
-        writeDummyFilesToStorage()
+        // writeDummyFilesToStorage()
         return true
     }
 
