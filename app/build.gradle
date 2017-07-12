@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     signingConfigs {
@@ -45,7 +46,7 @@ dependencies {
     compile "com.android.support:design:$app_compat"
     compile "com.android.support.constraint:constraint-layout:$constraint_layout"
     compile "com.google.android.gms:play-services:$play_services"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.anko:anko-common:$anko_version"
     compile "com.android.support:support-annotations:$annotations"
 }

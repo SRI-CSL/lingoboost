@@ -36,14 +36,14 @@ class LogDocumentsProvider : DocumentsProvider() {
             Document.COLUMN_SIZE,
             Document.COLUMN_LAST_MODIFIED)
 
-    var baseDir: File? = null
+    lateinit var baseDir: File
         private set
 
     override fun onCreate(): Boolean {
         Log.v(TAG, "onCreate")
 
         baseDir = context!!.getFilesDir(); // If baseDir could be null this is where to deal with it since everything below depends on it not being null.
-        Log.v(TAG, baseDir!!.getPath().toString())
+        Log.v(TAG, baseDir.getPath().toString())
         writeDummyFilesToStorage()
         return true
     }
@@ -59,8 +59,8 @@ class LogDocumentsProvider : DocumentsProvider() {
         row.add(Root.COLUMN_ICON, R.mipmap.ic_launcher)
         row.add(Root.COLUMN_TITLE, context!!.getString(R.string.app_name)) // COLUMN_TITLE is the root title (e.g. what will be displayed to identify your provider).
         row.add(Root.COLUMN_FLAGS, Root.FLAG_LOCAL_ONLY)
-        row.add(Root.COLUMN_MIME_TYPES, getChildMimeTypes(baseDir!!));
-        row.add(Root.COLUMN_DOCUMENT_ID, getDocIdForFile(baseDir!!)) // Unique and consistent across time. The system picker UI may save it and refer to it later.
+        row.add(Root.COLUMN_MIME_TYPES, getChildMimeTypes(baseDir));
+        row.add(Root.COLUMN_DOCUMENT_ID, getDocIdForFile(baseDir)) // Unique and consistent across time. The system picker UI may save it and refer to it later.
         return result
     }
 
@@ -127,7 +127,7 @@ class LogDocumentsProvider : DocumentsProvider() {
     }
 
     private fun getDocIdForFile(file: File): String {
-        val rootPath = baseDir!!.getPath()
+        val rootPath = baseDir.getPath()
         var path = file.absolutePath
 
         if (rootPath == path) {
@@ -147,7 +147,7 @@ class LogDocumentsProvider : DocumentsProvider() {
         var target = baseDir
 
         if (docId == ROOT) {
-            return target!!
+            return target
         }
 
         val splitIndex = docId.indexOf(':', 1)
@@ -206,17 +206,7 @@ class LogDocumentsProvider : DocumentsProvider() {
 
     @Throws(FileNotFoundException::class)
     private fun include(result: MatrixCursor, docId: String, file: File) {
-        var flags = 0
-
-        // if (file.isDirectory) {
-        //    if (file.isDirectory && file.canWrite()) {
-        //        flags = flags or Document.FLAG_DIR_SUPPORTS_CREATE
-        //    }
-        // } else if (file.canWrite()) {
-        //    flags = flags or Document.FLAG_SUPPORTS_WRITE
-        //    flags = flags or Document.FLAG_SUPPORTS_DELETE
-        // }
-
+        val flags = 0
         val displayName = file.name
         val mimeType = getTypeForFile(file)
         val row = result.newRow()
@@ -244,7 +234,7 @@ class LogDocumentsProvider : DocumentsProvider() {
     }
 
     private fun writeDummyFilesToStorage() {
-        if (baseDir!!.list().isNotEmpty()) {
+        if (baseDir.list().isNotEmpty()) {
             return
         }
 

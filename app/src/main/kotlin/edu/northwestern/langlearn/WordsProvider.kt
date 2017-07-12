@@ -1,17 +1,32 @@
 package edu.northwestern.langlearn
 
+import android.content.Intent
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
 
-import java.net.URL
-
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+
+import java.net.URL
 import java.net.UnknownHostException
 import java.io.FileNotFoundException
 
 data class Word(val norm: String, val audio_url: String, val word: String)
+
+interface WordsProviderUpdate {
+    val wordsProviderUpdateActivity: AppCompatActivity
+
+    fun updateJSONWords(json: String)
+    fun openMessageActivity(errorMsg: String) {
+        val msgIntent = Intent(wordsProviderUpdateActivity, MessageActivity::class.java)
+        val MESSAGE_INTENT_EXTRA = "message"
+
+        msgIntent.putExtra(MESSAGE_INTENT_EXTRA, errorMsg)
+        wordsProviderUpdateActivity.startActivity(msgIntent)
+    }
+}
 
 class WordsProvider(val jsonUrl: String) {
     var jsonStartDelay: Long = SleepMode.DEFAULT_START_WORDS_DELAY_MILLIS
@@ -23,7 +38,7 @@ class WordsProvider(val jsonUrl: String) {
     var jsonError: String = SleepMode.JSON_ERROR_MESSAGE
         private set
 
-    fun fetchJSONWords(sleepModeActivity: SleepMode): Unit {
+    fun fetchJSONWords(activity: WordsProviderUpdate): Unit {
         doAsync {
             var errorMsg: String? = ""
 
@@ -31,7 +46,7 @@ class WordsProvider(val jsonUrl: String) {
                 val json = URL(jsonUrl).readText()
 
                 Log.d(javaClass.simpleName, json.length.toString())
-                uiThread { sleepModeActivity.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
+                uiThread { activity.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
             } catch (e: UnknownHostException) {
                 Log.e(javaClass.simpleName, e.message)
                 errorMsg = e.message
@@ -41,7 +56,7 @@ class WordsProvider(val jsonUrl: String) {
             }
 
             if (errorMsg?.isNotEmpty() ?: true) {
-                uiThread { sleepModeActivity.openMessageActivity(errorMsg ?: "The exception message was null") }
+                uiThread { activity.openMessageActivity(errorMsg ?: "The exception message was null") }
             }
         }
     }

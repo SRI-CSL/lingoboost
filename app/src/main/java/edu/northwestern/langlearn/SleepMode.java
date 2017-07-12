@@ -28,8 +28,9 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jetbrains.anko.ToastsKt;
+import org.jetbrains.annotations.NotNull;
 
-public class SleepMode extends AppCompatActivity implements OnCompletionListener {
+public class SleepMode extends AppCompatActivity implements WordsProviderUpdate, OnCompletionListener {
     public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
     public static final long DEFAULT_BETWEEN_WORDS_DELAY_MILLIS = 5000; // 5s
     public static final boolean PLAY_ONLY_WHITE_NOISE_SHAM = false;
@@ -99,11 +100,14 @@ public class SleepMode extends AppCompatActivity implements OnCompletionListener
         wl.acquire();
     }
 
-    public void openMessageActivity(@NonNull String messsage) {
-        Intent msgIntent = new Intent(SleepMode.this, MessageActivity.class);
+    @NotNull
+    @Override
+    public AppCompatActivity getWordsProviderUpdateActivity() {
+        return this;
+    }
 
-        msgIntent.putExtra(MESSAGE_INTENT_EXTRA, messsage);
-        startActivity(msgIntent);
+    public void openMessageActivity(@NonNull String messsage) {
+        WordsProviderUpdate.DefaultImpls.openMessageActivity(this, messsage);
     }
 
     public void onCompletion(MediaPlayer mp) {
