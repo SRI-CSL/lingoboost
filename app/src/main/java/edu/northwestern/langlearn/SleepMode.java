@@ -65,7 +65,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
     };
 
-    public void updateJSONWords(String json) {
+    public void updateJSONWords(@NotNull String json) {
         Log.d(TAG, "updateJSONWords");
         jsonWords = json;
         words = wordsProvider.parseJSONWords(jsonWords);

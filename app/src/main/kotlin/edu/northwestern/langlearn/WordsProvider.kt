@@ -38,7 +38,7 @@ class WordsProvider(val jsonUrl: String) {
     var jsonError: String = SleepMode.JSON_ERROR_MESSAGE
         private set
 
-    fun fetchJSONWords(activity: WordsProviderUpdate): Unit {
+    fun fetchJSONWords(updateImpl: WordsProviderUpdate): Unit {
         doAsync {
             var errorMsg: String? = ""
 
@@ -46,7 +46,7 @@ class WordsProvider(val jsonUrl: String) {
                 val json = URL(jsonUrl).readText()
 
                 Log.d(javaClass.simpleName, json.length.toString())
-                uiThread { activity.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
+                uiThread { updateImpl.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
             } catch (e: UnknownHostException) {
                 Log.e(javaClass.simpleName, e.message)
                 errorMsg = e.message
@@ -56,7 +56,7 @@ class WordsProvider(val jsonUrl: String) {
             }
 
             if (errorMsg?.isNotEmpty() ?: true) {
-                uiThread { activity.openMessageActivity(errorMsg ?: "The exception message was null") }
+                uiThread { updateImpl.openMessageActivity(errorMsg ?: "The exception message was null") }
             }
         }
     }
