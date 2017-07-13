@@ -9,24 +9,12 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.EditText
 
-import org.jetbrains.anko.longToast
-import kotlinx.android.synthetic.main.activity_words.*
 import java.io.IOException
 import java.io.OutputStreamWriter
-import android.widget.Toast
-import android.view.inputmethod.EditorInfo
 
+//import org.jetbrains.anko.longToast
+import kotlinx.android.synthetic.main.activity_words.*
 
-
-//fun EditText.onTextChanged(onTextChanged: (CharSequence?, Int, Int, Int) -> Unit) {
-//    this.addTextChangedListener(object : TextWatcher {
-//        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//            onTextChanged.invoke(s, start, before, count)
-//        }
-//        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-//        override fun afterTextChanged(editable: Editable?) { }
-//    })
-//}
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
@@ -60,45 +48,45 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         wordsProvider = WordsProvider("https://cortical.csl.sri.com/langlearn/user/$user")
         wordsProvider.fetchJSONWords(this)
 
-        // words_edit_word.isFocusable = true
-        // words_edit_word.setOnFocusChangeListener { v, hasFocus ->
-        //     Log.d(TAG, "hasFocus: $hasFocus")
-        // }
+        words_edit_word.afterTextChanged {
+            Log.d(TAG, "afterTextChanged")
 
-        // This doesn't work for whatever reasons with soft keyboard, I had the ime action done in the xml
-        // words_edit_word.setOnEditorActionListener { v, actionId, event ->
-        //    if (actionId == EditorInfo.IME_ACTION_DONE) {
-        //        val text = v.text.toString()
-        //
-        //        Log.d(TAG, "onEditorAction")
-        //        true
-        //    } else {
-        //        false
-        //    }
-        // }
-
-        words_edit_word.addTextChangedListener(object: TextWatcher {
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { }
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { }
-            override fun afterTextChanged(s: Editable) {
-                Log.d(TAG, "afterTextChanged")
-
-                if (s.isEmpty())
-                    return
-
+            if (it.isNotEmpty()) {
                 Log.d(TAG, "afterTextChanged s not empty")
 
-                if (s.last() == '\n') {
+                if (it.last() == '\n') {
+                    val text = it.toString().replace("\n", "")
+
                     Log.d(TAG, "afterTextChanged detected a \\m")
-
-                    val text = s.toString().replace("\n", "")
-
-                    words_edit_word.setText(text)
-                    words_edit_word.setSelection(text.length)
-                    logTestResults { continueWordTesting() }
+                    // words_edit_word.setText(text)
+                    // words_edit_word.setSelection(text.length)
+                    logTestResults(text) { continueWordTesting() }
                 }
             }
-        })
+        }
+
+        //words_edit_word.addTextChangedListener(object: TextWatcher {
+        //    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { }
+        //    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { }
+        //    override fun afterTextChanged(s: Editable) {
+        //        Log.d(TAG, "afterTextChanged")
+        //
+        //        if (s.isEmpty())
+        //            return
+        //
+        //        Log.d(TAG, "afterTextChanged s not empty")
+        //
+        //        if (s.last() == '\n') {
+        //            Log.d(TAG, "afterTextChanged detected a \\m")
+        //
+        //            val text = s.toString().replace("\n", "")
+        //
+        //            words_edit_word.setText(text)
+        //            words_edit_word.setSelection(text.length)
+        //            logTestResults { continueWordTesting() }
+        //        }
+        //    }
+        //})
     }
 
     override fun updateJSONWords(json: String) {
@@ -126,10 +114,10 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         }
     }
 
-    private fun logTestResults(next: () -> Unit) {
+    private fun logTestResults(entry:String, next: () -> Unit) {
         val word = words.get(wordsIndex).word
 
-        writeFileLog(word);
+        writeFileLog("$word, $entry");
         wordsIndex++
         next();
     }
