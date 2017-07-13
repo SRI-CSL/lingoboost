@@ -41,6 +41,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         // words_edit_word.isFocusable = false
         // words_edit_word.isEnabled = false
         words_text_word.text = ""
+        writeCSVHeader()
 
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
         val user = sP.getString(MainActivity.USER_PREF, "NA")
@@ -56,8 +57,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
                 if (it.last() == '\n') {
                     val text = it.toString().replace("\n", "")
 
-                    // words_edit_word.setText(text)
-                    // words_edit_word.setSelection(text.length)
                     logTestResults(text) { continueWordTesting() }
                 }
             }
@@ -93,18 +92,32 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private fun logTestResults(entry:String, next: () -> Unit) {
         val word = words.get(wordsIndex).word
 
-        writeFileLog("$word, $entry");
+        writeFileLog("$word, $entry\n");
         wordsIndex++
         next();
     }
 
-    private fun writeFileLog(toLog: String) {
+    private fun writeFileLog(toLog: String, append: Boolean = true) {
         try {
-            val outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test.txt", Context.MODE_PRIVATE))
-            outputStreamWriter.write(toLog)
+            val outputStreamWriter: OutputStreamWriter
+
+            if (append) {
+                Log.d(TAG, "append")
+                outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test.txt", Context.MODE_APPEND))
+                outputStreamWriter.append(toLog)
+            } else {
+                Log.d(TAG, "write")
+                outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test.txt", Context.MODE_PRIVATE))
+                outputStreamWriter.write(toLog)
+            }
+
             outputStreamWriter.close()
         } catch (e: IOException) {
             Log.e("Exception", "File write failed: $e.toString()")
         }
+    }
+
+    private fun writeCSVHeader() {
+        writeFileLog("word, entry\n", false)
     }
 }
