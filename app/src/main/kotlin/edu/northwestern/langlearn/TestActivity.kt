@@ -1,6 +1,8 @@
 package edu.northwestern.langlearn
 
 import android.content.Context
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
@@ -36,6 +38,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private lateinit var wordsProvider: WordsProvider
     private lateinit  var words: List<Word>
     private var wordsIndex = 0
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +88,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         if (wordsIndex < words.size) {
             val word = words.get(wordsIndex).word
 
+            playAudioUrl()
             words_text_word.text = word
             words_edit_word.text.clear()
         }
@@ -122,5 +126,27 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private fun writeCSVHeader() {
         writeFileLog("timestamp, word, entry\n", false)
+    }
+
+    private fun playAudioUrl() {
+        Log.d(TAG, "playAudioUrl")
+
+        try {
+            val url = words[wordsIndex].audio_url
+
+            Log.d(TAG, words[wordsIndex].audio_url)
+            mediaPlayer = MediaPlayer()
+            mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            mediaPlayer?.setDataSource(url)
+            mediaPlayer?.prepare()
+            mediaPlayer?.start()
+            mediaPlayer?.setOnCompletionListener {
+                Log.d(TAG, "onCompletion")
+                mediaPlayer?.release()
+                mediaPlayer = null
+            }
+        } catch (ex: IOException) {
+            Log.e("Exception", "File write failed: $ex.toString()")
+        }
     }
 }
