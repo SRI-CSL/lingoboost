@@ -7,11 +7,16 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.widget.EditText
 
 import org.jetbrains.anko.longToast
 import kotlinx.android.synthetic.main.activity_words.*
 import java.io.IOException
 import java.io.OutputStreamWriter
+import android.widget.Toast
+import android.view.inputmethod.EditorInfo
+
+
 
 //fun EditText.onTextChanged(onTextChanged: (CharSequence?, Int, Int, Int) -> Unit) {
 //    this.addTextChangedListener(object : TextWatcher {
@@ -23,15 +28,15 @@ import java.io.OutputStreamWriter
 //    })
 //}
 
-//fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-//    this.addTextChangedListener(object : TextWatcher {
-//        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
-//        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
-//        override fun afterTextChanged(editable: Editable?) {
-//            afterTextChanged.invoke(editable.toString())
-//        }
-//    })
-//}
+fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+    this.addTextChangedListener(object : TextWatcher {
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
+        override fun afterTextChanged(editable: Editable?) {
+            afterTextChanged.invoke(editable.toString())
+        }
+    })
+}
 
 class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     override val wordsProviderUpdateActivity: AppCompatActivity
@@ -60,14 +65,32 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         //     Log.d(TAG, "hasFocus: $hasFocus")
         // }
 
+        // This doesn't work for whatever reasons with soft keyboard, I had the ime action done in the xml
+        // words_edit_word.setOnEditorActionListener { v, actionId, event ->
+        //    if (actionId == EditorInfo.IME_ACTION_DONE) {
+        //        val text = v.text.toString()
+        //
+        //        Log.d(TAG, "onEditorAction")
+        //        true
+        //    } else {
+        //        false
+        //    }
+        // }
+
         words_edit_word.addTextChangedListener(object: TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { }
             override fun afterTextChanged(s: Editable) {
+                Log.d(TAG, "afterTextChanged")
+
                 if (s.isEmpty())
                     return
 
+                Log.d(TAG, "afterTextChanged s not empty")
+
                 if (s.last() == '\n') {
+                    Log.d(TAG, "afterTextChanged detected a \\m")
+
                     val text = s.toString().replace("\n", "")
 
                     words_edit_word.setText(text)
@@ -82,7 +105,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         Log.d(TAG, "updateJSONWords")
         words = wordsProvider.parseJSONWords(json)
 
-        longToast("Words Updated")
+        // longToast("Words Updated")
         Log.d(TAG, "words.size: ${ words.size }")
 
         if (wordsProvider.jsonError.isNotEmpty()) {

@@ -11,7 +11,7 @@
         android:id="@+id/words_text_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wordzzz"
+        android:text="@string/test_word_text"
         android:textSize="24.0sp"/>
 
     <Space
@@ -20,9 +20,10 @@
 
     <EditText
         android:id="@+id/words_edit_word"
+        android:maxLines="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="Editable entry for the word being shown and played."
+        android:contentDescription="@string/test_content_description"
         android:textSize="24.0sp"
         tools:text="Enter the word displayed"/>
 </LinearLayout>
