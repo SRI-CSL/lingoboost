@@ -21,9 +21,16 @@
     <EditText
         android:id="@+id/words_edit_word"
         android:maxLines="1"
-        android:layout_width="match_parent"
+        android:textIsSelectable="false"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@string/test_content_description"
         android:textSize="24.0sp"
+        android:hint="@string/test_word_edit_hint"
         tools:text="Enter the word displayed"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_vertical_margin"/>
+
 </LinearLayout>

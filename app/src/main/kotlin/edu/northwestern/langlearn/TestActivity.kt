@@ -52,41 +52,16 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             Log.d(TAG, "afterTextChanged")
 
             if (it.isNotEmpty()) {
-                Log.d(TAG, "afterTextChanged s not empty")
 
                 if (it.last() == '\n') {
                     val text = it.toString().replace("\n", "")
 
-                    Log.d(TAG, "afterTextChanged detected a \\m")
                     // words_edit_word.setText(text)
                     // words_edit_word.setSelection(text.length)
                     logTestResults(text) { continueWordTesting() }
                 }
             }
         }
-
-        //words_edit_word.addTextChangedListener(object: TextWatcher {
-        //    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) { }
-        //    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { }
-        //    override fun afterTextChanged(s: Editable) {
-        //        Log.d(TAG, "afterTextChanged")
-        //
-        //        if (s.isEmpty())
-        //            return
-        //
-        //        Log.d(TAG, "afterTextChanged s not empty")
-        //
-        //        if (s.last() == '\n') {
-        //            Log.d(TAG, "afterTextChanged detected a \\m")
-        //
-        //            val text = s.toString().replace("\n", "")
-        //
-        //            words_edit_word.setText(text)
-        //            words_edit_word.setSelection(text.length)
-        //            logTestResults { continueWordTesting() }
-        //        }
-        //    }
-        //})
     }
 
     override fun updateJSONWords(json: String) {
@@ -111,6 +86,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             val word = words.get(wordsIndex).word
 
             words_text_word.text = word
+            words_edit_word.text.clear()
         }
     }
 
