@@ -67,6 +67,22 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        Log.d(TAG, "onDestroy")
+
+
+        if (mediaPlayer != null) {
+            if (mediaPlayer?.isPlaying() ?: false) {
+                mediaPlayer?.stop()
+            }
+
+            mediaPlayer?.release()
+            mediaPlayer = null
+        }
+
+        super.onDestroy()
+    }
+
     override fun updateJSONWords(json: String) {
         Log.d(TAG, "updateJSONWords")
         words = wordsProvider.parseJSONWords(json)
