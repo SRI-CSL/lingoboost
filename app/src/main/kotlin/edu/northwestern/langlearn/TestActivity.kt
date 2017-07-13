@@ -11,10 +11,12 @@ import android.widget.EditText
 
 import java.io.IOException
 import java.io.OutputStreamWriter
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.Date
 
 //import org.jetbrains.anko.longToast
 import kotlinx.android.synthetic.main.activity_words.*
-
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
@@ -39,7 +41,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_words)
         // words_edit_word.isFocusable = false
-        // words_edit_word.isEnabled = false
         words_text_word.text = ""
         writeCSVHeader()
 
@@ -91,22 +92,24 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private fun logTestResults(entry:String, next: () -> Unit) {
         val word = words.get(wordsIndex).word
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
+        val dateToStr = format.format(Date())
 
-        writeFileLog("$word, $entry\n");
+        writeFileLog("$dateToStr, $word, $entry\n");
         wordsIndex++
         next();
     }
 
     private fun writeFileLog(toLog: String, append: Boolean = true) {
+        Log.d(TAG, "writeFileLog")
+
         try {
             val outputStreamWriter: OutputStreamWriter
 
             if (append) {
-                Log.d(TAG, "append")
                 outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test.txt", Context.MODE_APPEND))
                 outputStreamWriter.append(toLog)
             } else {
-                Log.d(TAG, "write")
                 outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test.txt", Context.MODE_PRIVATE))
                 outputStreamWriter.write(toLog)
             }
@@ -118,6 +121,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     private fun writeCSVHeader() {
-        writeFileLog("word, entry\n", false)
+        writeFileLog("timestamp, word, entry\n", false)
     }
 }
