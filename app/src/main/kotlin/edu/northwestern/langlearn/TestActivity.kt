@@ -115,7 +115,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         val dateToStr = format.format(Date())
 
-        writeFileLog("$dateToStr, $word, $entry\n");
+        writeFileLog("$dateToStr,$word,$entry\n");
         wordsIndex++
         next();
     }
@@ -136,19 +136,19 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
             outputStreamWriter.close()
         } catch (e: IOException) {
-            Log.e("Exception", "File write failed: $e.toString()")
+            Log.e("Exception", "File write failed: ${ e.toString() }")
         }
     }
 
     private fun writeCSVHeader() {
-        writeFileLog("timestamp, word, entry\n", false)
+        writeFileLog("timestamp,word,entry\n", false)
     }
 
     private fun playAudioUrl() {
         Log.d(TAG, "playAudioUrl")
 
         try {
-            val url = words[wordsIndex].audio_url
+            val url = words.get(wordsIndex).audio_url
 
             Log.d(TAG, words[wordsIndex].audio_url)
             mediaPlayer = MediaPlayer()

@@ -112,7 +112,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     public void onCompletion(MediaPlayer mp) {
         Log.d(TAG, "onCompletion");
-        wordsIndex++;
         destroyWordsPlayer();
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -121,6 +120,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         sP.edit().putString(MainActivity.LAST_PRACTICE_TIME_PREF, dateToStr).apply();
         Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
+
+        writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + "," + words.get(wordsIndex).getAudio_url(), true);
+        wordsIndex++;
         pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
     }
 
@@ -149,6 +151,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_mode);
         createReceiver();
+        writeCSVHeader();
 
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         String user = sP.getString(MainActivity.USER_PREF, "NA");
@@ -275,14 +278,28 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
          mediaPlayer.start();
     }
 
-    private void writeFileLog(String toLog) {
+    private void writeFileLog(String toLog, boolean append) {
+        Log.d(TAG, "writeFileLog");
+
         try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep.txt", Context.MODE_PRIVATE));
-            outputStreamWriter.write(toLog);
+            OutputStreamWriter outputStreamWriter;
+
+            if (append) {
+                outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep.txt", Context.MODE_APPEND));
+                outputStreamWriter.append(toLog);
+            } else {
+                outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep.txt", Context.MODE_PRIVATE));
+                outputStreamWriter.write(toLog);
+            }
+
             outputStreamWriter.close();
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
+    }
+
+    private void writeCSVHeader() {
+        writeFileLog("timestamp,word,audio_url\n", false);
     }
 
     @SuppressWarnings("unchecked")
