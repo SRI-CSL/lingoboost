@@ -121,7 +121,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         sP.edit().putString(MainActivity.LAST_PRACTICE_TIME_PREF, dateToStr).apply();
         Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
 
-        writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + "," + words.get(wordsIndex).getAudio_url(), true);
+        String activityLog = "{Still=100}";
+
+        if (lastActivity != null) {
+            activityLog = "\"" + lastActivity.toString() + "\"";
+        }
+
+        writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + ","  + activityLog + "," + words.get(wordsIndex).getAudio_url() + "\n", true);
         wordsIndex++;
         pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
     }
@@ -299,7 +305,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     private void writeCSVHeader() {
-        writeFileLog("timestamp,word,audio_url\n", false);
+        writeFileLog("timestamp,word,activity,audio_url\n", false);
     }
 
     @SuppressWarnings("unchecked")

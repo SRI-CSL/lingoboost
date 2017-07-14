@@ -61,6 +61,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
                 if (it.last() == '\n') {
                     val text = it.toString().replace("\n", "")
 
+                    destroyPlayer()
                     logTestResults(text) { continueWordTesting() }
                 }
             }
@@ -69,17 +70,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
-
-
-        if (mediaPlayer != null) {
-            if (mediaPlayer?.isPlaying() ?: false) {
-                mediaPlayer?.stop()
-            }
-
-            mediaPlayer?.release()
-            mediaPlayer = null
-        }
-
+        destroyPlayer()
         super.onDestroy()
     }
 
@@ -107,6 +98,8 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             playAudioUrl()
             words_text_word.text = word
             words_edit_word.text.clear()
+        } else {
+            finish()
         }
     }
 
@@ -158,11 +151,21 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             mediaPlayer?.start()
             mediaPlayer?.setOnCompletionListener {
                 Log.d(TAG, "onCompletion")
-                mediaPlayer?.release()
-                mediaPlayer = null
+                destroyPlayer()
             }
         } catch (ex: IOException) {
             Log.e("Exception", "File write failed: $ex.toString()")
+        }
+    }
+
+    private fun destroyPlayer() {
+        if (mediaPlayer != null) {
+            if (mediaPlayer?.isPlaying() ?: false) {
+                mediaPlayer?.stop()
+            }
+
+            mediaPlayer?.release()
+            mediaPlayer = null
         }
     }
 }
