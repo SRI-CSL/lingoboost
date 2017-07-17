@@ -39,6 +39,9 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private lateinit  var words: List<Word>
     private var wordsIndex = 0
     private var mediaPlayer: MediaPlayer? = null
+    private val logDateToStr by lazy {
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Date())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,10 +123,10 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             val outputStreamWriter: OutputStreamWriter
 
             if (append) {
-                outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test.txt", Context.MODE_APPEND))
+                outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test-$logDateToStr.txt", Context.MODE_APPEND))
                 outputStreamWriter.append(toLog)
             } else {
-                outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test.txt", Context.MODE_PRIVATE))
+                outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test-$logDateToStr.txt", Context.MODE_PRIVATE))
                 outputStreamWriter.write(toLog)
             }
 

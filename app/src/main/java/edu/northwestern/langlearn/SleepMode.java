@@ -64,6 +64,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             checkAndPlayWordsIfStill();
         }
     };
+    private String logDateToStr;
 
     public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
@@ -291,10 +292,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             OutputStreamWriter outputStreamWriter;
 
             if (append) {
-                outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep.txt", Context.MODE_APPEND));
+                outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep-" + logDateToStr + ".txt", Context.MODE_APPEND));
                 outputStreamWriter.append(toLog);
             } else {
-                outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep.txt", Context.MODE_PRIVATE));
+                outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep-" + logDateToStr + ".txt", Context.MODE_PRIVATE));
                 outputStreamWriter.write(toLog);
             }
 
@@ -305,6 +306,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     private void writeCSVHeader() {
+        logDateToStr = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(new Date());
         writeFileLog("timestamp,word,activity,audio_url\n", false);
     }
 
