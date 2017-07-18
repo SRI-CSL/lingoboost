@@ -17,6 +17,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Date
 
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.httpPost
+
 //import org.jetbrains.anko.longToast
 import kotlinx.android.synthetic.main.activity_words.*
 
@@ -75,6 +78,35 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         Log.d(TAG, "onDestroy")
         destroyPlayer()
         super.onDestroy()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+//        Fuel.post("http://httpbin.org/post", listOf("foo" to "foo")).response { request, response, result ->
+//            val (data, error) = result
+//
+//            Log.d(TAG, request.cUrlString())
+//
+//            if (error != null) {
+//                Log.e(TAG, response.toString())
+//                Log.e(TAG, error.toString())
+//            } else {
+//                Log.d(TAG, "${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+//            }
+//        }
+        "http://httpbin.org/post".httpPost(listOf("app_log_file" to "log_of_foo")).responseString { request, response, result ->
+            val (data, error) = result
+
+            Log.d(TAG, request.cUrlString())
+
+            if (error != null) {
+                Log.e(TAG, response.toString())
+                Log.e(TAG, error.toString())
+            } else {
+                Log.d(TAG, "${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+            }
+        }
     }
 
     override fun updateJSONWords(json: String) {
