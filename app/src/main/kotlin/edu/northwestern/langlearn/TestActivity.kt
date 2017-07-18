@@ -83,19 +83,11 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-//        Fuel.post("http://httpbin.org/post", listOf("foo" to "foo")).response { request, response, result ->
-//            val (data, error) = result
-//
-//            Log.d(TAG, request.cUrlString())
-//
-//            if (error != null) {
-//                Log.e(TAG, response.toString())
-//                Log.e(TAG, error.toString())
-//            } else {
-//                Log.d(TAG, "${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
-//            }
-//        }
-        "http://httpbin.org/post".httpPost(listOf("app_log_file" to "log_of_foo")).responseString { request, response, result ->
+        // Fuel.post("http://httpbin.org/post", listOf("foo" to "foo")).response { request, response, result -> }
+        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val user = sP.getString(MainActivity.USER_PREF, "NA")
+
+        "https://cortical.csl.sri.com/langlearn/user/$user/upload".httpPost(listOf("app_log_file" to "log_of_foo")).responseString { request, response, result ->
             val (data, error) = result
 
             Log.d(TAG, request.cUrlString())
