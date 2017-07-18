@@ -36,7 +36,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private val TAG = javaClass.simpleName
     private lateinit var wordsProvider: WordsProvider
-    private lateinit  var words: List<Word>
+    private lateinit var words: List<Word>
     private var wordsIndex = 0
     private var mediaPlayer: MediaPlayer? = null
     private val logDateToStr by lazy {
