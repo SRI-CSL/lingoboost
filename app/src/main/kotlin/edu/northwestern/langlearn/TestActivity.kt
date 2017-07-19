@@ -19,9 +19,11 @@ import java.util.Date
 
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.fuel.httpUpload
 
 //import org.jetbrains.anko.longToast
 import kotlinx.android.synthetic.main.activity_words.*
+import java.io.File
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
@@ -81,22 +83,36 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     override fun onStop() {
+        Log.d(TAG, "onStop")
         super.onStop()
 
         // Fuel.post("http://httpbin.org/post", listOf("foo" to "foo")).response { request, response, result -> }
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
         val user = sP.getString(MainActivity.USER_PREF, "NA")
+        val timeout = 60000 // 1 min
 
-        "https://cortical.csl.sri.com/langlearn/user/$user/upload".httpPost(listOf("app_log_file" to "log_of_foo")).responseString { request, response, result ->
-            val (data, error) = result
+         // "https://cortical.csl.sri.com/langlearn/user/$user/upload".httpPost(listOf("app_log_file" to "log_of_foo")).responseString { request, response, result ->
+         // "http://httpbin.org/post".httpPost(listOf("log_file" to "log_of_foo")).responseString { request, response, result ->
+         //     Log.d(TAG, "http://httpbin.org/post ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+         // }
 
+        // Fuel.upload("https://cortical.csl.sri.com/langlearn/user/$user/upload").timeout(timeout).source { request, url ->
+        "https://cortical.csl.sri.com/langlearn/user/$user/upload".httpUpload().timeout(timeout).source { request, url ->
+            File(filesDir, "log-test-$logDateToStr.txt")
+        }.name {
+            "app_log_file"
+        }.progress { writtenBytes, totalBytes ->
+            Log.d(TAG, "Upload: ${ writtenBytes.toFloat().toString() } Total: ${ totalBytes.toFloat().toString() }")
+        }.responseString { request, response, result ->
             Log.d(TAG, request.cUrlString())
+
+            val (data, error) = result
 
             if (error != null) {
                 Log.e(TAG, response.toString())
                 Log.e(TAG, error.toString())
             } else {
-                Log.d(TAG, "${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+                Log.d(TAG, "https://cortical.csl.sri.com/langlearn/user/$user/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
             }
         }
     }
