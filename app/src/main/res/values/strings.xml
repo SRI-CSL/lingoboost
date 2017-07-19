@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">LangLearn</string>
-    <string name="app_build">0.12</string>
+    <string name="app_build">0.13</string>
     <string name="title_activity_message">Messages</string>
     <string name="sleep_button">Start Sleep Session</string>
     <string name="settomgs_button">Settings</string>
