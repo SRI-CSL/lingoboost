@@ -80,65 +80,21 @@ class WordsProvider(val jsonUrl: String) {
 
 
 
-        Log.d(TAG, "jsonStartDelay: ${ jsonStartDelay.toString() }")
-        jsonObj.getLongLogCatch("start_delay") { jsonStartDelay = it * 1000; Log.d(TAG, it.toString()) }
+        jsonObj.getItLong("start_delay") { jsonStartDelay = it * 1000 }
+        jsonObj.getItLong("word_delay") { jsonWordDelay = it * 1000 }
+        jsonObj.getItBoolean("sham") { jsonSham = it }
+        jsonObj.getItString("error") { jsonError = it }
 
-        fetchFromJSONObjectByClass<Long>(Long::class.java, jsonObj, "start_delay") { jsonStartDelay = it * 1000; Log.d(TAG, it.toString()) }
-
-        fetchFromJSONObject<Long>(jsonObj, "start_delay") { jsonStartDelay = it * 1000; Log.d(TAG, it.toString()) }
-
-        fetchFromJSONObject<Boolean>(jsonObj, "sham") { jsonSham = it; Log.d(TAG, it.toString()) }
-
-        jsonObj.fetchIt<Long>("start_delay") { jsonStartDelay = it * 1000; Log.d(TAG, it.toString()) }
-
-
-
-        try {
-            val startDelay = jsonObj.getLong("start_delay")
-
-            jsonStartDelay = startDelay * 1000
-        } catch (e: JSONException) {
-            Log.w(javaClass.simpleName, e.message)
-        }
-
-        try {
-            val wordDelay = jsonObj.getLong("word_delay")
-
-            jsonWordDelay = wordDelay * 1000
-        } catch (e: JSONException) {
-            Log.w(javaClass.simpleName, e.message)
-        }
-
-        try {
-            val sham = jsonObj.getBoolean("sham")
-
-            jsonSham = sham
-        } catch (e: JSONException) {
-            Log.i(javaClass.simpleName, e.message)
-        }
-
-        try {
-            val error = jsonObj.getString("error")
-
-            jsonError = error
-        } catch (e: JSONException) {
-            Log.i(javaClass.simpleName, e.message)
-        }
-
-        try {
-            val wordJson = jsonObj.getJSONArray("words")
-
-            for (i in 0..wordJson!!.length() - 1) {
-                val n = wordJson.getJSONObject(i).getString("norm")
-                val url = wordJson.getJSONObject(i).getString("audio_url")
-                val w = wordJson.getJSONObject(i).getString("word")
+        jsonObj.getItJSONArray("words") {
+            for (i in 0..it.length() - 1) {
+                val n = it.getJSONObject(i).returnItString("norm")         // getString("norm")
+                val url = it.getJSONObject(i).returnItString("audio_url")  // getString("audio_url")
+                val w = it.getJSONObject(i).returnItString("word")         // getString("word")
                 val word = Word(n, url, w)
 
-                Log.d(javaClass.simpleName, "$i $word")
+                Log.d(TAG, "$i $word")
                 Words.add(word)
             }
-        } catch (e: JSONException) {
-            Log.e(javaClass.simpleName, e.message)
         }
 
         return Words
