@@ -17,8 +17,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Date
 
-import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.httpPost
+//import com.github.kittinunf.fuel.Fuel
+//import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpUpload
 
 //import org.jetbrains.anko.longToast

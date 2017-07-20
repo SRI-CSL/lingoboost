@@ -19,9 +19,16 @@ import android.media.MediaPlayer;
 import android.media.AudioManager;
 import android.media.MediaPlayer.OnCompletionListener;
 
+import com.github.kittinunf.fuel.Fuel;
+import com.github.kittinunf.fuel.core.FuelError;
+import com.github.kittinunf.fuel.core.Request;
+import com.github.kittinunf.fuel.core.Response;
+
+import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +36,10 @@ import java.util.List;
 import java.util.Locale;
 
 import org.jetbrains.anko.ToastsKt;
+import org.jetbrains.annotations.NotNull;
+
+import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function2;
 
 public class SleepMode extends AppCompatActivity implements WordsProviderUpdate, OnCompletionListener {
     public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
@@ -149,6 +160,35 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             wl.release();
         }
 
+        final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final String user = sP.getString(MainActivity.USER_PREF, "NA");
+        final int timeout = 60000; // 1 min
+
+        Fuel.upload("https://cortical.csl.sri.com/langlearn/user/" + user +"/upload")
+                .timeout(timeout)
+                .source(new Function2<Request, URL, File>() {
+                    @Override
+                    public File invoke(Request request, URL url) {
+                        return new File(getFilesDir(), "log-sleep-" + logDateToStr + ".txt");
+                    }
+                }).name(new Function0<String>() {
+                    @Override
+                    public String invoke() {
+                        return "app_log_file";
+                    }
+                }).responseString(new com.github.kittinunf.fuel.core.Handler<String>() {
+                    @Override
+                    public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError error) {
+                        Log.e(TAG, response.toString());
+                        Log.e(TAG, error.toString());
+                    }
+
+                    @Override
+                    public void success(@NotNull Request request, @NotNull Response response, String data) {
+                        Log.d(TAG, request.cUrlString());
+                        Log.d(TAG, "https://cortical.csl.sri.com/langlearn/user/" + user + "/upload " + response.getHttpStatusCode() + ":" + response.getHttpResponseMessage());
+                    }
+                });
         super.onStop();
     }
 

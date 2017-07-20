@@ -3,15 +3,13 @@ package edu.northwestern.langlearn
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import org.json.JSONException
+
 import org.json.JSONObject
 
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 import java.net.URL
-import java.net.UnknownHostException
-import java.io.FileNotFoundException
 
 data class Word(val norm: String, val audio_url: String, val word: String)
 
