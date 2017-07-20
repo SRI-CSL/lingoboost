@@ -38,6 +38,8 @@ class WordsProvider(val jsonUrl: String) {
     var jsonError: String = SleepMode.JSON_ERROR_MESSAGE
         private set
 
+    private val TAG = javaClass.simpleName
+
     fun fetchJSONWords(updateImpl: WordsProviderUpdate): Unit {
         doAsync {
             var errorMsg: String? = ""
@@ -74,9 +76,22 @@ class WordsProvider(val jsonUrl: String) {
         }
         """
         val Words: MutableList<Word> = mutableListOf()
-        // val Words: Array<Word> = Array(0) { idx -> Word(name = "$idx") } // Array(0, { idx -> Word(name = "$idx") })
-        // val Words: Array<Word> = Array(0) { Word(name = "$it") }
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
+
+
+
+        Log.d(TAG, "jsonStartDelay: ${ jsonStartDelay.toString() }")
+        jsonObj.getLongLogCatch("start_delay") { jsonStartDelay = it * 1000; Log.d(TAG, it.toString()) }
+
+        fetchFromJSONObjectByClass<Long>(Long::class.java, jsonObj, "start_delay") { jsonStartDelay = it * 1000; Log.d(TAG, it.toString()) }
+
+        fetchFromJSONObject<Long>(jsonObj, "start_delay") { jsonStartDelay = it * 1000; Log.d(TAG, it.toString()) }
+
+        fetchFromJSONObject<Boolean>(jsonObj, "sham") { jsonSham = it; Log.d(TAG, it.toString()) }
+
+        jsonObj.fetchIt<Long>("start_delay") { jsonStartDelay = it * 1000; Log.d(TAG, it.toString()) }
+
+
 
         try {
             val startDelay = jsonObj.getLong("start_delay")

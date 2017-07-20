@@ -86,35 +86,27 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         Log.d(TAG, "onStop")
         super.onStop()
 
-        // Fuel.post("http://httpbin.org/post", listOf("foo" to "foo")).response { request, response, result -> }
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
         val user = sP.getString(MainActivity.USER_PREF, "NA")
         val timeout = 60000 // 1 min
 
-         // "https://cortical.csl.sri.com/langlearn/user/$user/upload".httpPost(listOf("app_log_file" to "log_of_foo")).responseString { request, response, result ->
-         // "http://httpbin.org/post".httpPost(listOf("log_file" to "log_of_foo")).responseString { request, response, result ->
-         //     Log.d(TAG, "http://httpbin.org/post ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
-         // }
+        "https://cortical.csl.sri.com/langlearn/user/$user/upload"
+            .httpUpload()
+            .timeout(timeout)
+            .source { request, url -> File(filesDir, "log-test-$logDateToStr.txt") }
+            .name { "app_log_file" }
+            .progress { writtenBytes, totalBytes -> Log.d(TAG, "Upload: ${ writtenBytes.toFloat().toString() } Total: ${ totalBytes.toFloat().toString() }") }
+            .responseString { request, response, result ->
+                Log.d(TAG, request.cUrlString())
+                val (data, error) = result
 
-        // Fuel.upload("https://cortical.csl.sri.com/langlearn/user/$user/upload").timeout(timeout).source { request, url ->
-        "https://cortical.csl.sri.com/langlearn/user/$user/upload".httpUpload().timeout(timeout).source { request, url ->
-            File(filesDir, "log-test-$logDateToStr.txt")
-        }.name {
-            "app_log_file"
-        }.progress { writtenBytes, totalBytes ->
-            Log.d(TAG, "Upload: ${ writtenBytes.toFloat().toString() } Total: ${ totalBytes.toFloat().toString() }")
-        }.responseString { request, response, result ->
-            Log.d(TAG, request.cUrlString())
-
-            val (data, error) = result
-
-            if (error != null) {
-                Log.e(TAG, response.toString())
-                Log.e(TAG, error.toString())
-            } else {
-                Log.d(TAG, "https://cortical.csl.sri.com/langlearn/user/$user/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+                if (error != null) {
+                    Log.e(TAG, response.toString())
+                    Log.e(TAG, error.toString())
+                } else {
+                    Log.d(TAG, "https://cortical.csl.sri.com/langlearn/user/$user/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+                }
             }
-        }
     }
 
     override fun updateJSONWords(json: String) {
