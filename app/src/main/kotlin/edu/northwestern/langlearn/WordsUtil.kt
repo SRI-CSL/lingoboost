@@ -1,10 +1,13 @@
 package edu.northwestern.langlearn
 
 import android.util.Log
+import java.net.URL
 
 import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONException
+import java.io.FileNotFoundException
+import java.net.UnknownHostException
 
 inline fun JSONObject.getItLong(key: String, block: (value: Long) -> Unit) {
     try {
@@ -39,6 +42,18 @@ inline fun JSONObject.getItJSONArray(key: String, block: (value: JSONArray) -> U
     }
 }
 
+inline fun URL.readItText(block: (text: String, error: String?) -> Unit) {
+    try {
+        block(this.readText(), "")
+    } catch (e: UnknownHostException) {
+        Log.e("${ javaClass.simpleName }KEx", e.message)
+        block("", e.message)
+    } catch (e: FileNotFoundException) {
+        Log.e("${ javaClass.simpleName }KEx", e.message)
+        block("", e.message)
+    }
+}
+
 fun JSONObject.returnItString(key: String): String {
     try {
         return this.getString(key)
@@ -47,53 +62,3 @@ fun JSONObject.returnItString(key: String): String {
         return e.message ?: ""
     }
 }
-
-
-//inline fun <T: Any> fetchFromJSONObjectByClass(clazz: Class<T>, jsonObj: JSONObject, key: String, block: (value: T) -> Unit) {
-//    Log.d("fetchFromJSONObject", "Here2")
-//    Log.d("fetchFromJSONObject", clazz.toString())
-//
-//    try {
-//        when {
-//            clazz.isInstance(Long::class.javaObjectType) -> {
-//                Log.d("fetchFromJSONObject", "Here3...")
-//                block(jsonObj.getLong(key) as T)
-//            }
-//        }
-//    } catch (e: JSONException) {
-//        Log.w("fetchFromJSONObject", e.message)
-//    }
-//}
-//
-//inline fun <reified T> JSONObject.getIt(key: String, block: (value: T) -> Unit) {
-//    Log.d("fetchFromJSONObject", "Here4")
-//
-//    try {
-//        when {
-//            Long is T -> { block(this.getLong(key) as T) }
-//            // Boolean is T -> { block(this.getBoolean(key) as T) }
-//            String is T -> { block(this.getString(key) as T) }
-//        }
-//
-//        Log.d("fetchFromJSONObject", "Here5")
-//
-//        val clazz: T
-//
-//        if (T::class.simpleName == "Long") {
-//            Log.d("fetchFromJSONObject", "Here6")
-//            block(this.getLong(key) as T)
-//        }
-//
-//
-//    } catch (e: JSONException) {
-//        Log.w("fetchFromJSONObject", e.message)
-//    }
-//}
-
-//try {
-//    val error = jsonObj.getString("error")
-//
-//    jsonError = error
-//} catch (e: JSONException) {
-//    Log.i(javaClass.simpleName, e.message)
-//}

@@ -42,23 +42,13 @@ class WordsProvider(val jsonUrl: String) {
 
     fun fetchJSONWords(updateImpl: WordsProviderUpdate): Unit {
         doAsync {
-            var errorMsg: String? = ""
-
-            try {
-                val json = URL(jsonUrl).readText()
-
-                Log.d(javaClass.simpleName, json.length.toString())
-                uiThread { updateImpl.updateJSONWords(json) } // if (!sleepModeActivity.isFinishing) uiThread does this since it is used by an Activity
-            } catch (e: UnknownHostException) {
-                Log.e(javaClass.simpleName, e.message)
-                errorMsg = e.message
-            } catch (e: FileNotFoundException) {
-                Log.e(javaClass.simpleName, e.message)
-                errorMsg = e.message
-            }
-
-            if (errorMsg?.isNotEmpty() ?: true) {
-                uiThread { updateImpl.openMessageActivity(errorMsg ?: "The exception message was null") }
+            URL(jsonUrl).readItText() { text, error ->
+                if (text.isNotEmpty()) {
+                    Log.d(javaClass.simpleName, text.length.toString())
+                    uiThread { updateImpl.updateJSONWords(text) }
+                } else {
+                    uiThread { updateImpl.openMessageActivity(error ?: "The exception message was null") }
+                }
             }
         }
     }
@@ -78,8 +68,6 @@ class WordsProvider(val jsonUrl: String) {
         val Words: MutableList<Word> = mutableListOf()
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
-
-
         jsonObj.getItLong("start_delay") { jsonStartDelay = it * 1000 }
         jsonObj.getItLong("word_delay") { jsonWordDelay = it * 1000 }
         jsonObj.getItBoolean("sham") { jsonSham = it }
@@ -87,9 +75,9 @@ class WordsProvider(val jsonUrl: String) {
 
         jsonObj.getItJSONArray("words") {
             for (i in 0..it.length() - 1) {
-                val n = it.getJSONObject(i).returnItString("norm")         // getString("norm")
-                val url = it.getJSONObject(i).returnItString("audio_url")  // getString("audio_url")
-                val w = it.getJSONObject(i).returnItString("word")         // getString("word")
+                val n = it.getJSONObject(i).returnItString("norm")
+                val url = it.getJSONObject(i).returnItString("audio_url")
+                val w = it.getJSONObject(i).returnItString("word")
                 val word = Word(n, url, w)
 
                 Log.d(TAG, "$i $word")
