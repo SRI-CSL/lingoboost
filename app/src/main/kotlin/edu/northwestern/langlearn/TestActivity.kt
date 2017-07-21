@@ -133,7 +133,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             val word = words.get(wordsIndex).word
 
             playAudioUrl()
-            words_text_word.text = word
+            words_text_word.text = "$word (${ wordsIndex + 1} of ${ words.size })"
             words_edit_word.text.clear()
         } else {
             finish()
