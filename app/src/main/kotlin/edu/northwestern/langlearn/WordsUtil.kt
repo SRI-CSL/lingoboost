@@ -8,6 +8,7 @@ import org.json.JSONObject
 import org.json.JSONException
 import java.io.FileNotFoundException
 import java.net.UnknownHostException
+import kotlin.reflect.KClass
 
 inline fun JSONObject.getItLong(key: String, block: (value: Long) -> Unit) {
     try {
@@ -62,3 +63,16 @@ fun JSONObject.returnItString(key: String): String {
         return e.message ?: ""
     }
 }
+
+
+//inline fun <reified T> JSONObject.getIt(key: String, block: (value: T) -> Unit) {
+//    try {
+//        when {
+//            Long is T -> { block(this.getLong(key) as T) }
+//            String is T -> { block(this.getString(key) as T) }
+//            // Boolean is T -> { block(this.getBoolean(key) as T) } // Boolean broken no compnion object
+//        }
+//    } catch (e: JSONException) {
+//        Log.w("${ javaClass.simpleName }KEx", e.message)
+//    }
+//}

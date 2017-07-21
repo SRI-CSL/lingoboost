@@ -70,6 +70,7 @@ class WordsProvider(val jsonUrl: String) {
         jsonObj.getItLong("word_delay") { jsonWordDelay = it * 1000 }
         jsonObj.getItBoolean("sham") { jsonSham = it }
         jsonObj.getItString("error") { jsonError = it }
+        // jsonObj.getIt<Long>("start_delay") { Log.d(TAG, it.toString()) }
 
         jsonObj.getItJSONArray("words") {
             for (i in 0..it.length() - 1) {

@@ -53,6 +53,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         setContentView(R.layout.activity_words)
         // words_edit_word.isFocusable = false
         words_text_word.text = ""
+        words_edit_word.hint = "Words Updating..."
         writeCSVHeader()
 
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
@@ -121,6 +122,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             return
         }
 
+        words_edit_word.hint = "Translate this word to English"
         continueWordTesting()
     }
 
