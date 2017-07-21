@@ -164,7 +164,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final String user = sP.getString(MainActivity.USER_PREF, "NA");
         final int timeout = 60000; // 1 min
 
-        Fuel.upload("https://cortical.csl.sri.com/langlearn/user/" + user +"/upload")
+        Fuel.upload("https://cortical.csl.sri.com/langlearn/user/" + user +"/upload?purpose=sleep")
                 .timeout(timeout)
                 .source(new Function2<Request, URL, File>() {
                     @Override
@@ -215,9 +215,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
 
         if (lastPracticeTime.equalsIgnoreCase("NA")) {
-            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user);
+            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "?purpose=sleep");
         } else {
-            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime); //.replace(" ", "'T'"));
+            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime + "?purpose=sleep");
         }
 
         wordsProvider.fetchJSONWords(this);

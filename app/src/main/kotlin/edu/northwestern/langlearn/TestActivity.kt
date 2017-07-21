@@ -59,7 +59,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
         val user = sP.getString(MainActivity.USER_PREF, "NA")
 
-        wordsProvider = WordsProvider("https://cortical.csl.sri.com/langlearn/user/$user")
+        wordsProvider = WordsProvider("https://cortical.csl.sri.com/langlearn/user/$user?purpose=test")
         wordsProvider.fetchJSONWords(this)
 
         words_edit_word.afterTextChanged {
@@ -91,7 +91,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val user = sP.getString(MainActivity.USER_PREF, "NA")
         val timeout = 60000 // 1 min
 
-        "https://cortical.csl.sri.com/langlearn/user/$user/upload"
+        "https://cortical.csl.sri.com/langlearn/user/$user/upload?purpose=test"
             .httpUpload()
             .timeout(timeout)
             .source { request, url -> File(filesDir, "log-test-$logDateToStr.txt") }
