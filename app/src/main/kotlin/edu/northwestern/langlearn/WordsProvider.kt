@@ -81,9 +81,6 @@ class WordsProvider(val jsonUrl: String) {
                 it.getJSONObject(i).getIt<String>("norm") { n = it }
                 it.getJSONObject(i).getIt<String>("audio_url") { url = it }
                 it.getJSONObject(i).getIt<String>("word") { w = it }
-                // val n = it.getJSONObject(i).getStringValue("norm")
-                // val url = it.getJSONObject(i).getStringValue("audio_url")
-                // val w = it.getJSONObject(i).getStringValue("word")
 
                 val word = Word(n, url, w)
 
