@@ -8,6 +8,7 @@ import org.json.JSONObject
 
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.json.JSONArray
 
 import java.net.URL
 
@@ -66,20 +67,22 @@ class WordsProvider(val jsonUrl: String) {
         val Words: MutableList<Word> = mutableListOf()
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
-        jsonObj.getItLong("start_delay") { jsonStartDelay = it * 1000 }
-        jsonObj.getItLong("word_delay") { jsonWordDelay = it * 1000 }
-        jsonObj.getItBoolean("sham") { jsonSham = it }
-        jsonObj.getItString("error") { jsonError = it }
+        //jsonObj.getIt<Long>("start_delay", JSONObject::getLong) { jsonStartDelay = it * 1000 }
+        //jsonObj.getIt<Long>("word_delay", JSONObject::getLong) { jsonWordDelay = it * 1000 }
+        //jsonObj.getIt<Boolean>("sham", JSONObject::getBoolean) { jsonSham = it }
+        //jsonObj.getIt<String>("error", JSONObject::getString) { jsonError = it }
 
+        jsonObj.getIt<Int>("start_delay") { jsonStartDelay = it.toLong() * 1000 }
+        jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
+        jsonObj.getIt<Boolean>("sham") { jsonSham = it }
+        jsonObj.getIt<String>("error") { jsonError = it }
 
-        jsonObj.getIt<Long>("start_delay") { Log.d(TAG, "getIt v1: $it") }
-        jsonObj.getIt<Long>("start_delay", JSONObject::getLong) { Log.d(TAG, "getIt v2 $it") }
-
-        jsonObj.getItJSONArray("words") {
+        //jsonObj.getIt<JSONArray>("words", JSONObject::getJSONArray) {
+        jsonObj.getIt<JSONArray>("words") {
             for (i in 0..it.length() - 1) {
-                val n = it.getJSONObject(i).returnItString("norm")
-                val url = it.getJSONObject(i).returnItString("audio_url")
-                val w = it.getJSONObject(i).returnItString("word")
+                val n = it.getJSONObject(i).getStringValue("norm")
+                val url = it.getJSONObject(i).getStringValue("audio_url")
+                val w = it.getJSONObject(i).getStringValue("word")
                 val word = Word(n, url, w)
 
                 Log.d(TAG, "$i $word")

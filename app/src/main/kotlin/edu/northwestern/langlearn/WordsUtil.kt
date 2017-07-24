@@ -9,21 +9,18 @@ import org.json.JSONException
 import java.io.FileNotFoundException
 import java.net.UnknownHostException
 
+
 inline fun <reified T> JSONObject.getIt(key: String, block: (value: T) -> Unit) {
     try {
-        when (T::class) {
-            kotlin.Long::class.java -> block(this.getLong(key) as T) // as Long
-            kotlin.String::class.java -> block(this.getString(key) as T) // as Stirng
-            kotlin.Boolean::class.java -> block(this.getBoolean(key) as T) // as Boolean
-            else -> {
-                Log.w("${ javaClass.simpleName }KEx", "Missing type T in JSONObject.getIt extension function")
-            }
-        }
+        block(this.get(key) as T)
     } catch (e: JSONException) {
         Log.w("${ javaClass.simpleName }KEx", e.message)
     }
 }
 
+//jsonObj.getIt<Long>("word_delay", JSONObject::getLong) { jsonWordDelay = it * 1000 }
+//jsonObj.getIt<Boolean>("sham", JSONObject::getBoolean) { jsonSham = it }
+//jsonObj.getIt<String>("error", JSONObject::getString) { jsonError = it }
 inline fun <T> JSONObject.getIt(key: String, accessor: JSONObject.(String) -> T, block: (T) -> Unit) {
     try {
         accessor(key).let(block)
@@ -32,36 +29,12 @@ inline fun <T> JSONObject.getIt(key: String, accessor: JSONObject.(String) -> T,
     }
 }
 
-inline fun JSONObject.getItLong(key: String, block: (value: Long) -> Unit) {
+fun JSONObject.getStringValue(key: String): String {
     try {
-        block(this.getLong(key))
+        return this.getString(key)
     } catch (e: JSONException) {
         Log.w("${ javaClass.simpleName }KEx", e.message)
-    }
-}
-
-inline fun JSONObject.getItBoolean(key: String, block: (value: Boolean) -> Unit) {
-    try {
-        block(this.getBoolean(key))
-    } catch (e: JSONException) {
-        Log.w("${ javaClass.simpleName }KEx", e.message)
-    }
-}
-
-inline fun JSONObject.getItString(key: String, block: (value: String) -> Unit) {
-
-    try {
-        block(this.getString(key))
-    } catch (e: JSONException) {
-        Log.w("${ javaClass.simpleName }KEx", e.message)
-    }
-}
-
-inline fun JSONObject.getItJSONArray(key: String, block: (value: JSONArray) -> Unit) {
-    try {
-        block(this.getJSONArray("words"))
-    } catch (e: JSONException) {
-        Log.e("${ javaClass.simpleName }KEx", e.message)
+        return e.message ?: ""
     }
 }
 
@@ -77,11 +50,35 @@ inline fun URL.readItText(block: (text: String, error: String?) -> Unit) {
     }
 }
 
-fun JSONObject.returnItString(key: String): String {
-    try {
-        return this.getString(key)
-    } catch (e: JSONException) {
-        Log.w("${ javaClass.simpleName }KEx", e.message)
-        return e.message ?: ""
-    }
-}
+//inline fun JSONObject.getItLong(key: String, block: (value: Long) -> Unit) {
+//    try {
+//        block(this.getLong(key))
+//    } catch (e: JSONException) {
+//        Log.w("${ javaClass.simpleName }KEx", e.message)
+//    }
+//}
+//
+//inline fun JSONObject.getItBoolean(key: String, block: (value: Boolean) -> Unit) {
+//    try {
+//        block(this.getBoolean(key))
+//    } catch (e: JSONException) {
+//        Log.w("${ javaClass.simpleName }KEx", e.message)
+//    }
+//}
+//
+//inline fun JSONObject.getItString(key: String, block: (value: String) -> Unit) {
+//
+//    try {
+//        block(this.getString(key))
+//    } catch (e: JSONException) {
+//        Log.w("${ javaClass.simpleName }KEx", e.message)
+//    }
+//}
+//
+//inline fun JSONObject.getItJSONArray(key: String, block: (value: JSONArray) -> Unit) {
+//    try {
+//        block(this.getJSONArray("words"))
+//    } catch (e: JSONException) {
+//        Log.e("${ javaClass.simpleName }KEx", e.message)
+//    }
+//}
