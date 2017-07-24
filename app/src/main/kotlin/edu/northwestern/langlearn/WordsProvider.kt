@@ -67,17 +67,11 @@ class WordsProvider(val jsonUrl: String) {
         val Words: MutableList<Word> = mutableListOf()
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
-        //jsonObj.getIt<Long>("start_delay", JSONObject::getLong) { jsonStartDelay = it * 1000 }
-        //jsonObj.getIt<Long>("word_delay", JSONObject::getLong) { jsonWordDelay = it * 1000 }
-        //jsonObj.getIt<Boolean>("sham", JSONObject::getBoolean) { jsonSham = it }
-        //jsonObj.getIt<String>("error", JSONObject::getString) { jsonError = it }
-
         jsonObj.getIt<Int>("start_delay") { jsonStartDelay = it.toLong() * 1000 }
         jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
         jsonObj.getIt<Boolean>("sham") { jsonSham = it }
         jsonObj.getIt<String>("error") { jsonError = it }
 
-        //jsonObj.getIt<JSONArray>("words", JSONObject::getJSONArray) {
         jsonObj.getIt<JSONArray>("words") {
             for (i in 0..it.length() - 1) {
                 val n = it.getJSONObject(i).getStringValue("norm")
