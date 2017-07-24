@@ -16,15 +16,6 @@ inline fun <reified T> JSONObject.getIt(key: String, block: (value: T) -> Unit) 
     }
 }
 
-fun JSONObject.getStringValue(key: String): String {
-    try {
-        return this.getString(key)
-    } catch (e: JSONException) {
-        Log.w("${ javaClass.simpleName }KEx", e.message)
-        return e.message ?: ""
-    }
-}
-
 inline fun URL.readItText(block: (text: String, error: String?) -> Unit) {
     try {
         block(this.readText(), "")
@@ -37,6 +28,17 @@ inline fun URL.readItText(block: (text: String, error: String?) -> Unit) {
     }
 }
 
+// NOTE:
+//fun JSONObject.getStringValue(key: String): String {
+//    try {
+//        return this.getString(key)
+//    } catch (e: JSONException) {
+//        Log.w("${ javaClass.simpleName }KEx", e.message)
+//        return e.message ?: ""
+//    }
+//}
+
+// NOTE: Cannot inline currently an optional function parameter (see below = null)
 //fun <T> JSONObject.getEx(key: String, block: ((value: T) -> T?)? = null): T? {
 //    var r: T? = null
 //

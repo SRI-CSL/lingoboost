@@ -73,10 +73,18 @@ class WordsProvider(val jsonUrl: String) {
         jsonObj.getIt<String>("error") { jsonError = it }
 
         jsonObj.getIt<JSONArray>("words") {
+            var n: String = ""
+            var url: String = ""
+            var w: String = ""
+
             for (i in 0..it.length() - 1) {
-                val n = it.getJSONObject(i).getStringValue("norm")
-                val url = it.getJSONObject(i).getStringValue("audio_url")
-                val w = it.getJSONObject(i).getStringValue("word")
+                it.getJSONObject(i).getIt<String>("norm") { n = it }
+                it.getJSONObject(i).getIt<String>("audio_url") { url = it }
+                it.getJSONObject(i).getIt<String>("word") { w = it }
+                // val n = it.getJSONObject(i).getStringValue("norm")
+                // val url = it.getJSONObject(i).getStringValue("audio_url")
+                // val w = it.getJSONObject(i).getStringValue("word")
+
                 val word = Word(n, url, w)
 
                 Log.d(TAG, "$i $word")
