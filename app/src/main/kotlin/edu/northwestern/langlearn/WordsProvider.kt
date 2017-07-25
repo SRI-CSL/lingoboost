@@ -8,7 +8,6 @@ import org.json.JSONObject
 
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import org.json.JSONArray
 
 import java.net.URL
 

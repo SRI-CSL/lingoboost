@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 
 import java.io.IOException
@@ -35,6 +36,10 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     })
 }
 
+fun EditText.asString(): String {
+    return text.toString()
+}
+
 class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     override val wordsProviderUpdateActivity: AppCompatActivity
         get() = this
@@ -51,7 +56,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_words)
-        // words_edit_word.isFocusable = false
         words_text_word.text = ""
         words_edit_word.hint = "Words Updating..."
         writeCSVHeader()
@@ -62,16 +66,23 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         wordsProvider = WordsProvider("https://cortical.csl.sri.com/langlearn/user/$user?purpose=test")
         wordsProvider.fetchJSONWords(this)
 
+        submit.setOnClickListener(View.OnClickListener {
+            Log.d(TAG, "submit OnClickListener")
+
+            if (words_edit_word.text.isNotEmpty()) {
+                destroyPlayer()
+                logTestResults(words_edit_word.asString()) { continueWordTesting() }
+            }
+        })
+
         words_edit_word.afterTextChanged {
             Log.d(TAG, "afterTextChanged")
 
             if (it.isNotEmpty()) {
+                Log.d(TAG, "afterTextChanged ${ it.toString() }")
 
                 if (it.last() == '\n') {
-                    val text = it.toString().replace("\n", "")
-
-                    destroyPlayer()
-                    logTestResults(text) { continueWordTesting() }
+                    words_edit_word.setText(it.toString().replace("\n", ""))
                 }
             }
         }

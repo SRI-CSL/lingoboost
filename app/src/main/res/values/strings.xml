@@ -4,6 +4,7 @@
     <string name="title_activity_message">Messages</string>
     <string name="sleep_button">Start Sleep Session</string>
     <string name="settomgs_button">Settings</string>
+    <string name="submit_button">Submit</string>
     <string name="test_words_button">Test Words</string>
     <string name="text_sleep_session">Adjust the volume to a comfortable level and place the phone next to your pillow with the screen up</string>
     <string name="test_word_text">Wordzzz</string>
