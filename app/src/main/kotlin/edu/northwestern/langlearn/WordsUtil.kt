@@ -16,7 +16,15 @@ inline fun <reified T> JSONObject.getIt(key: String, block: (value: T) -> Unit) 
     }
 }
 
-inline fun URL.readItText(block: (text: String, error: String?) -> Unit) {
+inline fun JSONObject.unless(func: JSONObject.() -> Unit) {
+    try {
+        this.func()
+    } catch (e: JSONException) {
+        Log.w("${ javaClass.simpleName }KEx", e.message)
+    }
+}
+
+inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
     try {
         block(this.readText(), "")
     } catch (e: UnknownHostException) {

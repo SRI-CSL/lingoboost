@@ -41,7 +41,7 @@ class WordsProvider(val jsonUrl: String) {
 
     fun fetchJSONWords(updateImpl: WordsProviderUpdate): Unit {
         doAsync {
-            URL(jsonUrl).readItText() { text, error ->
+            URL(jsonUrl).readText { text, error ->
                 if (text.isNotEmpty()) {
                     Log.d(javaClass.simpleName, text.length.toString())
                     uiThread { updateImpl.updateJSONWords(text) }
@@ -67,10 +67,18 @@ class WordsProvider(val jsonUrl: String) {
         val Words: MutableList<Word> = mutableListOf()
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
-        jsonObj.getIt<Int>("start_delay") { jsonStartDelay = it.toLong() * 1000 }
-        jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
-        jsonObj.getIt<Boolean>("sham") { jsonSham = it }
-        jsonObj.getIt<String>("error") { jsonError = it }
+        //jsonObj.getIt<Int>("start_delay") { jsonStartDelay = it.toLong() * 1000 }
+        //jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
+        //jsonObj.getIt<Boolean>("sham") { jsonSham = it }
+        //jsonObj.getIt<String>("error") { jsonError = it }
+
+        jsonObj.unless {
+            jsonStartDelay = getLong("start_delay") * 1000
+            jsonWordDelay = getLong("word_delay") * 1000
+        }
+        jsonObj.unless { jsonSham = getBoolean("sham") }
+        jsonObj.unless { jsonError = getString("error") }
+
 
         jsonObj.getIt<JSONArray>("words") {
             var n: String = ""
@@ -78,9 +86,14 @@ class WordsProvider(val jsonUrl: String) {
             var w: String = ""
 
             for (i in 0..it.length() - 1) {
-                it.getJSONObject(i).getIt<String>("norm") { n = it }
-                it.getJSONObject(i).getIt<String>("audio_url") { url = it }
-                it.getJSONObject(i).getIt<String>("word") { w = it }
+                it.getJSONObject(i).unless {
+                    n = getString("norm")
+                    url = getString("audio_url")
+                    w = getString("word")
+                }
+                //it.getJSONObject(i).getIt<String>("norm") { n = it }
+                //it.getJSONObject(i).getIt<String>("audio_url") { url = it }
+                //it.getJSONObject(i).getIt<String>("word") { w = it }
 
                 val word = Word(n, url, w)
 
