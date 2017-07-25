@@ -67,33 +67,24 @@ class WordsProvider(val jsonUrl: String) {
         val Words: MutableList<Word> = mutableListOf()
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
-        //jsonObj.getIt<Int>("start_delay") { jsonStartDelay = it.toLong() * 1000 }
-        //jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
-        //jsonObj.getIt<Boolean>("sham") { jsonSham = it }
-        //jsonObj.getIt<String>("error") { jsonError = it }
-
         jsonObj.unless {
             jsonStartDelay = getLong("start_delay") * 1000
             jsonWordDelay = getLong("word_delay") * 1000
         }
         jsonObj.unless { jsonSham = getBoolean("sham") }
         jsonObj.unless { jsonError = getString("error") }
-
-
-        jsonObj.getIt<JSONArray>("words") {
+        jsonObj.unless {
+            val words = getJSONArray("words")
             var n: String = ""
             var url: String = ""
             var w: String = ""
 
-            for (i in 0..it.length() - 1) {
-                it.getJSONObject(i).unless {
+            for (i in 0..words.length() - 1) {
+                words.getJSONObject(i).unless {
                     n = getString("norm")
                     url = getString("audio_url")
                     w = getString("word")
                 }
-                //it.getJSONObject(i).getIt<String>("norm") { n = it }
-                //it.getJSONObject(i).getIt<String>("audio_url") { url = it }
-                //it.getJSONObject(i).getIt<String>("word") { w = it }
 
                 val word = Word(n, url, w)
 

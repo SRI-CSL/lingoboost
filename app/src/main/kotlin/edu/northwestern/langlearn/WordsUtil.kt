@@ -8,14 +8,6 @@ import org.json.JSONException
 import java.io.FileNotFoundException
 import java.net.UnknownHostException
 
-inline fun <reified T> JSONObject.getIt(key: String, block: (value: T) -> Unit) {
-    try {
-        block(this.get(key) as T)
-    } catch (e: JSONException) {
-        Log.w("${ javaClass.simpleName }KEx", e.message)
-    }
-}
-
 inline fun JSONObject.unless(func: JSONObject.() -> Unit) {
     try {
         this.func()
@@ -35,6 +27,17 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
         block("", e.message)
     }
 }
+
+//jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
+//jsonObj.getIt<Boolean>("sham") { jsonSham = it }
+//jsonObj.getIt<String>("error") { jsonError = it }
+//inline fun <reified T> JSONObject.getIt(key: String, block: (value: T) -> Unit) {
+//    try {
+//        block(this.get(key) as T)
+//    } catch (e: JSONException) {
+//        Log.w("${ javaClass.simpleName }KEx", e.message)
+//    }
+//}
 
 // NOTE:
 //fun JSONObject.getStringValue(key: String): String {
