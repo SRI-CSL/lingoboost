@@ -12,19 +12,21 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 
+import java.text.SimpleDateFormat
 import java.io.IOException
 import java.io.OutputStreamWriter
-import java.text.SimpleDateFormat
+import java.io.File
 import java.util.Locale
 import java.util.Date
 
 //import com.github.kittinunf.fuel.Fuel
 //import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpUpload
+import com.github.kittinunf.fuel.core.FuelError
 
 //import org.jetbrains.anko.longToast
+
 import kotlinx.android.synthetic.main.activity_words.*
-import java.io.File
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
@@ -49,6 +51,8 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private lateinit var words: List<Word>
     private var wordsIndex = 0
     private var mediaPlayer: MediaPlayer? = null
+    private var IsSubmitEnabled = true
+    private var IsLogUploaded = false
     private val logDateToStr by lazy {
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Date())
     }
@@ -69,7 +73,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         submit.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "submit OnClickListener")
 
-            if (words_edit_word.text.isNotEmpty()) {
+            if (IsSubmitEnabled && words_edit_word.text.isNotEmpty()) {
                 destroyPlayer()
                 logTestResults(words_edit_word.asString()) { continueWordTesting() }
             }
@@ -97,28 +101,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     override fun onStop() {
         Log.d(TAG, "onStop")
         super.onStop()
-
-        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val user = sP.getString(MainActivity.USER_PREF, "NA")
-        val timeout = 60000 // 1 min
-
-        "https://cortical.csl.sri.com/langlearn/user/$user/upload?purpose=test"
-            .httpUpload()
-            .timeout(timeout)
-            .source { request, url -> File(filesDir, "log-test-$logDateToStr.txt") }
-            .name { "app_log_file" }
-            .progress { writtenBytes, totalBytes -> Log.d(TAG, "Upload: ${ writtenBytes.toFloat().toString() } Total: ${ totalBytes.toFloat().toString() }") }
-            .responseString { request, response, result ->
-                Log.d(TAG, request.cUrlString())
-                val (data, error) = result
-
-                if (error != null) {
-                    Log.e(TAG, response.toString())
-                    Log.e(TAG, error.toString())
-                } else {
-                    Log.d(TAG, "https://cortical.csl.sri.com/langlearn/user/$user/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
-                }
-            }
+        uploadLog()
     }
 
     override fun updateJSONWords(json: String) {
@@ -147,8 +130,39 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             words_text_word.text = "$word (${ wordsIndex + 1} of ${ words.size })"
             words_edit_word.text.clear()
         } else {
-            finish()
+            uploadLog()
+            words_edit_word.text.clear()
+            words_edit_word.hint = "Great Job! Your data is sent"
+            words_edit_word.isFocusable = false
+            IsSubmitEnabled = false
         }
+    }
+
+    private fun uploadLog() {
+        if (IsLogUploaded) return
+
+        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val user = sP.getString(MainActivity.USER_PREF, "NA")
+        val timeout = 60000 // 1 min
+
+        "https://cortical.csl.sri.com/langlearn/user/$user/upload?purpose=test"
+                .httpUpload()
+                .timeout(timeout)
+                .source { request, url -> File(filesDir, "log-test-$logDateToStr.txt") }
+                .name { "app_log_file" }
+                .progress { writtenBytes, totalBytes -> Log.d(TAG, "Upload: ${ writtenBytes.toFloat().toString() } Total: ${ totalBytes.toFloat().toString() }") }
+                .responseString { request, response, result ->
+                    Log.d(TAG, request.cUrlString())
+                    val (data: String?, err: FuelError?) = result
+
+                    if (err != null) {
+                        Log.e(TAG, response.toString())
+                        Log.e(TAG, (err as FuelError).toString())
+                    } else {
+                        IsLogUploaded = true
+                        Log.d(TAG, "https://cortical.csl.sri.com/langlearn/user/$user/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+                    }
+                }
     }
 
     private fun logTestResults(entry:String, next: () -> Unit) {
