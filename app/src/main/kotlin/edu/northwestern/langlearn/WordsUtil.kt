@@ -21,12 +21,13 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
         block(this.readText(), "")
     } catch (e: UnknownHostException) {
         Log.e("${ javaClass.simpleName }KEx", e.message)
-        block("", e.message)
+        block("", "No Internet Available. Please connect to the internet and try again")
     } catch (e: FileNotFoundException) {
         Log.e("${ javaClass.simpleName }KEx", e.message)
         block("", e.message)
     }
 }
+
 
 //jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
 //jsonObj.getIt<Boolean>("sham") { jsonSham = it }
@@ -36,16 +37,6 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
 //        block(this.get(key) as T)
 //    } catch (e: JSONException) {
 //        Log.w("${ javaClass.simpleName }KEx", e.message)
-//    }
-//}
-
-// NOTE:
-//fun JSONObject.getStringValue(key: String): String {
-//    try {
-//        return this.getString(key)
-//    } catch (e: JSONException) {
-//        Log.w("${ javaClass.simpleName }KEx", e.message)
-//        return e.message ?: ""
 //    }
 //}
 
@@ -77,30 +68,5 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
 //        block(this.getLong(key))
 //    } catch (e: JSONException) {
 //        Log.w("${ javaClass.simpleName }KEx", e.message)
-//    }
-//}
-//
-//inline fun JSONObject.getItBoolean(key: String, block: (value: Boolean) -> Unit) {
-//    try {
-//        block(this.getBoolean(key))
-//    } catch (e: JSONException) {
-//        Log.w("${ javaClass.simpleName }KEx", e.message)
-//    }
-//}
-//
-//inline fun JSONObject.getItString(key: String, block: (value: String) -> Unit) {
-//
-//    try {
-//        block(this.getString(key))
-//    } catch (e: JSONException) {
-//        Log.w("${ javaClass.simpleName }KEx", e.message)
-//    }
-//}
-//
-//inline fun JSONObject.getItJSONArray(key: String, block: (value: JSONArray) -> Unit) {
-//    try {
-//        block(this.getJSONArray("words"))
-//    } catch (e: JSONException) {
-//        Log.e("${ javaClass.simpleName }KEx", e.message)
 //    }
 //}
