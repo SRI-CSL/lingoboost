@@ -1,6 +1,7 @@
 package edu.northwestern.langlearn
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -59,6 +60,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_words)
         words_text_word.text = ""
         words_edit_word.hint = "Words Updating..."

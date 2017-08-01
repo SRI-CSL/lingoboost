@@ -3,9 +3,11 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
               android:paddingLeft="16dp"
-              android:paddingRight="16dp">
+              android:paddingRight="16dp"
+              android:orientation="vertical"
+              android:screenOrientation="portrait"
+              android:configChanges="keyboardHidden|orientation|screenSize">
 
     <TextView
         android:id="@+id/words_text_word"
