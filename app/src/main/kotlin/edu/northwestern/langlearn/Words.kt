@@ -1,5 +1,7 @@
 package edu.northwestern.langlearn
 
+import android.content.Intent
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import java.net.URL
 
@@ -7,6 +9,26 @@ import org.json.JSONObject
 import org.json.JSONException
 import java.io.FileNotFoundException
 import java.net.UnknownHostException
+
+typealias ListOfWords = List<Word>
+typealias MutableListOfWords = MutableList<Word>
+
+data class Word(val norm: String, val audio_url: String, val word: String)
+
+interface WordsProviderUpdate {
+    val wordsProviderUpdateActivity: AppCompatActivity
+
+    fun updateJSONWords(json: String)
+    fun openMessageActivity(errorMsg: String) {
+        val msgIntent = Intent(wordsProviderUpdateActivity, MessageActivity::class.java)
+        val MESSAGE_INTENT_EXTRA = "message"
+
+        msgIntent.putExtra(MESSAGE_INTENT_EXTRA, errorMsg)
+        wordsProviderUpdateActivity.startActivity(msgIntent)
+    }
+}
+
+fun mutableListOfWords(): MutableListOfWords = ArrayList()
 
 inline fun JSONObject.unless(func: JSONObject.() -> Unit) {
     try {

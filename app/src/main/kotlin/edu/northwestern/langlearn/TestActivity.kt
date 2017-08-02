@@ -20,12 +20,8 @@ import java.io.File
 import java.util.Locale
 import java.util.Date
 
-//import com.github.kittinunf.fuel.Fuel
-//import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpUpload
 import com.github.kittinunf.fuel.core.FuelError
-
-//import org.jetbrains.anko.longToast
 
 import kotlinx.android.synthetic.main.activity_words.*
 
@@ -49,7 +45,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private val TAG = javaClass.simpleName
     private lateinit var wordsProvider: WordsProvider
-    private lateinit var words: List<Word>
+    private lateinit var words: ListOfWords
     private var wordsIndex = 0
     private var mediaPlayer: MediaPlayer? = null
     private var IsSubmitEnabled = true

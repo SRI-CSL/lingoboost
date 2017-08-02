@@ -8,7 +8,7 @@ android {
         }
     }
 
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion '25.0.2'
     defaultConfig {
         applicationId "edu.northwestern.langlearn"
@@ -16,6 +16,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.5"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -42,14 +43,23 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Google play services is using 23.0.0, but we can safely ignore, only usling activity reporting
+    // ./gradlew -q dependencies app:dependencies --configuration compile
     compile "com.android.support:appcompat-v7:$app_compat"
     compile "com.android.support:design:$app_compat"
     compile "com.android.support.constraint:constraint-layout:$constraint_layout"
     compile "com.android.support:support-annotations:$annotations"
+
+    // Not upgrading play services due to extra requirements of newer version, account, etc. We only need Activity reporting.
     compile "com.google.android.gms:play-services:$play_services"
+
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.anko:anko-common:$anko_version"
+
     compile "com.github.kittinunf.fuel:fuel-android:$fuel_version"
+
+    compile "com.agilie:volume-control-view:$vol_version"
 }
 
 repositories {

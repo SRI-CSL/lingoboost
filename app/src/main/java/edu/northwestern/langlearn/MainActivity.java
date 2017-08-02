@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public static final String RESET_LAST_PRACTICED_PREF = "resetLastPraticed";
     public static final String VOLUME_WHITE_NOISE_PREF = "volumeWhiteNoise";
     public static final String PLAY_WHITE_NOISE_PREF = "playWhitenoise";
-    public static final String WHITE_NOISE_VOLUME_PREF_DEFAULT = "0.5";
+    public static final String WHITE_NOISE_VOLUME_PREF_DEFAULT = "0.05";
     public static final String INACTIVITY_DELAY_PREF = "inactivityDelay";
     public static final String NA_PREF = "NA";
 

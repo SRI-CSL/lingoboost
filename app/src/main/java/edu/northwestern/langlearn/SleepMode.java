@@ -64,7 +64,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private long delayMillis = DEFAULT_START_WORDS_DELAY_MILLIS;
     private long delayBetweenWords = DEFAULT_BETWEEN_WORDS_DELAY_MILLIS;
     private String jsonErrorMessage = JSON_ERROR_MESSAGE;
-    private float rightAndLeftWhiteNoiseVolume = 0.1f;
+    private float rightAndLeftWhiteNoiseVolume = 0.01f;
     private int wordsIndex = 0;
     private HashMap<String, Integer> lastActivity;
     @Nullable

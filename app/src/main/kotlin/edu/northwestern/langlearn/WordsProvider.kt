@@ -1,7 +1,5 @@
 package edu.northwestern.langlearn
 
-import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 
 import org.json.JSONObject
@@ -10,21 +8,6 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 import java.net.URL
-
-data class Word(val norm: String, val audio_url: String, val word: String)
-
-interface WordsProviderUpdate {
-    val wordsProviderUpdateActivity: AppCompatActivity
-
-    fun updateJSONWords(json: String)
-    fun openMessageActivity(errorMsg: String) {
-        val msgIntent = Intent(wordsProviderUpdateActivity, MessageActivity::class.java)
-        val MESSAGE_INTENT_EXTRA = "message"
-
-        msgIntent.putExtra(MESSAGE_INTENT_EXTRA, errorMsg)
-        wordsProviderUpdateActivity.startActivity(msgIntent)
-    }
-}
 
 class WordsProvider(val jsonUrl: String) {
     var jsonStartDelay: Long = SleepMode.DEFAULT_START_WORDS_DELAY_MILLIS
@@ -63,7 +46,7 @@ class WordsProvider(val jsonUrl: String) {
             ]
         }
         """
-        val Words: MutableList<Word> = mutableListOf()
+        val Words = mutableListOfWords()
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
         jsonObj.unless {
