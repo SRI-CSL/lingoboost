@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -11,34 +11,77 @@
               android:configChanges="keyboardHidden|orientation|screenSize">
 
     <com.agilie.volumecontrol.view.VolumeControlView
-        android:id="@+id/wordsVolume"
+        android:id="@+id/words_volume"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         app:controllerSpace="3"
         app:sectorRadius="6"
         app:splineCircleColor="#ffffff"
         app:shiningFrequency="0"
-        tools:context="com.agilie.controller.ControllerActivity">
-    </com.agilie.volumecontrol.view.VolumeControlView>
+        tools:context="com.agilie.controller.ControllerActivity" />
 
     <com.agilie.volumecontrol.view.VolumeControlView
-        android:id="@+id/whiteNoiseVolume"
+        android:id="@+id/white_noise_volume"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:layout_marginTop="10dp"
+        android:layout_below="@+id/text_view_word_playback"
         app:controllerSpace="3"
         app:sectorRadius="6"
         app:splineCircleColor="#ffffff"
         app:shiningFrequency="0"
-        tools:context="com.agilie.controller.ControllerActivity">
-    </com.agilie.volumecontrol.view.VolumeControlView>
+        android:visibility="gone"
+        tools:context="com.agilie.controller.ControllerActivity" />
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/seek_bar_words"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_below="@+id/words_volume"
+        android:theme="@style/Theme.AppCompat" />
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/seek_bar_white_noise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_below="@+id/white_noise_volume"
+        android:visibility="gone"
+        android:theme="@style/Theme.AppCompat"/>
+
+    <TextView
+        android:id="@+id/text_view_word_playback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seek_bar_words"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:text="Word playback volume" />
+
+    <TextView
+        android:id="@+id/text_view_white_noise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seek_bar_white_noise"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"
+        android:text="White noise playback volume" />
 
     <Button
-        android:id="@+id/volumeSubmit"
+        android:id="@+id/volume_next"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/save_button"
+        android:layout_below="@+id/text_view_white_noise"
+        android:layout_centerHorizontal="true"
+        android:text="Next"
         android:textSize="24.0sp" />
-</LinearLayout>
+
+</RelativeLayout>
