@@ -9,4 +9,5 @@
     <string name="text_sleep_session">Adjust the volume to a comfortable level and place the phone next to your pillow with the screen up</string>
     <string name="test_word_text">Wordzzz</string>
     <string name="test_word_edit_hint">Translate this word to English</string>
+    <string name="save_button">Save</string>
 </resources>

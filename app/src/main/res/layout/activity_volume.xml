@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:orientation="vertical"
+              android:screenOrientation="portrait"
+              android:configChanges="keyboardHidden|orientation|screenSize">
+
+    <com.agilie.volumecontrol.view.VolumeControlView
+        android:id="@+id/wordsVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
+        app:controllerSpace="3"
+        app:sectorRadius="6"
+        app:splineCircleColor="#ffffff"
+        app:shiningFrequency="0"
+        tools:context="com.agilie.controller.ControllerActivity">
+    </com.agilie.volumecontrol.view.VolumeControlView>
+
+    <com.agilie.volumecontrol.view.VolumeControlView
+        android:id="@+id/whiteNoiseVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_marginTop="10dp"
+        app:controllerSpace="3"
+        app:sectorRadius="6"
+        app:splineCircleColor="#ffffff"
+        app:shiningFrequency="0"
+        tools:context="com.agilie.controller.ControllerActivity">
+    </com.agilie.volumecontrol.view.VolumeControlView>
+
+    <Button
+        android:id="@+id/volumeSubmit"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_button"
+        android:textSize="24.0sp" />
+</LinearLayout>

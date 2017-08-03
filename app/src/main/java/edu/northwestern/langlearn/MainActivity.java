@@ -116,10 +116,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         testButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent tIntent = new Intent(MainActivity.this, TestActivity.class);
+                    Intent vIntent = new Intent(MainActivity.this, VolumeActivity.class);
 
-                    startActivity(tIntent);
-                }
+                    startActivity(vIntent);
+                    // Intent tIntent = new Intent(MainActivity.this, TestActivity.class);
+
+                    // startActivity(tIntent);
+                 }
         });
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
