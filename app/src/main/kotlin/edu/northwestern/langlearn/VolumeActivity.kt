@@ -1,6 +1,7 @@
 package edu.northwestern.langlearn
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.PointF
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -40,6 +41,30 @@ inline fun AppCompatSeekBar.onProgressChangeVolume(v: VolumeControlView, crossin
     })
 }
 
+inline fun SharedPreferences.edit(body: SharedPreferences.Editor.() -> Unit) {
+    val editor = edit()
+
+    editor.body()
+    editor.apply()
+}
+
+//inline fun SharedPreferences.get(body: SharedPreferences.() -> Unit) {
+//    this.body()
+//}
+
+fun SharedPreferences.Editor.put(pair: Pair<String, Any>) {
+    val key = pair.first
+    val value = pair.second
+    when(value) {
+        is String -> putString(key, value)
+        is Int -> putInt(key, value)
+        is Boolean -> putBoolean(key, value)
+        is Long -> putLong(key, value)
+        is Float -> putFloat(key, value)
+        else -> error("Only primitive types can be stored in SharedPreferences")
+    }
+}
+
 class VolumeActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
     private var mediaPlayer: MediaPlayer? = null
@@ -76,11 +101,13 @@ class VolumeActivity : AppCompatActivity() {
                 seek_bar_white_noise.visibility = View.GONE
                 text_view_white_noise.visibility = View.GONE
 
-                val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
+                val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
                 val tIntent: Intent = Intent(this, TestActivity::class.java)
 
-                sP.edit().putString(MainActivity.VOLUME_WORDS_PREF, (seek_bar_words.progress / 100f).toString()).apply()
-                sP.edit().putString(MainActivity.VOLUME_WHITE_NOISE_PREF, (seek_bar_white_noise.progress / 100f).toString()).apply()
+                prefs.edit {
+                    put(MainActivity.VOLUME_WORDS_PREF to (seek_bar_words.progress / 100f).toString())
+                    put(MainActivity.VOLUME_WHITE_NOISE_PREF to (seek_bar_white_noise.progress / 100f).toString())
+                }
                 startActivity(tIntent)
             }
         })
@@ -131,23 +158,42 @@ class VolumeActivity : AppCompatActivity() {
     }
 
     private fun checkSharedPreferences() {
-        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val wordsPercent: Int
-        val whiteNoisePercent: Int
+        val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        var wordsPercent: Int = 0
+        var whiteNoisePercent: Int = 0
 
-        if (sP.getString(MainActivity.VOLUME_WORDS_PREF, MainActivity.NA_PREF).contentEquals(MainActivity.NA_PREF) ?: false) {
-            sP.edit().putString(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT).apply()
-            wordsPercent = (MainActivity.WORDS_VOLUME_PREF_DEFAULT.toFloat() * 100f).toInt()
-        } else {
-            wordsPercent = (sP.getString(MainActivity.VOLUME_WORDS_PREF, MainActivity.NA_PREF).toFloat() * 100f).toInt()
+        prefs.apply {
+            wordsPercent = ((if (getString(MainActivity.VOLUME_WORDS_PREF, "").isEmpty()) {
+                edit { put(MainActivity.VOLUME_WORDS_PREF to MainActivity.WORDS_VOLUME_PREF_DEFAULT) }
+                MainActivity.WORDS_VOLUME_PREF_DEFAULT
+            } else {
+                getString(MainActivity.VOLUME_WORDS_PREF, "")
+            }).toFloat() * 100f).toInt()
+            whiteNoisePercent = ((if (getString(MainActivity.VOLUME_WHITE_NOISE_PREF, "").isEmpty()) {
+                edit { put(MainActivity.VOLUME_WHITE_NOISE_PREF to MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT) }
+                MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT
+            } else {
+                getString(MainActivity.VOLUME_WHITE_NOISE_PREF, "")
+            }).toFloat() * 100f).toInt()
+
+
+            // edit { put(MainActivity.VOLUME_WORDS_PREF to MainActivity.WORDS_VOLUME_PREF_DEFAULT) }
+            // edit { put(MainActivity.VOLUME_WHITE_NOISE_PREF to MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT) }
         }
 
-        if (sP.getString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.NA_PREF).contentEquals(MainActivity.NA_PREF) ?: false) {
-            sP.edit().putString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT).apply()
-            whiteNoisePercent = (MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT.toFloat() * 100f).toInt()
-        } else {
-            whiteNoisePercent = (sP.getString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.NA_PREF).toFloat() * 100f).toInt()
-        }
+//        if (wordsPref.isEmpty()) {
+//            prefs.edit { put(MainActivity.VOLUME_WORDS_PREF to MainActivity.WORDS_VOLUME_PREF_DEFAULT) }
+//            wordsPercent = (MainActivity.WORDS_VOLUME_PREF_DEFAULT.toFloat() * 100f).toInt()
+//        } else {
+//            wordsPercent = (wordsPref.toFloat() * 100f).toInt()
+//        }
+
+//        if (whiteNoisePref.isEmpty()) {
+//            prefs.edit { put(MainActivity.VOLUME_WHITE_NOISE_PREF to MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT) }
+//            whiteNoisePercent = (MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT.toFloat() * 100f).toInt()
+//        } else {
+//            whiteNoisePercent = (whiteNoisePref.toFloat() * 100f).toInt()
+//        }
 
         words_volume.setStartPercent(wordsPercent)
         seek_bar_words.progress = wordsPercent
