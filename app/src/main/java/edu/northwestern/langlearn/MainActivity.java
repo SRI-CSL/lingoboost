@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public static final String VOLUME_WORDS_PREF = "volumeWords";
     public static final String VOLUME_WHITE_NOISE_PREF = "volumeWhiteNoise";
     public static final String PLAY_WHITE_NOISE_PREF = "playWhitenoise";
-    public static final String WORDS_VOLUME_PREF_DEFAULT = "0.5";
-    public static final String WHITE_NOISE_VOLUME_PREF_DEFAULT = "0.1";
+    public static final int WORDS_VOLUME_PREF_DEFAULT = 50;
+    public static final int WHITE_NOISE_VOLUME_PREF_DEFAULT = 10;
     public static final String INACTIVITY_DELAY_PREF = "inactivityDelay";
     public static final String NA_PREF = "NA";
 

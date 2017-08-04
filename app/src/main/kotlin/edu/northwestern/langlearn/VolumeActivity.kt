@@ -45,17 +45,14 @@ inline fun SharedPreferences.edit(body: SharedPreferences.Editor.() -> Unit) {
     val editor = edit()
 
     editor.body()
-    editor.apply()
+    editor.apply() // not kotlin apply, prefs apply!
 }
-
-//inline fun SharedPreferences.get(body: SharedPreferences.() -> Unit) {
-//    this.body()
-//}
 
 fun SharedPreferences.Editor.put(pair: Pair<String, Any>) {
     val key = pair.first
     val value = pair.second
-    when(value) {
+
+    when (value) {
         is String -> putString(key, value)
         is Int -> putInt(key, value)
         is Boolean -> putBoolean(key, value)
@@ -105,8 +102,8 @@ class VolumeActivity : AppCompatActivity() {
                 val tIntent: Intent = Intent(this, TestActivity::class.java)
 
                 prefs.edit {
-                    put(MainActivity.VOLUME_WORDS_PREF to (seek_bar_words.progress / 100f).toString())
-                    put(MainActivity.VOLUME_WHITE_NOISE_PREF to (seek_bar_white_noise.progress / 100f).toString())
+                    put(MainActivity.VOLUME_WORDS_PREF to seek_bar_words.progress)
+                    put(MainActivity.VOLUME_WHITE_NOISE_PREF to seek_bar_white_noise.progress)
                 }
                 startActivity(tIntent)
             }
@@ -163,37 +160,13 @@ class VolumeActivity : AppCompatActivity() {
         var whiteNoisePercent: Int = 0
 
         prefs.apply {
-            wordsPercent = ((if (getString(MainActivity.VOLUME_WORDS_PREF, "").isEmpty()) {
-                edit { put(MainActivity.VOLUME_WORDS_PREF to MainActivity.WORDS_VOLUME_PREF_DEFAULT) }
-                MainActivity.WORDS_VOLUME_PREF_DEFAULT
-            } else {
-                getString(MainActivity.VOLUME_WORDS_PREF, "")
-            }).toFloat() * 100f).toInt()
-            whiteNoisePercent = ((if (getString(MainActivity.VOLUME_WHITE_NOISE_PREF, "").isEmpty()) {
-                edit { put(MainActivity.VOLUME_WHITE_NOISE_PREF to MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT) }
-                MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT
-            } else {
-                getString(MainActivity.VOLUME_WHITE_NOISE_PREF, "")
-            }).toFloat() * 100f).toInt()
-
-
-            // edit { put(MainActivity.VOLUME_WORDS_PREF to MainActivity.WORDS_VOLUME_PREF_DEFAULT) }
-            // edit { put(MainActivity.VOLUME_WHITE_NOISE_PREF to MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT) }
+            wordsPercent = getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT)
+            whiteNoisePercent = getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT)
+            edit {
+                put(MainActivity.VOLUME_WORDS_PREF to wordsPercent)
+                put(MainActivity.VOLUME_WHITE_NOISE_PREF to whiteNoisePercent)
+            }
         }
-
-//        if (wordsPref.isEmpty()) {
-//            prefs.edit { put(MainActivity.VOLUME_WORDS_PREF to MainActivity.WORDS_VOLUME_PREF_DEFAULT) }
-//            wordsPercent = (MainActivity.WORDS_VOLUME_PREF_DEFAULT.toFloat() * 100f).toInt()
-//        } else {
-//            wordsPercent = (wordsPref.toFloat() * 100f).toInt()
-//        }
-
-//        if (whiteNoisePref.isEmpty()) {
-//            prefs.edit { put(MainActivity.VOLUME_WHITE_NOISE_PREF to MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT) }
-//            whiteNoisePercent = (MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT.toFloat() * 100f).toInt()
-//        } else {
-//            whiteNoisePercent = (whiteNoisePref.toFloat() * 100f).toInt()
-//        }
 
         words_volume.setStartPercent(wordsPercent)
         seek_bar_words.progress = wordsPercent

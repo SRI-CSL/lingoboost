@@ -204,7 +204,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final String user = sP.getString(MainActivity.USER_PREF, "NA");
         final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
-        final String whiteNoiseVolume = sP.getString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
+        final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
         final boolean playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
         final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
 
@@ -393,9 +393,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "delayMillis: " + delayMillis);
     }
 
-    private void setWhiteNoiseVolumeFromPrefs(@NonNull String volume) {
+    private void setWhiteNoiseVolumeFromPrefs(int volume) {
         try {
-            rightAndLeftWhiteNoiseVolume = Float.parseFloat(volume);
+            rightAndLeftWhiteNoiseVolume = volume / 100f;
             Log.d(TAG, "rightAndLeftWhiteNoiseVolume: " + rightAndLeftWhiteNoiseVolume);
         } catch (NumberFormatException ex) {
             Log.w(TAG, ex.getMessage());
