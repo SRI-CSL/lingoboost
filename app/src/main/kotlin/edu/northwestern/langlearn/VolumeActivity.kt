@@ -48,15 +48,7 @@ class VolumeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volume)
         mediaPlayer = MediaPlayer.create(this, R.raw.kvinnan)
-
-        words_volume.setStartPercent(50)
-        seek_bar_words.progress = 50
-        white_noise_volume.setStartPercent(25)
-        seek_bar_white_noise.progress = 25
-
-        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
-
-
+        checkSharedPreferences()
         words_volume.onTouchChangeVolume(seek_bar_words) { vol -> playAudioRaw(vol) }
         white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { playAudioRaw(it) }
         seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
@@ -84,8 +76,11 @@ class VolumeActivity : AppCompatActivity() {
                 seek_bar_white_noise.visibility = View.GONE
                 text_view_white_noise.visibility = View.GONE
 
+                val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
                 val tIntent: Intent = Intent(this, TestActivity::class.java)
 
+                sP.edit().putString(MainActivity.VOLUME_WORDS_PREF, (seek_bar_words.progress / 100f).toString()).apply()
+                sP.edit().putString(MainActivity.VOLUME_WHITE_NOISE_PREF, (seek_bar_white_noise.progress / 100f).toString()).apply()
                 startActivity(tIntent)
             }
         })
@@ -133,5 +128,30 @@ class VolumeActivity : AppCompatActivity() {
 
         mediaPlayer?.release()
         mediaPlayer = null
+    }
+
+    private fun checkSharedPreferences() {
+        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val wordsPercent: Int
+        val whiteNoisePercent: Int
+
+        if (sP.getString(MainActivity.VOLUME_WORDS_PREF, MainActivity.NA_PREF).contentEquals(MainActivity.NA_PREF) ?: false) {
+            sP.edit().putString(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT).apply()
+            wordsPercent = (MainActivity.WORDS_VOLUME_PREF_DEFAULT.toFloat() * 100f).toInt()
+        } else {
+            wordsPercent = (sP.getString(MainActivity.VOLUME_WORDS_PREF, MainActivity.NA_PREF).toFloat() * 100f).toInt()
+        }
+
+        if (sP.getString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.NA_PREF).contentEquals(MainActivity.NA_PREF) ?: false) {
+            sP.edit().putString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT).apply()
+            whiteNoisePercent = (MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT.toFloat() * 100f).toInt()
+        } else {
+            whiteNoisePercent = (sP.getString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.NA_PREF).toFloat() * 100f).toInt()
+        }
+
+        words_volume.setStartPercent(wordsPercent)
+        seek_bar_words.progress = wordsPercent
+        white_noise_volume.setStartPercent(whiteNoisePercent)
+        seek_bar_white_noise.progress = whiteNoisePercent
     }
 }

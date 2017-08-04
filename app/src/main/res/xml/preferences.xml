@@ -8,9 +8,6 @@
                       android:defaultValue="true"
                       android:summary="This option if selected will play whitenoise between words."
                       android:key="playWhitenoise" />
-  <EditTextPreference android:title="White Noise Volume"
-                      android:summary="This option changes the volume of the background white noise."
-                      android:key="volumeWhiteNoise" />
   <ListPreference     android:title="Inactivity Delay"
                       android:summary="Select the inactivity period before word play"
                       android:key="inactivityDelay"

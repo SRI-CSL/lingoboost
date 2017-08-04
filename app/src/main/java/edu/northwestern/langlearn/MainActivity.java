@@ -28,9 +28,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public static final String USER_PREF = "user";
     public static final String LAST_PRACTICE_TIME_PREF = "lastPracticeTime";
     public static final String RESET_LAST_PRACTICED_PREF = "resetLastPraticed";
+    public static final String VOLUME_WORDS_PREF = "volumeWords";
     public static final String VOLUME_WHITE_NOISE_PREF = "volumeWhiteNoise";
     public static final String PLAY_WHITE_NOISE_PREF = "playWhitenoise";
-    public static final String WHITE_NOISE_VOLUME_PREF_DEFAULT = "0.05";
+    public static final String WORDS_VOLUME_PREF_DEFAULT = "0.5";
+    public static final String WHITE_NOISE_VOLUME_PREF_DEFAULT = "0.1";
     public static final String INACTIVITY_DELAY_PREF = "inactivityDelay";
     public static final String NA_PREF = "NA";
 
@@ -195,11 +197,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
         Log.d(TAG, LAST_PRACTICE_TIME_PREF + ": " + sP.getString("lastPracticeTime", NA_PREF));
 
-        if (sP.getString(VOLUME_WHITE_NOISE_PREF, "NA").equalsIgnoreCase(NA_PREF)) {
-            sP.edit().putString(VOLUME_WHITE_NOISE_PREF, WHITE_NOISE_VOLUME_PREF_DEFAULT).apply();
-        }
-
-        if (sP.getString(USER_PREF, "NA").equalsIgnoreCase(NA_PREF)) {
+        if (sP.getString(USER_PREF, NA_PREF).equalsIgnoreCase(NA_PREF)) {
             Log.d(TAG, "Setting the defualt " + USER_PREF + " in prefs");
             sP.edit().putString(USER_PREF, "corticalre").apply();
         }
