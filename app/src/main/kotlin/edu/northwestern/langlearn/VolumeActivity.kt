@@ -30,6 +30,8 @@ class VolumeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volume)
+        mediaPlayer = MediaPlayer.create(this, R.raw.kvinnan)
+
         words_volume.setStartPercent(50)
         seek_bar_words.progress = 50
         white_noise_volume.setStartPercent(25)
@@ -38,15 +40,22 @@ class VolumeActivity : AppCompatActivity() {
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
 
+
         words_volume.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
             override fun onControllerDown(angle: Int, percent: Int) { }
             override fun onControllerMove(angle: Int, percent: Int) { }
-            override fun onAngleChange(angle: Int, percent: Int) = seek_bar_words.setProgress(percent)
+            override fun onAngleChange(angle: Int, percent: Int) {
+                seek_bar_words.setProgress(percent)
+                playAudioRaw(percent / 100f)
+            }
         })
         white_noise_volume.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
             override fun onControllerDown(angle: Int, percent: Int) { }
             override fun onControllerMove(angle: Int, percent: Int) { }
-            override fun onAngleChange(angle: Int, percent: Int) = seek_bar_white_noise.setProgress(percent)
+            override fun onAngleChange(angle: Int, percent: Int) {
+                seek_bar_white_noise.setProgress(percent)
+                playAudioRaw(percent / 100f)
+            }
         })
         seek_bar_words.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) setVolumeControlViewProgress(words_volume, progress) else { }
@@ -68,6 +77,11 @@ class VolumeActivity : AppCompatActivity() {
                 white_noise_volume.visibility = View.VISIBLE
                 seek_bar_white_noise.visibility = View.VISIBLE
                 text_view_white_noise.visibility = View.VISIBLE
+                destroyPlayer()
+                mediaPlayer = MediaPlayer.create(this, R.raw.bnoise3)
+                mediaPlayer?.seekTo(45000)
+                mediaPlayer?.setLooping(true)
+                mediaPlayer?.start()
             } else {
                 words_volume.visibility = View.VISIBLE
                 seek_bar_words.visibility = View.VISIBLE
@@ -91,6 +105,7 @@ class VolumeActivity : AppCompatActivity() {
 
     override fun onStop() {
         Log.d(TAG, "onStop")
+        destroyPlayer()
         super.onStop()
     }
 
@@ -108,35 +123,21 @@ class VolumeActivity : AppCompatActivity() {
         v.onTouch(contentView!!, motionEvent)
     }
 
-    private fun playAudioUrl() {
-        Log.d(TAG, "playAudioUrl")
+    private fun playAudioRaw(volume: Float) {
+        Log.d(TAG, "playAudioRaw")
+        mediaPlayer?.setVolume(volume, volume)
 
-        try {
-            val url = ""
-
-            Log.d(TAG, "")
-            mediaPlayer = MediaPlayer()
-            mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
-            mediaPlayer?.setDataSource(url)
-            mediaPlayer?.prepare()
+        if (!(mediaPlayer?.isPlaying() ?: true)) {
             mediaPlayer?.start()
-            mediaPlayer?.setOnCompletionListener {
-                Log.d(TAG, "onCompletion")
-                destroyPlayer()
-            }
-        } catch (ex: IOException) {
-            Log.e("Exception", "File write failed: $ex.toString()")
         }
     }
 
     private fun destroyPlayer() {
-        if (mediaPlayer != null) {
-            if (mediaPlayer?.isPlaying() ?: false) {
-                mediaPlayer?.stop()
-            }
-
-            mediaPlayer?.release()
-            mediaPlayer = null
+        if (mediaPlayer?.isPlaying() ?: false) {
+            mediaPlayer?.stop()
         }
+
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

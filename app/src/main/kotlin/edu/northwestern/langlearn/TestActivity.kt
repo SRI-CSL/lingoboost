@@ -219,13 +219,11 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     private fun destroyPlayer() {
-        if (mediaPlayer != null) {
-            if (mediaPlayer?.isPlaying() ?: false) {
-                mediaPlayer?.stop()
-            }
-
-            mediaPlayer?.release()
-            mediaPlayer = null
+        if (mediaPlayer?.isPlaying() ?: false) {
+            mediaPlayer?.stop()
         }
+
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }
