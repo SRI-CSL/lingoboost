@@ -49,12 +49,12 @@ class VolumeActivity : AppCompatActivity() {
             override fun onAngleChange(angle: Int, percent: Int) = seek_bar_white_noise.setProgress(percent)
         })
         seek_bar_words.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) { if (fromUser) setVolumeControlViewProgress(words_volume, progress) }
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) setVolumeControlViewProgress(words_volume, progress) else { }
             override fun onStartTrackingTouch(seekBar: SeekBar) { }
             override fun onStopTrackingTouch(seekBar: SeekBar) { }
         })
         seek_bar_white_noise.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) { if (fromUser) setVolumeControlViewProgress(white_noise_volume, progress) }
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) setVolumeControlViewProgress(white_noise_volume, progress) else { }
             override fun onStartTrackingTouch(seekBar: SeekBar) { }
             override fun onStopTrackingTouch(seekBar: SeekBar) { }
         })
@@ -103,8 +103,7 @@ class VolumeActivity : AppCompatActivity() {
         }
         val controllerRadius = if (w > h) h / CONTROLLER_SPACE else w / CONTROLLER_SPACE
         val restoreTouchPoint = getPointOnBorderLineOfCircle(controllerCenter, controllerRadius, (progress *  360) / 100)
-        val metaState = 0
-        val motionEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, restoreTouchPoint.x, restoreTouchPoint.y, metaState)
+        val motionEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, restoreTouchPoint.x, restoreTouchPoint.y, 0)
 
         v.onTouch(contentView!!, motionEvent)
     }
