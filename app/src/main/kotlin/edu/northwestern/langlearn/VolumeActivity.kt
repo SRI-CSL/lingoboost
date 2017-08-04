@@ -15,11 +15,12 @@ import android.widget.SeekBar
 import java.io.IOException
 
 import kotlinx.android.synthetic.main.activity_volume.*
+
 import org.jetbrains.anko.contentView
-import android.os.SystemClock
 
 import com.agilie.volumecontrol.animation.controller.ControllerImpl
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
+import com.agilie.volumecontrol.view.VolumeControlView
 import com.agilie.volumecontrol.view.VolumeControlView.Companion.CONTROLLER_SPACE
 
 class VolumeActivity : AppCompatActivity() {
@@ -29,21 +30,12 @@ class VolumeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volume)
-
-        // words_volume.setBackgroundShiningColor(Color.rgb(1, 1, 1))
         words_volume.setStartPercent(50)
         seek_bar_words.progress = 50
-
-        // white_noise_volume.setBackgroundShiningColor(Color.WHITE)
-        // white_noise_volume.isEnabled = false
-        // white_noise_volume.isFocusable = false
         white_noise_volume.setStartPercent(25)
         seek_bar_white_noise.progress = 25
 
-
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
-
-
 
 
         words_volume.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
@@ -57,42 +49,12 @@ class VolumeActivity : AppCompatActivity() {
             override fun onAngleChange(angle: Int, percent: Int) = seek_bar_white_noise.setProgress(percent)
         })
         seek_bar_words.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                // words_volume.setStartAngle((progress *  360) / 100)
-                // MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, x, y, 0)
-                // words_volume.onTouch(contentView!!, MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, 0f, 0f, 0))
-
-                if (!fromUser) return
-
-                val w: Int = words_volume.width
-                val h: Int = words_volume.height
-                val controllerCenter = PointF().apply {
-                    x = w / 2f
-                    y = h / 2f
-                }
-                val controllerRadius = if (w > h) h / CONTROLLER_SPACE else w / CONTROLLER_SPACE
-                val restoreTouchPoint = getPointOnBorderLineOfCircle(controllerCenter, controllerRadius, (progress *  360) / 100)
-                // Obtain MotionEvent object
-                // val downTime = SystemClock.uptimeMillis()
-                // val eventTime = SystemClock.uptimeMillis() + 100
-                // List of meta states found here: developer.android.com/reference/android/view/KeyEvent.html#getMetaState()
-                val metaState = 0
-                val motionEvent = MotionEvent.obtain(
-                        // downTime,
-                        // eventTime,
-                        0,
-                        0,
-                        MotionEvent.ACTION_DOWN,
-                        restoreTouchPoint.x,
-                        restoreTouchPoint.y,
-                        metaState
-                )
-
-                // Dispatch touch event to view
-                // contentView?.dispatchTouchEvent(motionEvent)
-                words_volume.onTouch(contentView!!, motionEvent)
-                // motionEvent.recycle()
-            }
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) { if (fromUser) setVolumeControlViewProgress(words_volume, progress) }
+            override fun onStartTrackingTouch(seekBar: SeekBar) { }
+            override fun onStopTrackingTouch(seekBar: SeekBar) { }
+        })
+        seek_bar_white_noise.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) { if (fromUser) setVolumeControlViewProgress(white_noise_volume, progress) }
             override fun onStartTrackingTouch(seekBar: SeekBar) { }
             override fun onStopTrackingTouch(seekBar: SeekBar) { }
         })
@@ -109,7 +71,7 @@ class VolumeActivity : AppCompatActivity() {
             } else {
                 words_volume.visibility = View.VISIBLE
                 seek_bar_words.visibility = View.VISIBLE
-                text_view_word_playback.visibility = View.GONE
+                text_view_word_playback.visibility = View.VISIBLE
                 white_noise_volume.visibility = View.GONE
                 seek_bar_white_noise.visibility = View.GONE
                 text_view_white_noise.visibility = View.GONE
@@ -130,6 +92,21 @@ class VolumeActivity : AppCompatActivity() {
     override fun onStop() {
         Log.d(TAG, "onStop")
         super.onStop()
+    }
+
+    private fun setVolumeControlViewProgress(v: VolumeControlView, progress: Int) {
+        val w: Int = v.width
+        val h: Int = v.height
+        val controllerCenter = PointF().apply {
+            x = w / 2f
+            y = h / 2f
+        }
+        val controllerRadius = if (w > h) h / CONTROLLER_SPACE else w / CONTROLLER_SPACE
+        val restoreTouchPoint = getPointOnBorderLineOfCircle(controllerCenter, controllerRadius, (progress *  360) / 100)
+        val metaState = 0
+        val motionEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, restoreTouchPoint.x, restoreTouchPoint.y, metaState)
+
+        v.onTouch(contentView!!, motionEvent)
     }
 
     private fun playAudioUrl() {
