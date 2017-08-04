@@ -126,19 +126,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "onCompletion");
         destroyWordsPlayer();
 
-        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
-        String dateToStr = format.format(new Date());
+        final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+        final String dateToStr = format.format(new Date());
+        final String activityLog = "\"" + lastActivity.toString() + "\"";
 
         sP.edit().putString(MainActivity.LAST_PRACTICE_TIME_PREF, dateToStr).apply();
         Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
-
-        String activityLog = "{Still=100}";
-
-        if (lastActivity != null) {
-            activityLog = "\"" + lastActivity.toString() + "\"";
-        }
-
         writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + ","  + activityLog + "," + words.get(wordsIndex).getAudio_url() + "\n", true);
         wordsIndex++;
         pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
@@ -163,7 +157,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final String user = sP.getString(MainActivity.USER_PREF, "NA");
         final int timeout = 60000; // 1 min
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+        final String dateToStr = format.format(new Date());
+        final String activityLog = "\"" + lastActivity.toString() + "\"";
 
+        writeFileLog(dateToStr + ",," +  activityLog + ",\n", true);
         Fuel.upload("https://cortical.csl.sri.com/langlearn/user/" + user +"/upload?purpose=sleep")
                 .timeout(timeout)
                 .source(new Function2<Request, URL, File>() {
@@ -197,15 +195,18 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_mode);
+        Log.d(TAG, "Creating lastActivity with Still:100 as default, a null indicates the phone has been still for a long period of time, so we set the default");
+        lastActivity = new HashMap<String, Integer>();
+        lastActivity.put("Still", 100);
         createReceiver();
         writeCSVHeader();
 
-        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String user = sP.getString(MainActivity.USER_PREF, "NA");
-        String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
-        String whiteNoiseVolume = sP.getString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
-        boolean playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
-        String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
+        final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final String user = sP.getString(MainActivity.USER_PREF, "NA");
+        final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
+        final String whiteNoiseVolume = sP.getString(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
+        final boolean playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
+        final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
 
         setDelayMillisFromPrefs(delayListValue);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
@@ -258,9 +259,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
 
-        // lastActivity == null means no activity recognized made it to this activity, so it most likely is Still: 100 per Google docs
-        if (lastActivity == null || (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
-                lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE)) {
+        if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
+                lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
             if (wordsIndex >= words.size()) {
                 Log.d(TAG, "Repeating the words list, reached the end");
                 wordsIndex = 0;
@@ -346,8 +346,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     private void writeCSVHeader() {
+        final String activityLog = "\"" + lastActivity.toString() + "\"";
+
         logDateToStr = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(new Date());
         writeFileLog("timestamp,word,activity,audio_url\n", false);
+        writeFileLog(logDateToStr + ",," +  activityLog + ",\n", true);
     }
 
     @SuppressWarnings("unchecked")
