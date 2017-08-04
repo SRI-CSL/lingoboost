@@ -2,17 +2,15 @@ package edu.northwestern.langlearn
 
 import android.content.Intent
 import android.graphics.PointF
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.AppCompatSeekBar
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
-
-import java.io.IOException
 
 import kotlinx.android.synthetic.main.activity_volume.*
 
@@ -22,6 +20,25 @@ import com.agilie.volumecontrol.animation.controller.ControllerImpl
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
 import com.agilie.volumecontrol.view.VolumeControlView
 import com.agilie.volumecontrol.view.VolumeControlView.Companion.CONTROLLER_SPACE
+
+inline fun VolumeControlView.onTouchChangeVolume(bar: AppCompatSeekBar, crossinline body: (vol: Float) -> Unit) {
+    this.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
+        override fun onControllerDown(angle: Int, percent: Int) { }
+        override fun onControllerMove(angle: Int, percent: Int) { }
+        override fun onAngleChange(angle: Int, percent: Int) {
+            bar.setProgress(percent)
+            body(percent / 100f)
+        }
+    })
+}
+
+inline fun AppCompatSeekBar.onProgressChangeVolume(v: VolumeControlView, crossinline body: (v: VolumeControlView, progress: Int) -> Unit) {
+    this.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) body(v, progress) else { }
+        override fun onStartTrackingTouch(seekBar: SeekBar) { }
+        override fun onStopTrackingTouch(seekBar: SeekBar) { }
+    })
+}
 
 class VolumeActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
@@ -40,33 +57,10 @@ class VolumeActivity : AppCompatActivity() {
         val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
 
-
-        words_volume.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
-            override fun onControllerDown(angle: Int, percent: Int) { }
-            override fun onControllerMove(angle: Int, percent: Int) { }
-            override fun onAngleChange(angle: Int, percent: Int) {
-                seek_bar_words.setProgress(percent)
-                playAudioRaw(percent / 100f)
-            }
-        })
-        white_noise_volume.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
-            override fun onControllerDown(angle: Int, percent: Int) { }
-            override fun onControllerMove(angle: Int, percent: Int) { }
-            override fun onAngleChange(angle: Int, percent: Int) {
-                seek_bar_white_noise.setProgress(percent)
-                playAudioRaw(percent / 100f)
-            }
-        })
-        seek_bar_words.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) setVolumeControlViewProgress(words_volume, progress) else { }
-            override fun onStartTrackingTouch(seekBar: SeekBar) { }
-            override fun onStopTrackingTouch(seekBar: SeekBar) { }
-        })
-        seek_bar_white_noise.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) setVolumeControlViewProgress(white_noise_volume, progress) else { }
-            override fun onStartTrackingTouch(seekBar: SeekBar) { }
-            override fun onStopTrackingTouch(seekBar: SeekBar) { }
-        })
+        words_volume.onTouchChangeVolume(seek_bar_words) { vol -> playAudioRaw(vol) }
+        white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { playAudioRaw(it) }
+        seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
+        seek_bar_white_noise.onProgressChangeVolume(white_noise_volume) { v, p -> setVolumeControlViewProgress(v, p) }
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
 

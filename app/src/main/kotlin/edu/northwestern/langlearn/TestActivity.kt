@@ -25,12 +25,12 @@ import com.github.kittinunf.fuel.core.FuelError
 
 import kotlinx.android.synthetic.main.activity_words.*
 
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+inline fun EditText.afterTextChanged(crossinline afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) { }
         override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
+            afterTextChanged(editable.toString())
         }
     })
 }
