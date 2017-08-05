@@ -1,6 +1,7 @@
 package edu.northwestern.langlearn
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -53,6 +54,9 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private val logDateToStr by lazy {
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Date())
     }
+    private val wordsVolume: Float by lazy {
+        PreferenceManager.getDefaultSharedPreferences(baseContext).getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT) / 100f
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,8 +66,8 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         words_edit_word.hint = "Words Updating..."
         writeCSVHeader()
 
-        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val user = sP.getString(MainActivity.USER_PREF, "NA")
+        val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val user = prefs.getString(MainActivity.USER_PREF, "NA")
 
         wordsProvider = WordsProvider("https://cortical.csl.sri.com/langlearn/user/$user?purpose=test")
         wordsProvider.fetchJSONWords(this)
@@ -88,6 +92,14 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        finish()
+
+        val i: Intent = Intent(this, MainActivity::class.java)
+
+        startActivity(i)
     }
 
     override fun onDestroy() {
@@ -208,6 +220,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             mediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
             mediaPlayer?.setDataSource(url)
             mediaPlayer?.prepare()
+            mediaPlayer?.setVolume(wordsVolume, wordsVolume)
             mediaPlayer?.start()
             mediaPlayer?.setOnCompletionListener {
                 Log.d(TAG, "onCompletion")

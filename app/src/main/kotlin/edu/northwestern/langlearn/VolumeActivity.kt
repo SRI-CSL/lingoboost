@@ -71,6 +71,12 @@ class VolumeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_volume)
         mediaPlayer = MediaPlayer.create(this, R.raw.kvinnan)
         checkSharedPreferences()
+
+        val isSleep: Boolean = intent.getBooleanExtra("isSleep", false)
+        val isTest: Boolean = intent.getBooleanExtra("isTest", false)
+
+        Log.d(TAG, "isSleep: $isSleep")
+        Log.d(TAG, "isTest: $isTest")
         words_volume.onTouchChangeVolume(seek_bar_words) { vol -> playAudioRaw(vol) }
         white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { playAudioRaw(it) }
         seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
@@ -78,7 +84,7 @@ class VolumeActivity : AppCompatActivity() {
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
 
-            if (words_volume.visibility == View.VISIBLE) {
+            if (isSleep && words_volume.visibility == View.VISIBLE) {
                 words_volume.visibility = View.GONE
                 seek_bar_words.visibility = View.GONE
                 text_view_word_playback.visibility = View.GONE
@@ -91,21 +97,18 @@ class VolumeActivity : AppCompatActivity() {
                 mediaPlayer?.setLooping(true)
                 mediaPlayer?.start()
             } else {
-                words_volume.visibility = View.VISIBLE
-                seek_bar_words.visibility = View.VISIBLE
-                text_view_word_playback.visibility = View.VISIBLE
-                white_noise_volume.visibility = View.GONE
-                seek_bar_white_noise.visibility = View.GONE
-                text_view_white_noise.visibility = View.GONE
-
                 val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
-                val tIntent: Intent = Intent(this, TestActivity::class.java)
+                val toIntent: Intent = if (isSleep) {
+                    Intent(this, SleepMode::class.java)
+                } else {
+                    Intent(this, TestActivity::class.java)
+                }
 
                 prefs.edit {
                     put(MainActivity.VOLUME_WORDS_PREF to seek_bar_words.progress)
                     put(MainActivity.VOLUME_WHITE_NOISE_PREF to seek_bar_white_noise.progress)
                 }
-                startActivity(tIntent)
+                startActivity(toIntent)
             }
         })
     }

@@ -64,7 +64,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private long delayMillis = DEFAULT_START_WORDS_DELAY_MILLIS;
     private long delayBetweenWords = DEFAULT_BETWEEN_WORDS_DELAY_MILLIS;
     private String jsonErrorMessage = JSON_ERROR_MESSAGE;
-    private float rightAndLeftWhiteNoiseVolume = 0.01f;
+    private float rightAndLeftWordsVolume = 0.50f;
+    private float rightAndLeftWhiteNoiseVolume = 0.10f;
     private int wordsIndex = 0;
     private HashMap<String, Integer> lastActivity;
     @Nullable
@@ -119,6 +120,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     public void openMessageActivity(@NonNull String messsage) {
+        if (whiteNoisePlayer != null) {
+            whiteNoisePlayer.stop();
+            whiteNoisePlayer.release();
+            whiteNoisePlayer = null;
+        }
+
         WordsProviderUpdate.DefaultImpls.openMessageActivity(this, messsage);
     }
 
@@ -204,11 +211,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final String user = sP.getString(MainActivity.USER_PREF, "NA");
         final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
+        final int wordsVolume = sP.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT);
         final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
         final boolean playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
         final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
 
         setDelayMillisFromPrefs(delayListValue);
+        setWordsVolumeFromPrefs(wordsVolume);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
 
         if (playWhiteNoise) {
@@ -222,6 +231,15 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
 
         wordsProvider.fetchJSONWords(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+
+        final Intent i = new Intent(SleepMode.this, MainActivity.class);
+
+        startActivity(i);
     }
 
     @Override
@@ -253,7 +271,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
 
         super.onDestroy();
-        // finish();
     }
 
     private void checkAndPlayWordsIfStill() {
@@ -284,6 +301,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
+            mediaPlayer.setVolume(rightAndLeftWordsVolume, rightAndLeftWordsVolume);
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(this);
         } catch (IOException ex) {
@@ -393,12 +411,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "delayMillis: " + delayMillis);
     }
 
+    private void setWordsVolumeFromPrefs(int volume) {
+        rightAndLeftWordsVolume = volume / 100f;
+        Log.d(TAG, "rightAndLeftWordsVolume: " + rightAndLeftWordsVolume);
+    }
+
     private void setWhiteNoiseVolumeFromPrefs(int volume) {
-        try {
-            rightAndLeftWhiteNoiseVolume = volume / 100f;
-            Log.d(TAG, "rightAndLeftWhiteNoiseVolume: " + rightAndLeftWhiteNoiseVolume);
-        } catch (NumberFormatException ex) {
-            Log.w(TAG, ex.getMessage());
-        }
+        rightAndLeftWhiteNoiseVolume = volume / 100f;
+        Log.d(TAG, "rightAndLeftWhiteNoiseVolume: " + rightAndLeftWhiteNoiseVolume);
     }
 }

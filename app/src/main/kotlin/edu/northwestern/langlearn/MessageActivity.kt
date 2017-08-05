@@ -1,12 +1,10 @@
 package edu.northwestern.langlearn
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.support.v7.app.AppCompatActivity
-// import android.support.v7.widget.Toolbar
-// import android.widget.TextView
 
-// import kotlinx.android.synthetic.main.activity_message.toolbar
 import kotlinx.android.synthetic.main.content_message.errorMessage
 
 class MessageActivity : AppCompatActivity() {
@@ -15,7 +13,6 @@ class MessageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
-        // setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -25,8 +22,11 @@ class MessageActivity : AppCompatActivity() {
         errorMessage.text = msg
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
+    override fun onBackPressed() {
+        finish()
+
+        val i: Intent = Intent(this, MainActivity::class.java)
+
+        startActivity(i)
     }
 }

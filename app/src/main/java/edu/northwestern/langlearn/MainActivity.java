@@ -109,27 +109,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         sleepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, SleepMode.class);
+                Intent i = new Intent(MainActivity.this, VolumeActivity.class);
 
+                i.putExtra("isSleep", true);
+                i.putExtra("isTest", false);
                 startActivity(i);
             }
         });
-
         testButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent vIntent = new Intent(MainActivity.this, VolumeActivity.class);
+                    Intent i = new Intent(MainActivity.this, VolumeActivity.class);
 
-                    startActivity(vIntent);
+                    i.putExtra("isSleep", false);
+                    i.putExtra("isTest", true);
+                    startActivity(i);
                  }
         });
-
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, PrefActivity.class);
 
-                // startActivity(i);
                 startActivityForResult(i, SETTINGS);
             }
         });
