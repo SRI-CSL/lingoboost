@@ -77,6 +77,15 @@ class VolumeActivity : AppCompatActivity() {
 
         Log.d(TAG, "isSleep: $isSleep")
         Log.d(TAG, "isTest: $isTest")
+        text_view_word_playback.text = if (isSleep)
+            "Set the word volume so that you can clearly understand the word through the white noise, but at a volume that is comfortable for sleeping."
+        else
+            "Set the word volume loud enough so that you can clearly understand the word."
+        text_view_set_volume.text = if (isSleep)
+            "Set Sleep Volume"
+        else
+            "Set Test Volume"
+
         words_volume.onTouchChangeVolume(seek_bar_words) { vol -> playAudioRaw(vol) }
         white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { playAudioRaw(it) }
         seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
@@ -85,30 +94,9 @@ class VolumeActivity : AppCompatActivity() {
             Log.d(TAG, "next OnClickListener")
 
             if (isSleep && words_volume.visibility == View.VISIBLE) {
-                words_volume.visibility = View.GONE
-                seek_bar_words.visibility = View.GONE
-                text_view_word_playback.visibility = View.GONE
-                white_noise_volume.visibility = View.VISIBLE
-                seek_bar_white_noise.visibility = View.VISIBLE
-                text_view_white_noise.visibility = View.VISIBLE
-                destroyPlayer()
-                mediaPlayer = MediaPlayer.create(this, R.raw.bnoise3)
-                mediaPlayer?.seekTo(45000)
-                mediaPlayer?.setLooping(true)
-                mediaPlayer?.start()
+                showWhitenoise()
             } else {
-                val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
-                val toIntent: Intent = if (isSleep) {
-                    Intent(this, SleepMode::class.java)
-                } else {
-                    Intent(this, TestActivity::class.java)
-                }
-
-                prefs.edit {
-                    put(MainActivity.VOLUME_WORDS_PREF to seek_bar_words.progress)
-                    put(MainActivity.VOLUME_WHITE_NOISE_PREF to seek_bar_white_noise.progress)
-                }
-                startActivity(toIntent)
+                next(isSleep, isTest)
             }
         })
     }
@@ -123,6 +111,21 @@ class VolumeActivity : AppCompatActivity() {
         Log.d(TAG, "onStop")
         destroyPlayer()
         super.onStop()
+    }
+
+    private fun next(isSleep: Boolean, isTest: Boolean) {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        val toIntent: Intent = if (isSleep) {
+            Intent(this, SleepMode::class.java)
+        } else { // isTest
+            Intent(this, TestActivity::class.java)
+        }
+
+        prefs.edit {
+            put(MainActivity.VOLUME_WORDS_PREF to seek_bar_words.progress)
+            put(MainActivity.VOLUME_WHITE_NOISE_PREF to seek_bar_white_noise.progress)
+        }
+        startActivity(toIntent)
     }
 
     private fun setVolumeControlViewProgress(v: VolumeControlView, progress: Int) {
@@ -155,6 +158,20 @@ class VolumeActivity : AppCompatActivity() {
 
         mediaPlayer?.release()
         mediaPlayer = null
+    }
+
+    private fun showWhitenoise() {
+        words_volume.visibility = View.GONE
+        seek_bar_words.visibility = View.GONE
+        text_view_word_playback.visibility = View.GONE
+        white_noise_volume.visibility = View.VISIBLE
+        seek_bar_white_noise.visibility = View.VISIBLE
+        text_view_white_noise.visibility = View.VISIBLE
+        destroyPlayer()
+        mediaPlayer = MediaPlayer.create(this, R.raw.bnoise3)
+        mediaPlayer?.seekTo(45000)
+        mediaPlayer?.setLooping(true)
+        mediaPlayer?.start()
     }
 
     private fun checkSharedPreferences() {

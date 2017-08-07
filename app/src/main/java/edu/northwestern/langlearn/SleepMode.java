@@ -18,6 +18,7 @@ import android.util.Log;
 import android.media.MediaPlayer;
 import android.media.AudioManager;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.widget.TextView;
 
 import com.github.kittinunf.fuel.Fuel;
 import com.github.kittinunf.fuel.core.FuelError;
@@ -77,6 +78,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
     };
     private String logDateToStr;
+    private TextView debugActivity;
 
     public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
@@ -207,6 +209,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         lastActivity.put("Still", 100);
         createReceiver();
         writeCSVHeader();
+        debugActivity = (TextView)findViewById(R.id.debug_activity);
+        debugActivity.setText(lastActivity.toString());
 
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final String user = sP.getString(MainActivity.USER_PREF, "NA");
@@ -383,6 +387,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
                 if (extra instanceof HashMap) {
                     lastActivity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
+                    debugActivity.setText(lastActivity.toString());
                     Log.d(TAG, "Activity: " + lastActivity.toString());
                 }
             }
