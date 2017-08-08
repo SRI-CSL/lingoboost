@@ -68,11 +68,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private Handler pauseBetweenWordsHandler = new Handler();
     private long delayMillis = DEFAULT_START_WORDS_DELAY_MILLIS;
     private long delayBetweenWords = DEFAULT_BETWEEN_WORDS_DELAY_MILLIS;
-    private String jsonErrorMessage = JSON_ERROR_MESSAGE;
     private float rightAndLeftWordsVolume = 0.50f;
     private float rightAndLeftWhiteNoiseVolume = 0.10f;
     private int wordsIndex = 0;
     private HashMap<String, Integer> lastActivity;
+    private HashMap<String, Long> lastSensor;
     @Nullable
     private BroadcastReceiver receiver;
     private Runnable checkPlayWordsIfStillRunner = new Runnable() {
@@ -83,6 +83,15 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     };
     private String logDateToStr;
     private TextView debugActivity;
+    private TextView debugSensor;
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private float[] gravity;
+    private float[] geomagnetic;
+    private boolean resumePlayWords;
+    private boolean resumePauseBetweenWords;
+    private boolean playWhiteNoise;
 
     public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
@@ -109,14 +118,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         if (!wordsProvider.getJsonSham()) {
             playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+            playWordsIfStillHandler.sendEmptyMessage(-1);
         } else {
             Log.i(TAG, "Playing only white noise, sham was true");
         }
-
-        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-
-        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
-        wl.acquire();
     }
 
     @NonNull
@@ -126,12 +131,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     public void openMessageActivity(@NonNull String messsage) {
-        if (whiteNoisePlayer != null) {
-            whiteNoisePlayer.stop();
-            whiteNoisePlayer.release();
-            whiteNoisePlayer = null;
-        }
-
+        finish();
         WordsProviderUpdate.DefaultImpls.openMessageActivity(this, messsage);
     }
 
@@ -148,7 +148,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
         writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + ","  + activityLog + "," + words.get(wordsIndex).getAudio_url() + "\n", true);
         wordsIndex++;
-        pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
+
+        if (!resumePauseBetweenWords) {
+            pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
+            pauseBetweenWordsHandler.sendEmptyMessage(-2);
+        }
     }
 
     @Override
@@ -162,10 +166,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     protected void onStop() {
         Log.d(TAG, "onStop");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-
-        if (wl != null) {
-            wl.release();
-        }
 
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final String user = sP.getString(MainActivity.USER_PREF, "NA");
@@ -204,6 +204,69 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+
+        wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
+        wl.acquire();
+
+        if (resumePlayWords) {
+            Log.d(TAG, "resume play words if still");
+            playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+            playWordsIfStillHandler.sendEmptyMessage(-1);
+            resumePlayWords = false;
+        }
+
+        if (resumePauseBetweenWords) {
+            Log.d(TAG, "resume pause between words");
+            pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
+            pauseBetweenWordsHandler.sendEmptyMessage(-2);
+            resumePauseBetweenWords = false;
+        }
+
+        if (playWhiteNoise) {
+            playWhiteNoiseRaw();
+        }
+
+        if (words != null) {
+            checkAndPlayWordsIfStill();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        sensorManager.unregisterListener(this);
+
+        if (wl != null) {
+            wl.release();
+        }
+
+        if (playWordsIfStillHandler.hasMessages(-1)) {
+            Log.d(TAG, "remove callbacks play words if still");
+            playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+            playWordsIfStillHandler.removeMessages(-1);
+            resumePlayWords = true;
+        }
+
+        if (pauseBetweenWordsHandler.hasMessages(-2)) {
+            Log.d(TAG, "remove callbacks pause between words");
+            pauseBetweenWordsHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+            pauseBetweenWordsHandler.removeMessages(-2);
+            resumePauseBetweenWords = true;
+        }
+
+        destroyWordsPlayer();
+        destroyWhiteNoisePlayer();
+        super.onPause();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
@@ -211,26 +274,33 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "Creating lastActivity with Still:100 as default, a null indicates the phone has been still for a long period of time, so we set the default");
         lastActivity = new HashMap<String, Integer>();
         lastActivity.put("Still", 100);
+        lastSensor = new HashMap<String, Long>();
+        lastSensor.put("Azimuth", 0l);
+        lastSensor.put("Pitch", 0l);
+        lastSensor.put("Roll", 0l);
         createReceiver();
         writeCSVHeader();
+        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         debugActivity = (TextView)findViewById(R.id.debug_activity);
         debugActivity.setText(lastActivity.toString());
+        debugSensor = (TextView)findViewById(R.id.debug_sensor);
+        debugSensor.setText(lastSensor.toString());
+        resumePlayWords = false;
+        resumePauseBetweenWords = false;
 
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final String user = sP.getString(MainActivity.USER_PREF, "NA");
         final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
         final int wordsVolume = sP.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT);
         final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
-        final boolean playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
         final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
 
+        playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
         setDelayMillisFromPrefs(delayListValue);
         setWordsVolumeFromPrefs(wordsVolume);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
-
-        if (playWhiteNoise) {
-            playWhiteNoiseRaw();
-        }
 
         if (lastPracticeTime.equalsIgnoreCase("NA")) {
             wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "?purpose=sleep");
@@ -239,14 +309,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
 
         wordsProvider.fetchJSONWords(this);
-
-
-
-
-
-        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
     @Override
@@ -263,56 +325,19 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "onDestroy");
 
         if (playWordsIfStillHandler != null) {
-            playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+            // playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
             playWordsIfStillHandler = null;
         }
 
         if (pauseBetweenWordsHandler != null) {
-            pauseBetweenWordsHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+            // pauseBetweenWordsHandler.removeCallbacks(checkPlayWordsIfStillRunner);
             pauseBetweenWordsHandler = null;
         }
 
-        if (mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
-
-            destroyWordsPlayer();
-        }
-
-        if (whiteNoisePlayer != null) {
-            whiteNoisePlayer.stop();
-            whiteNoisePlayer.release();
-            whiteNoisePlayer = null;
-        }
-
+        destroyWordsPlayer();
+        destroyWhiteNoisePlayer();
         super.onDestroy();
     }
-
-
-
-
-
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume");
-        super.onResume();
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "onPause");
-        super.onPause();
-        sensorManager.unregisterListener(this);
-    }
-
-    private SensorManager sensorManager;
-    private Sensor accelerometer;
-    private Sensor magnetometer;
-    private float[] gravity;
-    private float[] geomagnetic;
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {  }
@@ -326,8 +351,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             geomagnetic = event.values;
 
         if (gravity != null && geomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
+            final float R[] = new float[9];
+            final float I[] = new float[9];
             final boolean success = SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
 
             if (success) {
@@ -339,17 +364,15 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                 final float pitch = orientation[1];
                 final float roll = orientation[2];
 
-                Log.d(TAG, "A: " + Math.round(Math.toDegrees(azimuth))); // -azimuth * 360 / (2 * 3.14159f));
-                Log.d(TAG, "P: " + Math.round(Math.toDegrees(pitch)));
-                Log.d(TAG, "R: " + Math.round(Math.toDegrees(roll)));
+                lastSensor.put("Azimuth", Math.round(Math.toDegrees(azimuth)));
+                lastSensor.put("Pitch", Math.round(Math.toDegrees(pitch)));
+                lastSensor.put("Roll", Math.round(Math.toDegrees(roll)));
+                // Log.d(TAG, "A: " + Math.round(Math.toDegrees(azimuth))); // -azimuth * 360 / (2 * 3.14159f));
+                // Log.d(TAG, "P: " + Math.round(Math.toDegrees(pitch)));
+                // Log.d(TAG, "R: " + Math.round(Math.toDegrees(roll)));
             }
         }
     }
-
-
-
-
-
 
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
@@ -365,6 +388,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             playAudioUrl();
         } else {
             playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+            playWordsIfStillHandler.sendEmptyMessage(-1);
         }
     }
 
@@ -372,7 +396,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "playAudioUrl");
 
         try {
-            String url = words.get(wordsIndex).getAudio_url();
+            final String url = words.get(wordsIndex).getAudio_url();
 
             Log.d(TAG, words.get(wordsIndex).getAudio_url());
             mediaPlayer = new MediaPlayer();
@@ -398,8 +422,25 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     private void destroyWordsPlayer() {
         Log.d(TAG, "destroyWordsPlayer");
-        mediaPlayer.release();
-        mediaPlayer = null;
+
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    private void destroyWhiteNoisePlayer() {
+        Log.d(TAG, "destroyWhiteNoisePlayer");
+
+        if (whiteNoisePlayer != null) {
+            whiteNoisePlayer.stop();
+            whiteNoisePlayer.release();
+            whiteNoisePlayer = null;
+        }
     }
 
     private void loadWordsJsonRes() {
