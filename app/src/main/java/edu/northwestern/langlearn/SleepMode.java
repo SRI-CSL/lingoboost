@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -42,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function2;
 
-public class SleepMode extends AppCompatActivity implements WordsProviderUpdate, OnCompletionListener {
+public class SleepMode extends AppCompatActivity implements WordsProviderUpdate, OnCompletionListener, SensorEventListener {
     public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
     public static final long DEFAULT_BETWEEN_WORDS_DELAY_MILLIS = 5000; // 5s
     public static final boolean PLAY_ONLY_WHITE_NOISE_SHAM = false;
@@ -235,6 +239,14 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
 
         wordsProvider.fetchJSONWords(this);
+
+
+
+
+
+        sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
     @Override
@@ -276,6 +288,68 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         super.onDestroy();
     }
+
+
+
+
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
+    private Sensor magnetometer;
+    private float[] gravity;
+    private float[] geomagnetic;
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {  }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+            gravity = event.values;
+
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+            geomagnetic = event.values;
+
+        if (gravity != null && geomagnetic != null) {
+            float R[] = new float[9];
+            float I[] = new float[9];
+            final boolean success = SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
+
+            if (success) {
+                float orientation[] = new float[3];
+
+                SensorManager.getOrientation(R, orientation);
+
+                final float azimuth = orientation[0]; // orientation contains: azimut (yaw), pitch and roll
+                final float pitch = orientation[1];
+                final float roll = orientation[2];
+
+                Log.d(TAG, "A: " + Math.round(Math.toDegrees(azimuth))); // -azimuth * 360 / (2 * 3.14159f));
+                Log.d(TAG, "P: " + Math.round(Math.toDegrees(pitch)));
+                Log.d(TAG, "R: " + Math.round(Math.toDegrees(roll)));
+            }
+        }
+    }
+
+
+
+
+
 
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
