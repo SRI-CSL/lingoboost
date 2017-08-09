@@ -21,6 +21,7 @@
         app:sectorRadius="6"
         app:splineCircleColor="#ffffff"
         app:shiningFrequency="0"
+        android:visibility="gone"
         tools:context="com.agilie.controller.ControllerActivity" />
 
     <com.agilie.volumecontrol.view.VolumeControlView
@@ -33,7 +34,6 @@
         app:sectorRadius="6"
         app:splineCircleColor="#ffffff"
         app:shiningFrequency="0"
-        android:visibility="gone"
         tools:context="com.agilie.controller.ControllerActivity" />
 
     <android.support.v7.widget.AppCompatSeekBar
@@ -43,6 +43,7 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:layout_below="@+id/words_volume"
+        android:visibility="gone"
         android:theme="@style/Theme.AppCompat" />
 
     <android.support.v7.widget.AppCompatSeekBar
@@ -52,7 +53,6 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
         android:layout_below="@+id/white_noise_volume"
-        android:visibility="gone"
         android:theme="@style/Theme.AppCompat"/>
 
     <TextView
@@ -72,6 +72,7 @@
         android:layout_below="@+id/seek_bar_words"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp"
+        android:visibility="gone"
         android:text="Word volume" />
 
     <TextView
@@ -81,7 +82,6 @@
         android:layout_below="@+id/seek_bar_white_noise"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp"
-        android:visibility="gone"
         android:text="Set the white noise to a volume that is comfortable for sleeping." />
 
     <Button

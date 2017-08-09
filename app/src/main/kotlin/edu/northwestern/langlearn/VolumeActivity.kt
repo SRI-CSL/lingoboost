@@ -65,11 +65,11 @@ fun SharedPreferences.Editor.put(pair: Pair<String, Any>) {
 class VolumeActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
     private var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayerWhiteNoise: MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volume)
-        mediaPlayer = MediaPlayer.create(this, R.raw.kvinnan)
         checkSharedPreferences()
 
         val isSleep: Boolean = intent.getBooleanExtra("isSleep", false)
@@ -86,15 +86,16 @@ class VolumeActivity : AppCompatActivity() {
         else
             "Set Test Volume"
 
-        words_volume.onTouchChangeVolume(seek_bar_words) { vol -> playAudioRaw(vol) }
-        white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { playAudioRaw(it) }
+        createPlayer(isSleep)
+        words_volume.onTouchChangeVolume(seek_bar_words) { vol -> changeVolumeAndPlay(vol) }
+        white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { changeVolumeAndPlay(it) }
         seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
         seek_bar_white_noise.onProgressChangeVolume(white_noise_volume) { v, p -> setVolumeControlViewProgress(v, p) }
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
 
-            if (isSleep && words_volume.visibility == View.VISIBLE) {
-                showWhitenoise()
+            if (isSleep && white_noise_volume.visibility == View.VISIBLE) {
+                showWordsVolume()
             } else {
                 next(isSleep, isTest)
             }
@@ -128,6 +129,17 @@ class VolumeActivity : AppCompatActivity() {
         startActivity(toIntent)
     }
 
+    private fun createPlayer(isSleep: Boolean = true) {
+        if (isSleep) {
+            mediaPlayerWhiteNoise = MediaPlayer.create(this, R.raw.bnoise3)
+            mediaPlayerWhiteNoise?.seekTo(45000)
+            mediaPlayerWhiteNoise?.setLooping(true)
+            mediaPlayerWhiteNoise?.start()
+        }
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.kvinnan)
+    }
+
     private fun setVolumeControlViewProgress(v: VolumeControlView, progress: Int) {
         val w: Int = v.width
         val h: Int = v.height
@@ -142,8 +154,8 @@ class VolumeActivity : AppCompatActivity() {
         v.onTouch(contentView!!, motionEvent)
     }
 
-    private fun playAudioRaw(volume: Float) {
-        Log.d(TAG, "playAudioRaw")
+    private fun changeVolumeAndPlay(volume: Float) {
+        Log.d(TAG, "changeVolumeAndPlay")
         mediaPlayer?.setVolume(volume, volume)
 
         if (!(mediaPlayer?.isPlaying() ?: true)) {
@@ -156,22 +168,23 @@ class VolumeActivity : AppCompatActivity() {
             mediaPlayer?.stop()
         }
 
+        if (mediaPlayerWhiteNoise.isPlaying() ?: false) {
+            mediaPlayerWhiteNoise.stop()
+        }
+
         mediaPlayer?.release()
         mediaPlayer = null
+        mediaPlayerWhiteNoise.release()
+        mediaPlayerWhiteNoise = null;
     }
 
-    private fun showWhitenoise() {
-        words_volume.visibility = View.GONE
-        seek_bar_words.visibility = View.GONE
-        text_view_word_playback.visibility = View.GONE
-        white_noise_volume.visibility = View.VISIBLE
-        seek_bar_white_noise.visibility = View.VISIBLE
-        text_view_white_noise.visibility = View.VISIBLE
-        destroyPlayer()
-        mediaPlayer = MediaPlayer.create(this, R.raw.bnoise3)
-        mediaPlayer?.seekTo(45000)
-        mediaPlayer?.setLooping(true)
-        mediaPlayer?.start()
+    private fun showWordsVolume() {
+        white_noise_volume.visibility = View.GONE
+        seek_bar_white_noise.visibility = View.GONE
+        text_view_white_noise.visibility = View.GONE
+        words_volume.visibility = View.VISIBLE
+        seek_bar_words.visibility = View.VISIBLE
+        text_view_word_playback.visibility = View.VISIBLE
     }
 
     private fun checkSharedPreferences() {

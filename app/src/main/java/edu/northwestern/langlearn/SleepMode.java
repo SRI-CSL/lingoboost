@@ -312,12 +312,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "onDestroy");
 
         if (playWordsIfStillHandler != null) {
-            // playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
             playWordsIfStillHandler = null;
         }
 
         if (pauseBetweenWordsHandler != null) {
-            // pauseBetweenWordsHandler.removeCallbacks(checkPlayWordsIfStillRunner);
             pauseBetweenWordsHandler = null;
         }
 
@@ -355,18 +353,16 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                 final float pitch = orientation[1];
                 final float roll = orientation[2];
 
-                lastSensor.put("Azimuth", Math.round(Math.toDegrees(azimuth)));
+                lastSensor.put("Azimuth", Math.round(Math.toDegrees(azimuth))); // -azimuth * 360 / (2 * 3.14159f));
                 lastSensor.put("Pitch", Math.round(Math.toDegrees(pitch)));
                 lastSensor.put("Roll", Math.round(Math.toDegrees(roll)));
-                // Log.d(TAG, "A: " + Math.round(Math.toDegrees(azimuth))); // -azimuth * 360 / (2 * 3.14159f));
-                // Log.d(TAG, "P: " + Math.round(Math.toDegrees(pitch)));
-                // Log.d(TAG, "R: " + Math.round(Math.toDegrees(roll)));
             }
         }
     }
 
     private void onTickSensor() {
-        Log.d(TAG, "updateSendosr");
+        Log.d(TAG, "onTickSensor");
+        Log.d(TAG, lastSensor.toString());
         debugSensor.setText(lastSensor.toString());
         tickSensorHandler.postDelayed(tickSensorRunner, 2000); // 2s
     }
