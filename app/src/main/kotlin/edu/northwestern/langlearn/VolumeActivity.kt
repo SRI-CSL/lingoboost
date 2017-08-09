@@ -87,8 +87,11 @@ class VolumeActivity : AppCompatActivity() {
             "Set Test Volume"
 
         createPlayer(isSleep)
+
+        if (isTest) showWordsVolume()
+
         words_volume.onTouchChangeVolume(seek_bar_words) { vol -> changeVolumeAndPlay(vol) }
-        white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { changeVolumeAndPlay(it) }
+        white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { mediaPlayerWhiteNoise?.setVolume(it, it) }
         seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
         seek_bar_white_noise.onProgressChangeVolume(white_noise_volume) { v, p -> setVolumeControlViewProgress(v, p) }
         volume_next.setOnClickListener(View.OnClickListener {
@@ -134,6 +137,7 @@ class VolumeActivity : AppCompatActivity() {
             mediaPlayerWhiteNoise = MediaPlayer.create(this, R.raw.bnoise3)
             mediaPlayerWhiteNoise?.seekTo(45000)
             mediaPlayerWhiteNoise?.setLooping(true)
+            mediaPlayerWhiteNoise?.setVolume(seek_bar_white_noise.progress.toFloat(), seek_bar_white_noise.progress.toFloat())
             mediaPlayerWhiteNoise?.start()
         }
 
@@ -168,13 +172,13 @@ class VolumeActivity : AppCompatActivity() {
             mediaPlayer?.stop()
         }
 
-        if (mediaPlayerWhiteNoise.isPlaying() ?: false) {
-            mediaPlayerWhiteNoise.stop()
+        if (mediaPlayerWhiteNoise?.isPlaying() ?: false) {
+            mediaPlayerWhiteNoise?.stop()
         }
 
         mediaPlayer?.release()
         mediaPlayer = null
-        mediaPlayerWhiteNoise.release()
+        mediaPlayerWhiteNoise?.release()
         mediaPlayerWhiteNoise = null;
     }
 
