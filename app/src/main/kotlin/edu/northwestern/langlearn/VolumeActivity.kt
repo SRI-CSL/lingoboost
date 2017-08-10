@@ -117,7 +117,7 @@ class VolumeActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         isSleepPartOne {
-            if (!it) showWhiteNoiseVolume()
+            if (!it && isSleep) showWhiteNoiseVolume()
             else super.onBackPressed()
         }
     }
