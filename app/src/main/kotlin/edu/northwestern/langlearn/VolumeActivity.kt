@@ -66,14 +66,13 @@ class VolumeActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
     private var mediaPlayer: MediaPlayer? = null
     private var mediaPlayerWhiteNoise: MediaPlayer? = null
+    private val isSleep by lazy { intent.getBooleanExtra("isSleep", false) }
+    private val isTest by lazy { intent.getBooleanExtra("isTest", false) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volume)
         checkSharedPreferences()
-
-        val isSleep: Boolean = intent.getBooleanExtra("isSleep", false)
-        val isTest: Boolean = intent.getBooleanExtra("isTest", false)
 
         Log.d(TAG, "isSleep: $isSleep")
         Log.d(TAG, "isTest: $isTest")
@@ -86,7 +85,7 @@ class VolumeActivity : AppCompatActivity() {
         else
             "Set Test Volume"
 
-        createPlayer(isSleep)
+        createPlayer()
 
         if (isTest) showWordsVolume()
 
@@ -97,10 +96,9 @@ class VolumeActivity : AppCompatActivity() {
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
 
-            if (isSleep && white_noise_volume.visibility == View.VISIBLE) {
-                showWordsVolume()
-            } else {
-                next(isSleep, isTest)
+            isSleepPartOne {
+                if (it) showWordsVolume()
+                else next()
             }
         })
     }
@@ -117,7 +115,14 @@ class VolumeActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    private fun next(isSleep: Boolean, isTest: Boolean) {
+    override fun onBackPressed() {
+        isSleepPartOne {
+            if (!it) showWhiteNoiseVolume()
+            else super.onBackPressed()
+        }
+    }
+
+    private fun next() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
         val toIntent: Intent = if (isSleep) {
             Intent(this, SleepMode::class.java)
@@ -132,7 +137,14 @@ class VolumeActivity : AppCompatActivity() {
         startActivity(toIntent)
     }
 
-    private fun createPlayer(isSleep: Boolean = true) {
+    private fun isSleepPartOne(func: ((isSleepP1: Boolean) -> Unit)? = null): Boolean {
+        val pOne = isSleep && white_noise_volume.visibility == View.VISIBLE
+
+        func?.invoke(pOne)
+        return pOne
+    }
+
+    private fun createPlayer() {
         if (isSleep) {
             mediaPlayerWhiteNoise = MediaPlayer.create(this, R.raw.bnoise3)
             mediaPlayerWhiteNoise?.seekTo(45000)
@@ -189,6 +201,15 @@ class VolumeActivity : AppCompatActivity() {
         words_volume.visibility = View.VISIBLE
         seek_bar_words.visibility = View.VISIBLE
         text_view_word_playback.visibility = View.VISIBLE
+    }
+
+    private fun showWhiteNoiseVolume() {
+        white_noise_volume.visibility = View.VISIBLE
+        seek_bar_white_noise.visibility = View.VISIBLE
+        text_view_white_noise.visibility = View.VISIBLE
+        words_volume.visibility = View.GONE
+        seek_bar_words.visibility = View.GONE
+        text_view_word_playback.visibility = View.GONE
     }
 
     private fun checkSharedPreferences() {
