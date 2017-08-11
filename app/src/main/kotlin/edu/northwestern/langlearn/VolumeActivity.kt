@@ -138,7 +138,7 @@ class VolumeActivity : AppCompatActivity() {
     }
 
     private fun isSleepPartOne(func: ((isSleepP1: Boolean) -> Unit)? = null): Boolean {
-        val pOne = isSleep && white_noise_volume.visibility == View.VISIBLE
+        val pOne = if (isTest) false else white_noise_volume.visibility == View.VISIBLE
 
         func?.invoke(pOne)
         return pOne

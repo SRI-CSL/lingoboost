@@ -40,7 +40,7 @@
         android:id="@+id/seek_bar_words"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="42dp"
         android:layout_marginBottom="4dp"
         android:layout_below="@+id/words_volume"
         android:visibility="gone"
@@ -50,7 +50,7 @@
         android:id="@+id/seek_bar_white_noise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="42dp"
         android:layout_marginBottom="4dp"
         android:layout_below="@+id/white_noise_volume"
         android:theme="@style/Theme.AppCompat"/>
