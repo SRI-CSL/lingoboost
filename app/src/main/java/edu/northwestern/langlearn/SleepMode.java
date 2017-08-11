@@ -74,6 +74,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private int wordsIndex = 0;
     private HashMap<String, Integer> lastActivity;
     private HashMap<String, Long> lastSensor;
+    private HashMap<String, Float> lastAccel;
     @Nullable
     private BroadcastReceiver receiver;
     private Runnable checkPlayWordsIfStillRunner = new Runnable() {
@@ -90,7 +91,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     };
     private String logDateToStr;
     private TextView debugActivity;
-    private TextView debugSensor;
+    private TextView debugSensorOrientation;
+    private TextView debugSensorAceelerationChange;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     private Sensor magnetometer;
@@ -266,6 +268,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         lastSensor.put("Azimuth", 0l);
         lastSensor.put("Pitch", 0l);
         lastSensor.put("Roll", 0l);
+        lastAccel = new HashMap<String, Float>();
+        lastAccel.put("x", 0.0f);
+        lastAccel.put("y", 0.0f);
+        lastAccel.put("z", 0.0f);
+        lastAccel.put("lastx", 0.0f);
+        lastAccel.put("lasty", 0.0f);
+        lastAccel.put("lastz", 0.0f);
         createReceiver();
         writeCSVHeader();
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
@@ -273,7 +282,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         debugActivity = (TextView)findViewById(R.id.debug_activity);
         debugActivity.setText(lastActivity.toString());
-        debugSensor = (TextView)findViewById(R.id.debug_sensor);
+        debugSensorOrientation = (TextView)findViewById(R.id.debug_sensor_orientation);
+        debugSensorAceelerationChange = (TextView)findViewById(R.id.debug_sensor_acceleration_change);
         resumePlayWords = false;
         onTickSensor();
 
@@ -333,11 +343,16 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             gravity = event.values;
+            lastAccel.put("x", gravity[ 0 ]);
+            lastAccel.put("y", gravity[ 1 ]);
+            lastAccel.put("z", gravity[ 2 ]);
+        }
 
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             geomagnetic = event.values;
+        }
 
         if (gravity != null && geomagnetic != null) {
             final float R[] = new float[9];
@@ -349,7 +364,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
                 SensorManager.getOrientation(R, orientation);
 
-                final float azimuth = orientation[0]; // orientation contains: azimut (yaw), pitch and roll
+                final float azimuth = orientation[0]; // orientation contains: azimuth (yaw), pitch and roll
                 final float pitch = orientation[1];
                 final float roll = orientation[2];
 
@@ -362,8 +377,25 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     private void onTickSensor() {
         Log.d(TAG, "onTickSensor");
+
+        float x = lastAccel.get("x");
+        float y = lastAccel.get("y");
+        float z = lastAccel.get("z");
+        double dx = x - lastAccel.get("lastx");
+        double dy = y - lastAccel.get("lasty");
+        double dz = z - lastAccel.get("lastz");
+        double sqx = Math.pow(dx, 2);
+        double sqy = Math.pow(dy, 2);
+        double sqz = Math.pow(dz, 2);
+        double accelChangeMagnitude = Math.sqrt(sqx + sqy + sqz);
+
+        Log.d(TAG, "Accel Change Mag: " + Math.round(accelChangeMagnitude));
+        lastAccel.put("lastx", x);
+        lastAccel.put("lasty", y);
+        lastAccel.put("lastz", z);
         Log.d(TAG, lastSensor.toString());
-        debugSensor.setText(lastSensor.toString());
+        debugSensorOrientation.setText(lastSensor.toString());
+        debugSensorAceelerationChange.setText(Long.valueOf(Math.round(accelChangeMagnitude)).toString());
         tickSensorHandler.postDelayed(tickSensorRunner, 2000); // 2s
     }
 

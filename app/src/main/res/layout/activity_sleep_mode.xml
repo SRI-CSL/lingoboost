@@ -37,11 +37,26 @@
         android:background="@android:color/darker_gray"/>
 
     <TextView
-        android:id="@+id/debug_sensor"
+        android:id="@+id/debug_sensor_orientation"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Debug Orientation"
+        android:textAlignment="textStart"
+        android:textColor="?android:textColorSecondaryInverse"
+        android:textSize="24.0sp"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/debug_sensor_acceleration_change"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Debug Acceleration Change"
         android:textAlignment="textStart"
         android:textColor="?android:textColorSecondaryInverse"
         android:textSize="24.0sp"/>
