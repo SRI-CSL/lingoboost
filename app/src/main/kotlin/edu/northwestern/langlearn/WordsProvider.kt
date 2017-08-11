@@ -53,8 +53,8 @@ class WordsProvider(val jsonUrl: String) {
             jsonStartDelay = getLong("start_delay") * 1000
             jsonWordDelay = getLong("word_delay") * 1000
         }
-        jsonObj.unless { jsonSham = getBoolean("sham") }
-        jsonObj.unless { jsonError = getString("error") }
+        jsonObj.unless { jsonSham = getBoolean("sham") } // This could be missing, so do it by itself if missing exception
+        jsonObj.unless { jsonError = getString("error") } // This could be missing, so do it by itself if missing exception
         jsonObj.unless {
             val words = getJSONArray("words")
             var n: String = ""

@@ -23,10 +23,10 @@ class MessageActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish()
-
         val i: Intent = Intent(this, MainActivity::class.java)
 
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(i)
+        finish()
     }
 }

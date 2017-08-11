@@ -84,8 +84,7 @@ class LogDocumentsProvider : DocumentsProvider() {
         // Create a cursor with the requested projection, or the default projection.
         val result = MatrixCursor(projection ?: DEFAULT_DOCUMENT_PROJECTION)
 
-        if (documentId != null) includeByDocId(result, documentId)
-
+        documentId?.let { includeByDocId(result, it) } // if (documentId != null) includeByDocId(result, documentId)
         return result;
     }
 
@@ -169,17 +168,15 @@ class LogDocumentsProvider : DocumentsProvider() {
 
     private fun getTypeForName(name: String): String {
         val lastDot = name.lastIndexOf('.')
+        var mime: String? = null
 
         if (lastDot >= 0) {
             val extension = name.substring(lastDot + 1)
-            val mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
 
-            if (mime != null) {
-                return mime
-            }
+            mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
         }
 
-        return "application/octet-stream"
+        return mime ?: "application/octet-stream"
     }
 
     private fun getTypeForFile(file: File): String {
@@ -270,14 +267,13 @@ class LogDocumentsProvider : DocumentsProvider() {
 
             buffer = outputStream.toByteArray()
             fos = context!!.openFileOutput(filename, Context.MODE_PRIVATE)
-            fos.write(buffer)
+            fos?.write(buffer)
         } catch (e: IOException) {
             e.printStackTrace()
         } finally {
             ins.close()
             outputStream.close()
-
-            if (fos != null) fos.close()
+            fos?.close()
         }
     }
 }

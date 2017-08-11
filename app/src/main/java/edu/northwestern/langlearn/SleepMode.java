@@ -300,11 +300,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     @Override
     public void onBackPressed() {
-        finish();
-
         final Intent i = new Intent(SleepMode.this, MainActivity.class);
 
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
+        finish();
     }
 
     @Override
