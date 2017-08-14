@@ -10,70 +10,52 @@
               android:screenOrientation="portrait"
               android:configChanges="keyboardHidden|orientation|screenSize">
 
-    <com.agilie.volumecontrol.view.VolumeControlView
-        android:id="@+id/words_volume"
+    <TextView
+        android:id="@+id/text_view_set_volume"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/text_view_set_volume"
-        app:controllerSpace="3"
-        app:sectorRadius="6"
-        app:splineCircleColor="#ffffff"
-        app:shiningFrequency="0"
-        android:visibility="gone"
-        tools:context="com.agilie.controller.ControllerActivity" />
-
-    <com.agilie.volumecontrol.view.VolumeControlView
-        android:id="@+id/white_noise_volume"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/text_view_word_playback"
-        app:controllerSpace="3"
-        app:sectorRadius="6"
-        app:splineCircleColor="#ffffff"
-        app:shiningFrequency="0"
-        tools:context="com.agilie.controller.ControllerActivity" />
-
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/seek_bar_words"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="42dp"
-        android:layout_marginBottom="4dp"
-        android:layout_below="@+id/words_volume"
-        android:visibility="gone"
-        android:theme="@style/Theme.AppCompat" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:textSize="24.0sp"
+        android:text="Volume" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_view_set_volume"
+        android:layout_marginTop="4dp"
+        android:background="@android:color/darker_gray"/>
 
     <android.support.v7.widget.AppCompatSeekBar
         android:id="@+id/seek_bar_white_noise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="42dp"
+        android:layout_below="@+id/text_view_heading_white_noise"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:layout_below="@+id/white_noise_volume"
+        android:progressBackgroundTint="#000000"
         android:theme="@style/Theme.AppCompat"/>
 
-    <TextView
-        android:id="@+id/text_view_set_volume"
-        android:layout_alignParentTop="true"
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/seek_bar_words"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/text_view_heading_spoken_words"
         android:layout_marginTop="4dp"
-        android:textSize="24.0sp"
-        android:text="Set Volume(s)" />
+        android:layout_marginBottom="4dp"
+        android:progressBackgroundTint="#000000"
+        android:theme="@style/Theme.AppCompat" />
 
     <TextView
-        android:id="@+id/text_view_word_playback"
+        android:id="@+id/text_view_heading_white_noise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/seek_bar_words"
+        android:layout_below="@+id/text_view_set_volume"
+        android:layout_marginTop="8dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:visibility="gone"
-        android:text="Word volume" />
+        android:textSize="24.0sp"
+        android:text="White Noise" />
 
     <TextView
         android:id="@+id/text_view_white_noise"
@@ -84,14 +66,40 @@
         android:layout_marginTop="4dp"
         android:text="Set the white noise to a volume that is comfortable for sleeping." />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_view_white_noise"
+        android:layout_marginTop="4dp"
+        android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:id="@+id/text_view_heading_spoken_words"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_white_noise"
+        android:layout_marginTop="12dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="24.0sp"
+        android:text="Spoken Words" />
+
+    <TextView
+        android:id="@+id/text_view_word_playback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seek_bar_words"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:text="Word Volume" />
+
     <Button
         android:id="@+id/volume_next"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view_white_noise"
-        android:layout_centerHorizontal="true"
-        android:text="Next"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="Ready for ..."
         android:textSize="24.0sp" />
 
 </RelativeLayout>

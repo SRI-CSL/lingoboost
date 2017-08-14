@@ -17,25 +17,33 @@ import kotlinx.android.synthetic.main.activity_volume.*
 
 import org.jetbrains.anko.contentView
 
-import com.agilie.volumecontrol.animation.controller.ControllerImpl
-import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
-import com.agilie.volumecontrol.view.VolumeControlView
-import com.agilie.volumecontrol.view.VolumeControlView.Companion.CONTROLLER_SPACE
+//import com.agilie.volumecontrol.animation.controller.ControllerImpl
+//import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
+//import com.agilie.volumecontrol.view.VolumeControlView
+//import com.agilie.volumecontrol.view.VolumeControlView.Companion.CONTROLLER_SPACE
 
-inline fun VolumeControlView.onTouchChangeVolume(bar: AppCompatSeekBar, crossinline body: (vol: Float) -> Unit) {
-    this.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
-        override fun onControllerDown(angle: Int, percent: Int) { }
-        override fun onControllerMove(angle: Int, percent: Int) { }
-        override fun onAngleChange(angle: Int, percent: Int) {
-            bar.setProgress(percent)
-            body(percent / 100f)
-        }
-    })
-}
+//inline fun VolumeControlView.onTouchChangeVolume(bar: AppCompatSeekBar, crossinline body: (vol: Float) -> Unit) {
+//    this.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
+//        override fun onControllerDown(angle: Int, percent: Int) { }
+//        override fun onControllerMove(angle: Int, percent: Int) { }
+//        override fun onAngleChange(angle: Int, percent: Int) {
+//            bar.setProgress(percent)
+//            body(percent / 100f)
+//        }
+//    })
+//}
 
-inline fun AppCompatSeekBar.onProgressChangeVolume(v: VolumeControlView, crossinline body: (v: VolumeControlView, progress: Int) -> Unit) {
+//inline fun AppCompatSeekBar.onProgressChangeVolume(v: VolumeControlView, crossinline body: (v: VolumeControlView, progress: Int) -> Unit) {
+//    this.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+//        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) body(v, progress) else { }
+//        override fun onStartTrackingTouch(seekBar: SeekBar) { }
+//        override fun onStopTrackingTouch(seekBar: SeekBar) { }
+//    })
+//}
+
+inline fun AppCompatSeekBar.onProgressChangeVolume(crossinline body: (progress: Float) -> Unit) {
     this.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) body(v, progress) else { }
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) body(progress / 100f) else { }
         override fun onStartTrackingTouch(seekBar: SeekBar) { }
         override fun onStopTrackingTouch(seekBar: SeekBar) { }
     })
@@ -81,25 +89,28 @@ class VolumeActivity : AppCompatActivity() {
         else
             "Set the word volume loud enough so that you can clearly understand the word."
         text_view_set_volume.text = if (isSleep)
-            "Set Sleep Volume"
+            "Sleep Volume"
         else
-            "Set Test Volume"
+            "Test Volume"
 
         createPlayer()
 
         if (isTest) showWordsVolume()
 
-        words_volume.onTouchChangeVolume(seek_bar_words) { vol -> changeVolumeAndPlay(vol) }
-        white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { mediaPlayerWhiteNoise?.setVolume(it, it) }
-        seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
-        seek_bar_white_noise.onProgressChangeVolume(white_noise_volume) { v, p -> setVolumeControlViewProgress(v, p) }
+        // words_volume.onTouchChangeVolume(seek_bar_words) { vol -> changeVolumeAndPlay(vol) }
+        // white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { mediaPlayerWhiteNoise?.setVolume(it, it) }
+        //seek_bar_white_noise.onProgressChangeVolume(white_noise_volume) { v, p -> setVolumeControlViewProgress(v, p) }
+        seek_bar_white_noise.onProgressChangeVolume { mediaPlayerWhiteNoise?.setVolume(it, it) }
+        // seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
+        seek_bar_words.onProgressChangeVolume { vol -> changeVolumeAndPlay(vol) }
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
 
-            isSleepPartOne {
-                if (it) showWordsVolume()
-                else next()
-            }
+            //isSleepPartOne {
+            //    if (it) showWordsVolume()
+            //    else next()
+            //}
+            next()
         })
     }
 
@@ -115,15 +126,15 @@ class VolumeActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    override fun onBackPressed() {
-        isSleepPartOne {
-            when {
-                isTest -> super.onBackPressed()
-                !it -> showWhiteNoiseVolume()
-                else -> super.onBackPressed()
-            }
-        }
-    }
+    //override fun onBackPressed() {
+    //    isSleepPartOne {
+    //        when {
+    //            isTest -> super.onBackPressed()
+    //            !it -> showWhiteNoiseVolume()
+    //            else -> super.onBackPressed()
+    //        }
+    //    }
+    //}
 
     private fun next() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
@@ -140,38 +151,39 @@ class VolumeActivity : AppCompatActivity() {
         startActivity(toIntent)
     }
 
-    private fun isSleepPartOne(func: ((isSleepP1: Boolean) -> Unit)? = null): Boolean {
-        val pOne = if (isTest) false else white_noise_volume.visibility == View.VISIBLE
-
-        func?.invoke(pOne)
-        return pOne
-    }
+    //private fun isSleepPartOne(func: ((isSleepP1: Boolean) -> Unit)? = null): Boolean {
+    //    val pOne = if (isTest) false else white_noise_volume.visibility == View.VISIBLE
+    //
+    //    func?.invoke(pOne)
+    //    return pOne
+    //}
 
     private fun createPlayer() {
         if (isSleep) {
             mediaPlayerWhiteNoise = MediaPlayer.create(this, R.raw.bnoise3)
             mediaPlayerWhiteNoise?.seekTo(45000)
             mediaPlayerWhiteNoise?.setLooping(true)
-            mediaPlayerWhiteNoise?.setVolume(seek_bar_white_noise.progress.toFloat(), seek_bar_white_noise.progress.toFloat())
+            mediaPlayerWhiteNoise?.setVolume(seek_bar_white_noise.progress / 100f, seek_bar_white_noise.progress / 100f)
             mediaPlayerWhiteNoise?.start()
         }
 
         mediaPlayer = MediaPlayer.create(this, R.raw.kvinnan)
+        changeVolumeAndPlay(seek_bar_words.progress / 100f)
     }
 
-    private fun setVolumeControlViewProgress(v: VolumeControlView, progress: Int) {
-        val w: Int = v.width
-        val h: Int = v.height
-        val controllerCenter = PointF().apply {
-            x = w / 2f
-            y = h / 2f
-        }
-        val controllerRadius = if (w > h) h / CONTROLLER_SPACE else w / CONTROLLER_SPACE
-        val restoreTouchPoint = getPointOnBorderLineOfCircle(controllerCenter, controllerRadius, (progress *  360) / 100)
-        val motionEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, restoreTouchPoint.x, restoreTouchPoint.y, 0)
-
-        v.onTouch(contentView!!, motionEvent)
-    }
+    //private fun setVolumeControlViewProgress(v: VolumeControlView, progress: Int) {
+    //    val w: Int = v.width
+    //    val h: Int = v.height
+    //    val controllerCenter = PointF().apply {
+    //        x = w / 2f
+    //        y = h / 2f
+    //    }
+    //    val controllerRadius = if (w > h) h / CONTROLLER_SPACE else w / CONTROLLER_SPACE
+    //    val restoreTouchPoint = getPointOnBorderLineOfCircle(controllerCenter, controllerRadius, (progress *  360) / 100)
+    //    val motionEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, restoreTouchPoint.x, restoreTouchPoint.y, 0)
+    //
+    //    v.onTouch(contentView!!, motionEvent)
+    //}
 
     private fun changeVolumeAndPlay(volume: Float) {
         Log.d(TAG, "changeVolumeAndPlay")
@@ -198,22 +210,23 @@ class VolumeActivity : AppCompatActivity() {
     }
 
     private fun showWordsVolume() {
-        white_noise_volume.visibility = View.GONE
+        //white_noise_volume.visibility = View.GONE
         seek_bar_white_noise.visibility = View.GONE
         text_view_white_noise.visibility = View.GONE
-        words_volume.visibility = View.VISIBLE
-        seek_bar_words.visibility = View.VISIBLE
-        text_view_word_playback.visibility = View.VISIBLE
+        text_view_heading_white_noise.visibility = View.GONE
+        //words_volume.visibility = View.VISIBLE
+        //seek_bar_words.visibility = View.VISIBLE
+        //text_view_word_playback.visibility = View.VISIBLE
     }
 
-    private fun showWhiteNoiseVolume() {
-        white_noise_volume.visibility = View.VISIBLE
-        seek_bar_white_noise.visibility = View.VISIBLE
-        text_view_white_noise.visibility = View.VISIBLE
-        words_volume.visibility = View.GONE
-        seek_bar_words.visibility = View.GONE
-        text_view_word_playback.visibility = View.GONE
-    }
+    //private fun showWhiteNoiseVolume() {
+    //    //white_noise_volume.visibility = View.VISIBLE
+    //    seek_bar_white_noise.visibility = View.VISIBLE
+    //    text_view_white_noise.visibility = View.VISIBLE
+    //    //words_volume.visibility = View.GONE
+    //    seek_bar_words.visibility = View.GONE
+    //    text_view_word_playback.visibility = View.GONE
+    //}
 
     private fun checkSharedPreferences() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
@@ -229,9 +242,9 @@ class VolumeActivity : AppCompatActivity() {
             }
         }
 
-        words_volume.setStartPercent(wordsPercent)
+        //words_volume.setStartPercent(wordsPercent)
         seek_bar_words.progress = wordsPercent
-        white_noise_volume.setStartPercent(whiteNoisePercent)
+        //white_noise_volume.setStartPercent(whiteNoisePercent)
         seek_bar_white_noise.progress = whiteNoisePercent
     }
 }
