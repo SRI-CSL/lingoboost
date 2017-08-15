@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="delayListArray">
         <item>30m</item>
         <item>45m</item>
@@ -14,14 +15,4 @@
         <item>4</item>
     </string-array>
 
-
-    <array name="image_res_ids">
-        <item>@raw/android_dinner</item>
-        <item>@raw/android_rose</item>
-    </array>
-
-    <array name="text_res_ids">
-        <item>@raw/cat_names</item>
-        <item>@raw/dog_names</item>
-    </array>
 </resources>
