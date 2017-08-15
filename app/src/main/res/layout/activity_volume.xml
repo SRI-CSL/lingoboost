@@ -25,7 +25,7 @@
         android:layout_height="1dp"
         android:layout_below="@+id/text_view_set_volume"
         android:layout_marginTop="4dp"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
     <android.support.v7.widget.AppCompatSeekBar
         android:id="@+id/seek_bar_white_noise"
@@ -71,7 +71,7 @@
         android:layout_height="1dp"
         android:layout_below="@+id/text_view_white_noise"
         android:layout_marginTop="4dp"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/text_view_heading_spoken_words"
@@ -91,6 +91,13 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp"
         android:text="Word Volume" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/text_view_word_playback"
+        android:layout_marginTop="4dp"
+        android:background="@android:color/darker_gray" />
 
     <Button
         android:id="@+id/volume_next"

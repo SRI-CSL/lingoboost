@@ -2,44 +2,16 @@ package edu.northwestern.langlearn
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.PointF
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatSeekBar
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
 
 import kotlinx.android.synthetic.main.activity_volume.*
-
-import org.jetbrains.anko.contentView
-
-//import com.agilie.volumecontrol.animation.controller.ControllerImpl
-//import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
-//import com.agilie.volumecontrol.view.VolumeControlView
-//import com.agilie.volumecontrol.view.VolumeControlView.Companion.CONTROLLER_SPACE
-
-//inline fun VolumeControlView.onTouchChangeVolume(bar: AppCompatSeekBar, crossinline body: (vol: Float) -> Unit) {
-//    this.controller?.onTouchControllerListener = (object : ControllerImpl.OnTouchControllerListener {
-//        override fun onControllerDown(angle: Int, percent: Int) { }
-//        override fun onControllerMove(angle: Int, percent: Int) { }
-//        override fun onAngleChange(angle: Int, percent: Int) {
-//            bar.setProgress(percent)
-//            body(percent / 100f)
-//        }
-//    })
-//}
-
-//inline fun AppCompatSeekBar.onProgressChangeVolume(v: VolumeControlView, crossinline body: (v: VolumeControlView, progress: Int) -> Unit) {
-//    this.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-//        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) body(v, progress) else { }
-//        override fun onStartTrackingTouch(seekBar: SeekBar) { }
-//        override fun onStopTrackingTouch(seekBar: SeekBar) { }
-//    })
-//}
 
 inline fun AppCompatSeekBar.onProgressChangeVolume(crossinline body: (progress: Float) -> Unit) {
     this.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -97,11 +69,7 @@ class VolumeActivity : AppCompatActivity() {
 
         if (isTest) showWordsVolume()
 
-        // words_volume.onTouchChangeVolume(seek_bar_words) { vol -> changeVolumeAndPlay(vol) }
-        // white_noise_volume.onTouchChangeVolume(seek_bar_white_noise) { mediaPlayerWhiteNoise?.setVolume(it, it) }
-        //seek_bar_white_noise.onProgressChangeVolume(white_noise_volume) { v, p -> setVolumeControlViewProgress(v, p) }
         seek_bar_white_noise.onProgressChangeVolume { mediaPlayerWhiteNoise?.setVolume(it, it) }
-        // seek_bar_words.onProgressChangeVolume(words_volume) { v, p -> setVolumeControlViewProgress(v, p) }
         seek_bar_words.onProgressChangeVolume { vol -> changeVolumeAndPlay(vol) }
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
@@ -171,20 +139,6 @@ class VolumeActivity : AppCompatActivity() {
         changeVolumeAndPlay(seek_bar_words.progress / 100f)
     }
 
-    //private fun setVolumeControlViewProgress(v: VolumeControlView, progress: Int) {
-    //    val w: Int = v.width
-    //    val h: Int = v.height
-    //    val controllerCenter = PointF().apply {
-    //        x = w / 2f
-    //        y = h / 2f
-    //    }
-    //    val controllerRadius = if (w > h) h / CONTROLLER_SPACE else w / CONTROLLER_SPACE
-    //    val restoreTouchPoint = getPointOnBorderLineOfCircle(controllerCenter, controllerRadius, (progress *  360) / 100)
-    //    val motionEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, restoreTouchPoint.x, restoreTouchPoint.y, 0)
-    //
-    //    v.onTouch(contentView!!, motionEvent)
-    //}
-
     private fun changeVolumeAndPlay(volume: Float) {
         Log.d(TAG, "changeVolumeAndPlay")
         mediaPlayer?.setVolume(volume, volume)
@@ -210,23 +164,10 @@ class VolumeActivity : AppCompatActivity() {
     }
 
     private fun showWordsVolume() {
-        //white_noise_volume.visibility = View.GONE
         seek_bar_white_noise.visibility = View.GONE
         text_view_white_noise.visibility = View.GONE
         text_view_heading_white_noise.visibility = View.GONE
-        //words_volume.visibility = View.VISIBLE
-        //seek_bar_words.visibility = View.VISIBLE
-        //text_view_word_playback.visibility = View.VISIBLE
     }
-
-    //private fun showWhiteNoiseVolume() {
-    //    //white_noise_volume.visibility = View.VISIBLE
-    //    seek_bar_white_noise.visibility = View.VISIBLE
-    //    text_view_white_noise.visibility = View.VISIBLE
-    //    //words_volume.visibility = View.GONE
-    //    seek_bar_words.visibility = View.GONE
-    //    text_view_word_playback.visibility = View.GONE
-    //}
 
     private fun checkSharedPreferences() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
@@ -242,9 +183,7 @@ class VolumeActivity : AppCompatActivity() {
             }
         }
 
-        //words_volume.setStartPercent(wordsPercent)
         seek_bar_words.progress = wordsPercent
-        //white_noise_volume.setStartPercent(whiteNoisePercent)
         seek_bar_white_noise.progress = whiteNoisePercent
     }
 }
