@@ -21,47 +21,62 @@
         android:text="Volume" />
 
     <View
+        android:id="@+id/bar_heading"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/text_view_set_volume"
         android:layout_marginTop="4dp"
         android:background="@android:color/darker_gray" />
 
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/seek_bar_white_noise"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view_heading_white_noise"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:progressBackgroundTint="#000000"
-        android:theme="@style/Theme.AppCompat"/>
-
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/seek_bar_words"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view_heading_spoken_words"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:progressBackgroundTint="#000000"
-        android:theme="@style/Theme.AppCompat" />
 
     <TextView
         android:id="@+id/text_view_heading_white_noise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view_set_volume"
+        android:layout_below="@+id/bar_heading"
         android:layout_marginTop="8dp"
         android:layout_centerHorizontal="true"
         android:textSize="24.0sp"
         android:text="White Noise" />
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/lay_white_noise"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_view_heading_white_noise"
+                    android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/image_white_noise_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/image_white_noise_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:layout_alignParentEnd="true" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seek_bar_white_noise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_toLeftOf="@+id/image_white_noise_up"
+            android:layout_toRightOf="@+id/image_white_noise_off"
+            android:progressBackgroundTint="#000000"
+            android:theme="@style/Theme.AppCompat"/>
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/text_view_white_noise"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/seek_bar_white_noise"
+        android:layout_below="@+id/lay_white_noise"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp"
         android:text="Set the white noise to a volume that is comfortable for sleeping." />
@@ -82,6 +97,16 @@
         android:layout_centerHorizontal="true"
         android:textSize="24.0sp"
         android:text="Spoken Words" />
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/seek_bar_words"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/text_view_heading_spoken_words"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:progressBackgroundTint="#000000"
+        android:theme="@style/Theme.AppCompat" />
 
     <TextView
         android:id="@+id/text_view_word_playback"
