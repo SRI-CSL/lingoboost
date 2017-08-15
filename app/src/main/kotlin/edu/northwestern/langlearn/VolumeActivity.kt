@@ -46,6 +46,8 @@ class VolumeActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
     private var mediaPlayer: MediaPlayer? = null
     private var mediaPlayerWhiteNoise: MediaPlayer? = null
+    private var hasWhiteNoiseBeenAdjusted = false
+    private var hasWhordsBeenAdjusted = false
     private val isSleep by lazy { intent.getBooleanExtra("isSleep", false) }
     private val isTest by lazy { intent.getBooleanExtra("isTest", false) }
 
@@ -69,12 +71,21 @@ class VolumeActivity : AppCompatActivity() {
         else
             "Ready for Test"
 
+        volume_next.isEnabled = false
         createPlayer()
 
         if (isTest) showWordsVolume()
 
-        seek_bar_white_noise.onProgressChangeVolume { mediaPlayerWhiteNoise?.setVolume(it, it) }
-        seek_bar_words.onProgressChangeVolume { vol -> changeVolumeAndPlay(vol) }
+        seek_bar_white_noise.onProgressChangeVolume {
+            mediaPlayerWhiteNoise?.setVolume(it, it)
+            hasWhiteNoiseBeenAdjusted = true
+            enableNextTouch()
+        }
+        seek_bar_words.onProgressChangeVolume { vol ->
+            changeVolumeAndPlay(vol)
+            hasWhordsBeenAdjusted = true
+            enableNextTouch()
+        }
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
             next()
@@ -116,6 +127,13 @@ class VolumeActivity : AppCompatActivity() {
             put(MainActivity.VOLUME_WHITE_NOISE_PREF to seek_bar_white_noise.progress)
         }
         startActivity(toIntent)
+    }
+
+    private fun enableNextTouch() {
+        when {
+            isTest -> volume_next.isEnabled = hasWhordsBeenAdjusted
+            isSleep -> volume_next.isEnabled = hasWhiteNoiseBeenAdjusted && hasWhordsBeenAdjusted
+        }
     }
 
     //private fun isSleepPartOne(func: ((isSleepP1: Boolean) -> Unit)? = null): Boolean {
