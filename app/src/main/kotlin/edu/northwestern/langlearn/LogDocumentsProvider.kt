@@ -230,24 +230,6 @@ class LogDocumentsProvider : DocumentsProvider() {
         return resIds
     }
 
-    private fun writeDummyFilesToStorage() {
-        if (baseDir.list().isNotEmpty()) {
-            return
-        }
-
-        val imageResIds = getResourceIdArray(R.array.image_res_ids)
-
-        for (resId in imageResIds) {
-            writeFileToInternalStorage(resId, ".jpeg")
-        }
-
-        val textResIds = getResourceIdArray(R.array.text_res_ids)
-
-        for (resId in textResIds) {
-            writeFileToInternalStorage(resId, ".txt")
-        }
-    }
-
     private fun writeFileToInternalStorage(resId: Int, extension: String) {
         val filename = context!!.resources.getResourceEntryName(resId) + extension
         val ins = context!!.resources.openRawResource(resId)

@@ -16,8 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:textSize="24.0sp"
+        android:layout_marginTop="24dp"
+        android:textSize="32.0sp"
         android:text="Volume" />
 
     <View
@@ -25,7 +25,7 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/text_view_set_volume"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="48dp"
         android:background="@android:color/darker_gray" />
 
 
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bar_heading"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_centerHorizontal="true"
         android:textSize="24.0sp"
         android:text="White Noise" />
@@ -50,21 +50,21 @@
             android:id="@+id/image_white_noise_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_voloff"
             android:layout_alignParentStart="true" />
 
         <ImageView
             android:id="@+id/image_white_noise_up"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_volup"
             android:layout_alignParentEnd="true" />
 
         <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/seek_bar_white_noise"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:layout_toLeftOf="@+id/image_white_noise_up"
             android:layout_toRightOf="@+id/image_white_noise_off"
             android:progressBackgroundTint="#000000"
@@ -78,50 +78,74 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/lay_white_noise"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="24dp"
         android:text="Set the white noise to a volume that is comfortable for sleeping." />
 
     <View
+        android:id="@+id/bar_volume_two"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/text_view_white_noise"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="12dp"
         android:background="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/text_view_heading_spoken_words"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view_white_noise"
-        android:layout_marginTop="12dp"
+        android:layout_below="@+id/bar_volume_two"
+        android:layout_marginTop="24dp"
         android:layout_centerHorizontal="true"
         android:textSize="24.0sp"
         android:text="Spoken Words" />
 
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/seek_bar_words"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_view_heading_spoken_words"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:progressBackgroundTint="#000000"
-        android:theme="@style/Theme.AppCompat" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/lay_words"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_view_heading_spoken_words"
+                    android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/image_words_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_volwordsoff"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/image_words_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_volwordsup"
+            android:layout_alignParentEnd="true" />
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/seek_bar_words"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_toLeftOf="@+id/image_words_up"
+            android:layout_toRightOf="@+id/image_words_off"
+            android:progressBackgroundTint="#000000"
+            android:theme="@style/Theme.AppCompat" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/text_view_word_playback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/seek_bar_words"
+        android:layout_below="@+id/lay_words"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="24dp"
         android:text="Word Volume" />
 
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/text_view_word_playback"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="12dp"
         android:background="@android:color/darker_gray" />
 
     <Button

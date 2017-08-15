@@ -64,6 +64,10 @@ class VolumeActivity : AppCompatActivity() {
             "Sleep Volume"
         else
             "Test Volume"
+        volume_next.text = if (isSleep)
+            "Ready for Sleep"
+        else
+            "Ready for Test"
 
         createPlayer()
 
@@ -73,11 +77,6 @@ class VolumeActivity : AppCompatActivity() {
         seek_bar_words.onProgressChangeVolume { vol -> changeVolumeAndPlay(vol) }
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
-
-            //isSleepPartOne {
-            //    if (it) showWordsVolume()
-            //    else next()
-            //}
             next()
         })
     }
@@ -164,9 +163,10 @@ class VolumeActivity : AppCompatActivity() {
     }
 
     private fun showWordsVolume() {
-        seek_bar_white_noise.visibility = View.GONE
-        text_view_white_noise.visibility = View.GONE
+        bar_heading.visibility = View.GONE
         text_view_heading_white_noise.visibility = View.GONE
+        lay_white_noise.visibility = View.GONE
+        text_view_white_noise.visibility = View.GONE
     }
 
     private fun checkSharedPreferences() {
