@@ -100,6 +100,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private float[] geomagnetic;
     private boolean resumePlayWords;
     private boolean playWhiteNoise;
+    private int sysStreamVolume;
 
     public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
@@ -153,7 +154,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         sP.edit().putString(MainActivity.LAST_PRACTICE_TIME_PREF, dateToStr).apply();
         Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
-        writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + ","  + activityLog + "," + words.get(wordsIndex).getAudio_url() + "\n", true);
+
+        int sysStreamVolumePercent = Math.round(((sysStreamVolume / 15f) * 100f));
+        int whiteNoiseVolumePercent = Math.round(rightAndLeftWhiteNoiseVolume * 100f);
+        int wordsVolumePercent = Math.round(rightAndLeftWordsVolume * 100f);
+
+        writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + ","  + activityLog + "," + words.get(wordsIndex).getAudio_url()
+                + "," + sysStreamVolumePercent + "," + whiteNoiseVolumePercent + "," + wordsVolumePercent + "\n", true);
         wordsIndex++;
 
         if (!resumePlayWords) {
@@ -180,7 +187,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final String dateToStr = format.format(new Date());
         final String activityLog = "\"" + lastActivity.toString() + "\"";
 
-        writeFileLog(dateToStr + ",," +  activityLog + ",\n", true);
+        writeFileLog(dateToStr + ",," +  activityLog + ",,,,\n", true);
         Fuel.upload("https://cortical.csl.sri.com/langlearn/user/" + user +"/upload?purpose=sleep")
                 .timeout(timeout)
                 .source(new Function2<Request, URL, File>() {
@@ -293,11 +300,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final int wordsVolume = sP.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT);
         final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
         final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
+        final AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
         setDelayMillisFromPrefs(delayListValue);
         setWordsVolumeFromPrefs(wordsVolume);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
+        sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC); // 0 .. 15
 
         if (lastPracticeTime.equalsIgnoreCase("NA")) {
             wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "?purpose=sleep");
@@ -510,8 +519,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final String activityLog = "\"" + lastActivity.toString() + "\"";
 
         logDateToStr = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(new Date());
-        writeFileLog("timestamp,word,activity,audio_url\n", false);
-        writeFileLog(logDateToStr + ",," +  activityLog + ",\n", true);
+        writeFileLog("timestamp,word,activity,audio_url,system_volume,white_noise_volume,words_volume\n", false);
+        writeFileLog(logDateToStr + ",," +  activityLog + ",,,,\n", true);
     }
 
     @SuppressWarnings("unchecked")
