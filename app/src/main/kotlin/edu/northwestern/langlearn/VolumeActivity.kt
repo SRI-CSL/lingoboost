@@ -76,15 +76,11 @@ class VolumeActivity : AppCompatActivity() {
 
         if (isTest) showWordsVolume()
 
-        seek_bar_white_noise.onProgressChangeVolume {
-            mediaPlayerWhiteNoise?.setVolume(it, it)
-            hasWhiteNoiseBeenAdjusted = true
-            enableNextTouch()
+        seek_bar_white_noise.onProgressChangeVolume { vol ->
+            enableNextTouch(whiteNoiseAdjusted = true) { mediaPlayerWhiteNoise?.setVolume(vol, vol) }
         }
         seek_bar_words.onProgressChangeVolume { vol ->
-            changeVolumeAndPlay(vol)
-            hasWhordsBeenAdjusted = true
-            enableNextTouch()
+            enableNextTouch(wordsAdjusted = true) { changeVolumeAndPlay(vol) }
         }
         volume_next.setOnClickListener(View.OnClickListener {
             Log.d(TAG, "next OnClickListener")
@@ -104,16 +100,6 @@ class VolumeActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    //override fun onBackPressed() {
-    //    isSleepPartOne {
-    //        when {
-    //            isTest -> super.onBackPressed()
-    //            !it -> showWhiteNoiseVolume()
-    //            else -> super.onBackPressed()
-    //        }
-    //    }
-    //}
-
     private fun next() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
         val toIntent: Intent = if (isSleep) {
@@ -129,19 +115,17 @@ class VolumeActivity : AppCompatActivity() {
         startActivity(toIntent)
     }
 
-    private fun enableNextTouch() {
+    private fun enableNextTouch(whiteNoiseAdjusted: Boolean? = null, wordsAdjusted: Boolean? = null, func:() -> Unit) {
+        hasWhiteNoiseBeenAdjusted = whiteNoiseAdjusted ?: hasWhiteNoiseBeenAdjusted
+        hasWhordsBeenAdjusted = wordsAdjusted ?: hasWhordsBeenAdjusted
+
         when {
             isTest -> volume_next.isEnabled = hasWhordsBeenAdjusted
             isSleep -> volume_next.isEnabled = hasWhiteNoiseBeenAdjusted && hasWhordsBeenAdjusted
         }
-    }
 
-    //private fun isSleepPartOne(func: ((isSleepP1: Boolean) -> Unit)? = null): Boolean {
-    //    val pOne = if (isTest) false else white_noise_volume.visibility == View.VISIBLE
-    //
-    //    func?.invoke(pOne)
-    //    return pOne
-    //}
+        func.invoke()
+    }
 
     private fun createPlayer() {
         if (isSleep) {
