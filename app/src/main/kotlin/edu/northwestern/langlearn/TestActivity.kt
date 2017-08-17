@@ -57,6 +57,12 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private val wordsVolume: Float by lazy {
         PreferenceManager.getDefaultSharedPreferences(baseContext).getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT) / 100f
     }
+    private val sysStreamVolumeProgress: Int by lazy {
+        val am = getSystemService(AUDIO_SERVICE) as AudioManager
+        val sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC) // 0 .. 15
+
+        Math.round((sysStreamVolume / 15f) * 100f)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -180,7 +186,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         val dateToStr = format.format(Date())
 
-        writeFileLog("$dateToStr,$word,$entry\n");
+        writeFileLog("$dateToStr,$word,$entry,$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) }\n");
         wordsIndex++
         next();
     }
@@ -206,7 +212,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     private fun writeCSVHeader() {
-        writeFileLog("timestamp,word,entry\n", false)
+        writeFileLog("timestamp,word,entry,system_volume,words_volume\n", false)
     }
 
     private fun playAudioUrl() {

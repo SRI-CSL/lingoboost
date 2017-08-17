@@ -10,12 +10,14 @@ import android.support.v7.widget.AppCompatSeekBar
 import android.util.Log
 import android.view.View
 import android.widget.SeekBar
+import android.media.AudioManager
+import android.os.Handler
 
 import kotlinx.android.synthetic.main.activity_volume.*
 
-inline fun AppCompatSeekBar.onProgressChangeVolume(crossinline body: (progress: Float) -> Unit) {
+inline fun AppCompatSeekBar.onProgressChangeVolume(crossinline body: (seekBar: SeekBar, progress: Float) -> Unit) {
     this.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) body(progress / 100f) else { }
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) = if (fromUser) body(seekBar, progress / 100f) else { }
         override fun onStartTrackingTouch(seekBar: SeekBar) { }
         override fun onStopTrackingTouch(seekBar: SeekBar) { }
     })
@@ -33,11 +35,11 @@ fun SharedPreferences.Editor.put(pair: Pair<String, Any>) {
     val value = pair.second
 
     when (value) {
-        is String -> putString(key, value)
-        is Int -> putInt(key, value)
-        is Boolean -> putBoolean(key, value)
-        is Long -> putLong(key, value)
-        is Float -> putFloat(key, value)
+        is String -> putString(key, value as String)
+        is Int -> putInt(key, value as Int)
+        is Boolean -> putBoolean(key, value as Boolean)
+        is Long -> putLong(key, value as Long)
+        is Float -> putFloat(key, value as Float)
         else -> error("Only primitive types can be stored in SharedPreferences")
     }
 }
@@ -48,6 +50,8 @@ class VolumeActivity : AppCompatActivity() {
     private var mediaPlayerWhiteNoise: MediaPlayer? = null
     private var hasWhiteNoiseBeenAdjusted = false
     private var hasWhordsBeenAdjusted = false
+    private lateinit var updateSysStreamProgresRunner: Runnable
+    private var updateSysStreamProgressHandler: Handler? = Handler()
     private val isSleep by lazy { intent.getBooleanExtra("isSleep", false) }
     private val isTest by lazy { intent.getBooleanExtra("isTest", false) }
 
@@ -71,15 +75,29 @@ class VolumeActivity : AppCompatActivity() {
         else
             "Ready for Test"
 
+        val am = getSystemService(AUDIO_SERVICE) as AudioManager
+        val sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC) // 0 .. 15
+        val sysStreamVolumeProgress = Math.round((sysStreamVolume / 15f) * 100f)
+
+        Log.d(TAG, "SysStreamVolume: $sysStreamVolume")
         volume_next.isEnabled = false
+        seek_bar_sys_stream_volume.progress = sysStreamVolumeProgress
+        seek_bar_sys_stream_volume.isFocusable = false
+        seek_bar_sys_stream_volume.onProgressChangeVolume { seekBar, vol -> seekBar.progress = sysStreamVolumeProgress }
+        updateSysStreamProgresRunner = object: Runnable {
+            override fun run() {
+                seek_bar_sys_stream_volume.progress = Math.round((am.getStreamVolume(AudioManager.STREAM_MUSIC) / 15f) * 100f)
+                updateSysStreamProgressHandler?.postDelayed(this, 200)
+            }
+        }
         createPlayer()
 
         if (isTest) showWordsVolume()
 
-        seek_bar_white_noise.onProgressChangeVolume { vol ->
+        seek_bar_white_noise.onProgressChangeVolume { seekBar, vol ->
             enableNextTouch(whiteNoiseAdjusted = true) { mediaPlayerWhiteNoise?.setVolume(vol, vol) }
         }
-        seek_bar_words.onProgressChangeVolume { vol ->
+        seek_bar_words.onProgressChangeVolume { seekBar, vol ->
             enableNextTouch(wordsAdjusted = true) { changeVolumeAndPlay(vol) }
         }
         volume_next.setOnClickListener(View.OnClickListener {
@@ -91,12 +109,22 @@ class VolumeActivity : AppCompatActivity() {
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
         destroyPlayer()
+
+        updateSysStreamProgressHandler = null
         super.onDestroy()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart")
+
+        updateSysStreamProgressHandler?.postDelayed(updateSysStreamProgresRunner, 200)
     }
 
     override fun onStop() {
         Log.d(TAG, "onStop")
         destroyPlayer()
+        updateSysStreamProgressHandler?.removeCallbacks(updateSysStreamProgresRunner);
         super.onStop()
     }
 
@@ -165,7 +193,7 @@ class VolumeActivity : AppCompatActivity() {
     }
 
     private fun showWordsVolume() {
-        bar_heading.visibility = View.GONE
+        bar_volumes.visibility = View.GONE
         text_view_heading_white_noise.visibility = View.GONE
         lay_white_noise.visibility = View.GONE
         text_view_white_noise.visibility = View.GONE
