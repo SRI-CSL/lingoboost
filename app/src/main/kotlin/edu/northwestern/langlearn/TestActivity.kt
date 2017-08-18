@@ -24,6 +24,10 @@ import java.util.Date
 import com.github.kittinunf.fuel.httpUpload
 import com.github.kittinunf.fuel.core.FuelError
 
+import org.jetbrains.anko.clearTask
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
+
 import kotlinx.android.synthetic.main.activity_words.*
 
 inline fun EditText.afterTextChanged(crossinline afterTextChanged: (String) -> Unit) {
@@ -36,9 +40,7 @@ inline fun EditText.afterTextChanged(crossinline afterTextChanged: (String) -> U
     })
 }
 
-fun EditText.asString(): String {
-    return text.toString()
-}
+fun EditText.asString(): String = text.toString()
 
 class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     override val wordsProviderUpdateActivity: AppCompatActivity
@@ -101,10 +103,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val i: Intent = Intent(this, MainActivity::class.java)
-
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(i)
+        startActivity(intentFor<MainActivity>().newTask().clearTask())
         finish()
     }
 

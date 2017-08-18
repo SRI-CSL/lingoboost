@@ -1,15 +1,16 @@
 package edu.northwestern.langlearn
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.support.v7.app.AppCompatActivity
 
 import kotlinx.android.synthetic.main.content_message.errorMessage
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
+import org.jetbrains.anko.clearTask
 
-class MessageActivity : AppCompatActivity() {
-    private val TAG = javaClass.simpleName
-
+class MessageActivity : AppCompatActivity(), AnkoLogger {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_message)
@@ -18,15 +19,13 @@ class MessageActivity : AppCompatActivity() {
 
         val msg = intent.getStringExtra(SleepMode.MESSAGE_INTENT_EXTRA)
 
-        Log.d(TAG, "Msg: $msg")
+        debug("This never appears in the Device Monitor")
+        debug("Msg: $msg") // ./adb shell setprop log.tag.LangLearn DEBUG
         errorMessage.text = msg
     }
 
     override fun onBackPressed() {
-        val i: Intent = Intent(this, MainActivity::class.java)
-
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(i)
+        startActivity(intentFor<MainActivity>().newTask().clearTask())
         finish()
     }
 }

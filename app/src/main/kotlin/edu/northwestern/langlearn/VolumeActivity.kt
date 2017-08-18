@@ -13,6 +13,8 @@ import android.widget.SeekBar
 import android.media.AudioManager
 import android.os.Handler
 
+import org.jetbrains.anko.startActivity
+
 import kotlinx.android.synthetic.main.activity_volume.*
 
 inline fun AppCompatSeekBar.onProgressChangeVolume(crossinline body: (seekBar: SeekBar, progress: Float) -> Unit) {
@@ -100,10 +102,10 @@ class VolumeActivity : AppCompatActivity() {
         seek_bar_words.onProgressChangeVolume { seekBar, vol ->
             enableNextTouch(wordsAdjusted = true) { changeVolumeAndPlay(vol) }
         }
-        volume_next.setOnClickListener(View.OnClickListener {
+        volume_next.setOnClickListener {
             Log.d(TAG, "next OnClickListener")
             next()
-        })
+        }
     }
 
     override fun onDestroy() {
@@ -130,17 +132,17 @@ class VolumeActivity : AppCompatActivity() {
 
     private fun next() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val toIntent: Intent = if (isSleep) {
-            Intent(this, SleepMode::class.java)
-        } else { // isTest
-            Intent(this, TestActivity::class.java)
-        }
 
         prefs.edit {
             put(MainActivity.VOLUME_WORDS_PREF to seek_bar_words.progress)
             put(MainActivity.VOLUME_WHITE_NOISE_PREF to seek_bar_white_noise.progress)
         }
-        startActivity(toIntent)
+
+        if (isSleep) {
+            startActivity<SleepMode>()
+        } else { // isTest
+            startActivity<TestActivity>()
+        }
     }
 
     private fun enableNextTouch(whiteNoiseAdjusted: Boolean? = null, wordsAdjusted: Boolean? = null, func:() -> Unit) {
