@@ -18,6 +18,8 @@ class WordsProvider(val jsonUrl: String) {
         private set
     var jsonError: String = SleepMode.JSON_ERROR_MESSAGE
         private set
+    var jsonFeedback: Boolean = false
+        private set
 
     private val TAG = javaClass.simpleName
 
@@ -50,8 +52,9 @@ class WordsProvider(val jsonUrl: String) {
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
         jsonObj.unless {
-            jsonStartDelay = getLong("start_delay") * 1000
-            jsonWordDelay = getLong("word_delay") * 1000
+            jsonStartDelay = getLong("start_delay") * 1000L
+            jsonWordDelay = getLong("word_delay") * 1000L
+            jsonFeedback = getBoolean("feedback")
         }
         jsonObj.unless { jsonSham = getBoolean("sham") } // This could be missing, so do it by itself if missing exception
         jsonObj.unless { jsonError = getString("error") } // This could be missing, so do it by itself if missing exception
@@ -75,6 +78,9 @@ class WordsProvider(val jsonUrl: String) {
             }
         }
 
+        Log.d(TAG, "Start Delay: $jsonStartDelay")
+        Log.d(TAG, "Word Delay: $jsonWordDelay")
+        Log.d(TAG, "Feedback: $jsonFeedback")
         return Words
     }
 }
