@@ -75,6 +75,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private HashMap<String, Integer> lastActivity;
     private HashMap<String, Long> lastSensor;
     private HashMap<String, Float> lastAccel;
+    private EvictingQueue<Integer> magnitudes = new EvictingQueue<>(60);
     @Nullable
     private BroadcastReceiver receiver;
     private Runnable checkPlayWordsIfStillRunner = new Runnable() {
@@ -151,16 +152,19 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
         final String dateToStr = format.format(new Date());
         final String activityLog = "\"" + lastActivity.toString() + "\"";
+        final String sensorLog = "\"" + lastSensor.toString() + "\"";
+        final String accelLog = "\"" + magnitudes.toString() + "\"";
 
         sP.edit().putString(MainActivity.LAST_PRACTICE_TIME_PREF, dateToStr).apply();
         Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
 
-        int sysStreamVolumePercent = Math.round(((sysStreamVolume / 15f) * 100f));
-        int whiteNoiseVolumePercent = Math.round(rightAndLeftWhiteNoiseVolume * 100f);
-        int wordsVolumePercent = Math.round(rightAndLeftWordsVolume * 100f);
+        final int sysStreamVolumePercent = Math.round(((sysStreamVolume / 15f) * 100f));
+        final int whiteNoiseVolumePercent = Math.round(rightAndLeftWhiteNoiseVolume * 100f);
+        final int wordsVolumePercent = Math.round(rightAndLeftWordsVolume * 100f);
 
         writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + ","  + activityLog + "," + words.get(wordsIndex).getAudio_url()
-                + "," + sysStreamVolumePercent + "," + whiteNoiseVolumePercent + "," + wordsVolumePercent + "\n", true);
+                + "," + sysStreamVolumePercent + "," + whiteNoiseVolumePercent + "," + wordsVolumePercent
+                + "," + sensorLog + "," + accelLog + "\n", true);
         wordsIndex++;
 
         if (!resumePlayWords) {
@@ -187,7 +191,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final String dateToStr = format.format(new Date());
         final String activityLog = "\"" + lastActivity.toString() + "\"";
 
-        writeFileLog(dateToStr + ",," +  activityLog + ",,,,\n", true);
+        writeFileLog(dateToStr + ",," +  activityLog + ",,,,,,\n", true);
         Fuel.upload("https://cortical.csl.sri.com/langlearn/user/" + user +"/upload?purpose=sleep")
                 .timeout(timeout)
                 .source(new Function2<Request, URL, File>() {
@@ -369,7 +373,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             final boolean success = SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
 
             if (success) {
-                float orientation[] = new float[3];
+                final float orientation[] = new float[3];
 
                 SensorManager.getOrientation(R, orientation);
 
@@ -387,25 +391,27 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void onTickSensor() {
         Log.d(TAG, "onTickSensor");
 
-        float x = lastAccel.get("x");
-        float y = lastAccel.get("y");
-        float z = lastAccel.get("z");
-        double dx = x - lastAccel.get("lastx");
-        double dy = y - lastAccel.get("lasty");
-        double dz = z - lastAccel.get("lastz");
-        double sqx = Math.pow(dx, 2);
-        double sqy = Math.pow(dy, 2);
-        double sqz = Math.pow(dz, 2);
-        double accelChangeMagnitude = Math.sqrt(sqx + sqy + sqz);
+        final float x = lastAccel.get("x");
+        final float y = lastAccel.get("y");
+        final float z = lastAccel.get("z");
+        final double dx = x - lastAccel.get("lastx");
+        final double dy = y - lastAccel.get("lasty");
+        final double dz = z - lastAccel.get("lastz");
+        final double sqx = Math.pow(dx, 2);
+        final double sqy = Math.pow(dy, 2);
+        final double sqz = Math.pow(dz, 2);
+        final double accelChangeMagnitude = Math.sqrt(sqx + sqy + sqz);
+        final long magnitude = Math.round(accelChangeMagnitude);
 
-        Log.d(TAG, "Accel Change Mag: " + Math.round(accelChangeMagnitude));
+        Log.d(TAG, "Accel Change Mag: " + magnitude);
         lastAccel.put("lastx", x);
         lastAccel.put("lasty", y);
         lastAccel.put("lastz", z);
+        magnitudes.add(Long.valueOf(magnitude).intValue());
         Log.d(TAG, lastSensor.toString());
         debugSensorOrientation.setText(lastSensor.toString());
-        debugSensorAceelerationChange.setText(Long.valueOf(Math.round(accelChangeMagnitude)).toString());
-        tickSensorHandler.postDelayed(tickSensorRunner, 2000); // 2s
+        debugSensorAceelerationChange.setText(Long.valueOf(magnitude).toString());
+        tickSensorHandler.postDelayed(tickSensorRunner, 1000); // 1s
     }
 
     private void checkAndPlayWordsIfStill() {
@@ -519,8 +525,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final String activityLog = "\"" + lastActivity.toString() + "\"";
 
         logDateToStr = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(new Date());
-        writeFileLog("timestamp,word,activity,audio_url,system_volume,white_noise_volume,words_volume\n", false);
-        writeFileLog(logDateToStr + ",," +  activityLog + ",,,,\n", true);
+        writeFileLog("timestamp,word,activity,audio_url,system_volume,white_noise_volume,words_volume,orientation,acceleration\n", false);
+        writeFileLog(logDateToStr + ",," +  activityLog + ",,,,,,\n", true);
     }
 
     @SuppressWarnings("unchecked")

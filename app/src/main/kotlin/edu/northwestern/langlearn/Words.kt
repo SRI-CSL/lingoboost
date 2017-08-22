@@ -3,11 +3,12 @@ package edu.northwestern.langlearn
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import java.net.URL
 
 import org.json.JSONObject
 import org.json.JSONException
+
 import java.io.FileNotFoundException
+import java.net.URL
 import java.net.UnknownHostException
 
 typealias ListOfWords = List<Word>
