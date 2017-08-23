@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,6 +24,7 @@ import android.util.Log;
 import android.media.MediaPlayer;
 import android.media.AudioManager;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.view.View;
 import android.widget.TextView;
 
 import com.github.kittinunf.fuel.Fuel;
@@ -272,6 +275,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sleep_mode);
+        removeSensorStatusCheck();
         Log.d(TAG, "Creating lastActivity with Still:100 as default, a null indicates the phone has been still for a long period of time, so we set the default");
         lastActivity = new HashMap<String, Integer>();
         lastActivity.put("Still", 100);
@@ -578,5 +582,36 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void setWhiteNoiseVolumeFromPrefs(int volume) {
         rightAndLeftWhiteNoiseVolume = volume / 100f;
         Log.d(TAG, "rightAndLeftWhiteNoiseVolume: " + rightAndLeftWhiteNoiseVolume);
+    }
+
+    private void removeSensorStatusCheck() {
+        final PackageManager pm = getPackageManager();
+        final String pn = getPackageName();
+        ApplicationInfo ai = null;
+
+        try {
+            ai = pm.getApplicationInfo(pn, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.w(TAG, "Could not find package " + pn);
+            e.printStackTrace();
+        }
+
+        if (ai != null) {
+            if ((ai.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
+                Log.i(TAG, "FLAG_DEBUGGABLE");
+            }
+        }
+
+        if (pn.equals("edu.northwestern.langlearn.debug")) {
+            Log.i(TAG, "DEBUG!");
+        } else {
+            TextView s1 = (TextView)findViewById(R.id.debug_activity);
+            TextView s2 = (TextView)findViewById(R.id.debug_sensor_orientation);
+            TextView s3 = (TextView)findViewById(R.id.debug_sensor_acceleration_change);
+
+            s1.setVisibility(View.GONE);
+            s2.setVisibility(View.GONE);
+            s3.setVisibility(View.GONE);
+        }
     }
 }
