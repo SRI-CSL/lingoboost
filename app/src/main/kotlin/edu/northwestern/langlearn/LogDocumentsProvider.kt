@@ -117,11 +117,7 @@ class LogDocumentsProvider : DocumentsProvider() {
 
         mimeTypes.add("image/*")
         mimeTypes.add("text/*")
-
-        for (mimeType in mimeTypes) {
-            mimeTypesString.append(mimeType).append("\n")
-        }
-
+        mimeTypes.forEach { mimeTypesString.append(it).append("\n") }
         return mimeTypesString.toString()
     }
 

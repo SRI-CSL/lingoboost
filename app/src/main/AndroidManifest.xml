@@ -42,7 +42,7 @@
         <service android:name=".ActivityRecognizedIntentServices" />
         <provider
             android:name="edu.northwestern.langlearn.LogDocumentsProvider"
-            android:authorities="edu.northwestern.langlearn.documents"
+            android:authorities="edu.northwestern.langlearn.documents.debug"
             android:exported="true"
             android:grantUriPermissions="true"
             android:permission="android.permission.MANAGE_DOCUMENTS">
