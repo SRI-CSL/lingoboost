@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">LangLearn</string>
     <string name="app_build">0.23</string>
     <string name="title_activity_message">Messages</string>
     <string name="sleep_button">Start Sleep Session</string>
