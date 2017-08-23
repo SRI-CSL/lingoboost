@@ -8,7 +8,7 @@
               xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
-        android:id="@id/iinstr"
+        android:id="@+id/text_sleep_instructions"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/text_sleep_session"

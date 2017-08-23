@@ -5,15 +5,8 @@ import android.support.v4.util.CircularArray
 class EvictingQueue<T>(val max: Int) {
     private val array: CircularArray<T> = CircularArray(max)
 
-    override fun toString(): String {
-        var s: String = "{${ get(0) }"
-
-        for (i in 1..(size() - 1)) {
-            s = "$s,${ get(i) }"
-        }
-
-        return "$s}"
-    }
+    // = (1..(size() - 1)).fold("{${ get(0) }") { acc, i -> "$acc, ${ get(i) }" }.plus("}")
+    override fun toString(): String = (0..(size() - 1)).joinToString(prefix = "{", postfix = "}") { "${ get(it) }" }
 
     fun add(elem: T): Unit {
         if (size() == max) pop()

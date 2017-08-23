@@ -14,7 +14,7 @@ android {
         applicationId "edu.northwestern.langlearn"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 1
+        versionCode 0
         versionName "0.23"
         multiDexEnabled true
         resValue "string", "app_name", "LangLearn"
