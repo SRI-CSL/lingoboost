@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:textSize="24.0sp"
         android:hint="@string/test_word_edit_hint"
+        android:inputType="textNoSuggestions"
         tools:text="Enter the word displayed"/>
 
     <Space

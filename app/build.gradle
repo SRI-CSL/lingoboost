@@ -15,9 +15,10 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 0
-        versionName "0.23"
+        versionName "0.24"
         multiDexEnabled true
         resValue "string", "app_name", "LangLearn"
+        resValue "string", "doc_provider_authority", "edu.northwestern.langlearn.documents"
     }
 
     buildTypes {
@@ -25,6 +26,7 @@ android {
             debuggable true
             applicationIdSuffix = ".debug"
             resValue "string", "app_name", "LangLearn DEBUG"
+            resValue "string", "doc_provider_authority", "edu.northwestern.langlearn.documents.debug"
         }
 
         release {
@@ -37,6 +39,7 @@ android {
             applicationIdSuffix = ".beta"
             resValue "string", "app_name", "LangLearn BETA"
             signingConfig signingConfigs.debug
+            resValue "string", "doc_provider_authority", "edu.northwestern.langlearn.documents.beta"
         }
     }
 
