@@ -20,6 +20,12 @@ class WordsProvider(val jsonUrl: String) {
         private set
     var jsonFeedback: Boolean = false
         private set
+    var jsonRepeatDelay: Long = 0L
+        private set
+    var jsonMaxLoops: Long = -1L
+        private set
+    var jsonMaxTime: Long = -1L
+        private set
 
     private val TAG = javaClass.simpleName
 
@@ -56,8 +62,12 @@ class WordsProvider(val jsonUrl: String) {
             jsonWordDelay = getLong("word_delay") * 1000L
             jsonFeedback = getBoolean("feedback")
         }
-        jsonObj.unless { jsonSham = getBoolean("sham") } // This could be missing, so do it by itself if missing exception
-        jsonObj.unless { jsonError = getString("error") } // This could be missing, so do it by itself if missing exception
+        // These could be missing, so do them one at a time due to missing exception
+        jsonObj.unless { jsonSham = getBoolean("sham") }
+        jsonObj.unless { jsonError = getString("error") }
+        jsonObj.unless { jsonRepeatDelay = getLong("repeat_delay") }
+        jsonObj.unless { jsonMaxLoops = getLong("max_loops") }
+        jsonObj.unless { jsonMaxTime = getLong("max_time") }
         jsonObj.unless {
             val words = getJSONArray("words")
             var n: String = ""

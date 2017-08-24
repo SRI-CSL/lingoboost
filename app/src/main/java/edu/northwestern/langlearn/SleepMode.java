@@ -72,6 +72,20 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private Handler tickSensorHandler = new Handler();
     private long delayMillis = DEFAULT_START_WORDS_DELAY_MILLIS;
     private long delayBetweenWords = DEFAULT_BETWEEN_WORDS_DELAY_MILLIS;
+
+    // TODO: In progress fields
+    private boolean feedback;
+
+    private long repeatDelay;
+    private long maxLoops;
+    private Handler repeatDelayHandler = new Handler();
+    private Handler maxTimeHandler = new Handler();
+    private Runnable maxTimeRunner = new Runnable() {
+        @Override
+        public void run() {
+            if (maxLoops != 0) maxLoops = 0;
+        }
+    };
     private float rightAndLeftWordsVolume = 0.50f;
     private float rightAndLeftWhiteNoiseVolume = 0.10f;
     private int wordsIndex = 0;
@@ -121,6 +135,14 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             Log.d(TAG, "delayBetweenWords: " + delayBetweenWords);
         }
 
+
+        // TODO: Handle defaults, if checks
+        feedback = wordsProvider.getJsonFeedback();
+        repeatDelay = wordsProvider.getJsonRepeatDelay();
+        maxLoops = wordsProvider.getJsonMaxLoops();
+        final long maxTime = wordsProvider.getJsonMaxTime();
+
+
         ToastsKt.longToast(SleepMode.this, "Words Updated");
         Log.d(TAG, "words.size: " + words.size());
 
@@ -131,6 +153,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         if (!wordsProvider.getJsonSham()) {
             playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+
+            if (maxTime > 0) {
+                maxTimeHandler.postDelayed(maxTimeRunner, maxTime * 60 * 1000);
+            }
         } else {
             Log.i(TAG, "Playing only white noise, sham was true");
         }
@@ -264,6 +290,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
         pauseBetweenWordsHandler.removeCallbacks(checkPlayWordsIfStillRunner);
         tickSensorHandler.removeCallbacks(tickSensorRunner);
+        repeatDelayHandler.removeCallbacks(checkPlayWordsIfStillRunner);
         resumePlayWords = true;
         destroyWordsPlayer();
         destroyWhiteNoisePlayer();
@@ -350,6 +377,15 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             tickSensorHandler = null;
         }
 
+        if (repeatDelayHandler != null) {
+            repeatDelayHandler = null;
+        }
+
+        if (maxTimeHandler != null) {
+            maxTimeHandler.removeCallbacks(maxTimeRunner);
+            maxTimeHandler = null;
+        }
+
         destroyWordsPlayer();
         destroyWhiteNoisePlayer();
         super.onDestroy();
@@ -421,18 +457,40 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
 
-        if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) &&
-                lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
-            if (wordsIndex >= words.size()) {
-                Log.d(TAG, "Repeating the words list, reached the end");
-                wordsIndex = 0;
+        if (lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
+            if (shouldPlayAudioAfterWordsIndexUpdate()) {
+                // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+                playAudioUrl();
             }
-
-            // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
-            playAudioUrl();
         } else {
             playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
         }
+    }
+
+    private boolean shouldPlayAudioAfterWordsIndexUpdate() {
+        boolean shouldPlay = true;
+
+        if (wordsIndex >= words.size()) {
+            if (maxLoops == 0) {
+                Log.d(TAG, "Stopping play, max loops completed");
+                shouldPlay = false;
+            } else {
+                Log.d(TAG, "Repeating the words list, reached the end");
+                wordsIndex = 0;
+
+                if (maxLoops > 0) {
+                    --maxLoops;
+                }
+
+                if (repeatDelay > 0) {
+                    Log.d(TAG, "Pausing play, repeat delay");
+                    repeatDelayHandler.postDelayed(checkPlayWordsIfStillRunner, repeatDelay * 60 * 1000);
+                    shouldPlay = false;
+                }
+            }
+        }
+
+        return shouldPlay;
     }
 
     private void playAudioUrl() {
