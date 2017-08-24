@@ -429,7 +429,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     private void onTickSensor() {
-        Log.d(TAG, "onTickSensor");
+        // Log.d(TAG, "onTickSensor");
 
         final float x = lastAccel.get("x");
         final float y = lastAccel.get("y");
@@ -443,12 +443,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final double accelChangeMagnitude = Math.sqrt(sqx + sqy + sqz);
         final long magnitude = Math.round(accelChangeMagnitude);
 
-        Log.d(TAG, "Accel Change Mag: " + magnitude);
+        // Log.d(TAG, "Accel Change Mag: " + magnitude);
         lastAccel.put("lastx", x);
         lastAccel.put("lasty", y);
         lastAccel.put("lastz", z);
         magnitudes.add(Long.valueOf(magnitude).intValue());
-        Log.d(TAG, lastSensor.toString());
+        // Log.d(TAG, lastSensor.toString());
         debugSensorOrientation.setText(lastSensor.toString());
         debugSensorAceelerationChange.setText(Long.valueOf(magnitude).toString());
         tickSensorHandler.postDelayed(tickSensorRunner, 1000); // 1s
@@ -460,6 +460,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         if (lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
             if (shouldPlayAudioAfterWordsIndexUpdate()) {
                 // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+                Log.d(TAG, "Playing word " + wordsIndex + " of " + words.size());
                 playAudioUrl();
             }
         } else {
@@ -597,14 +598,14 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "onReceive");
+                // Log.d(TAG, "onReceive");
 
                 Object extra = intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
 
                 if (extra instanceof HashMap) {
                     lastActivity = (HashMap<String, Integer>)intent.getSerializableExtra(ActivityRecognizedIntentServices.ACTIVITY);
                     debugActivity.setText(lastActivity.toString());
-                    Log.d(TAG, "Activity: " + lastActivity.toString());
+                    // Log.d(TAG, "Activity: " + lastActivity.toString());
                 }
             }
         };
