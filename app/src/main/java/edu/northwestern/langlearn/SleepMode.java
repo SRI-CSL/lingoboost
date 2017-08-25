@@ -457,7 +457,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
 
-        if (lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
+        if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) && lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
             if (shouldPlayAudioAfterWordsIndexUpdate()) {
                 // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
                 Log.d(TAG, "Playing word " + wordsIndex + " of " + words.size());
@@ -661,7 +661,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             }
         }
 
-        if (pn.equals("edu.northwestern.langlearn.debug")) {
+        if (pn.equals("com.sri.lingoboost.debug")) {
             Log.i(TAG, "DEBUG!");
         } else {
             TextView s1 = (TextView)findViewById(R.id.debug_activity);

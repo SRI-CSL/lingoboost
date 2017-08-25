@@ -19,7 +19,7 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
     companion object {
         private const val TAG = "ARIntentServices"
 
-        const val ACTIVITY_NOTIFICATION = "com.sri.csl.langlearn.receiver"
+        const val ACTIVITY_NOTIFICATION = "com.sri.lingoboost.receiver"
         const val ACTIVITY = "activity";
         const val CONFIDENCE_BASE_TRACK_LEVEL = 0;
         const val STILL = "Still"
