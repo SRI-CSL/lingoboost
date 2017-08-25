@@ -12,7 +12,7 @@ class PrefActivity : PreferenceActivity() {
         val versionName: String = packageInfo.versionName
         val versionCode: Int = packageInfo.versionCode
 
-        "$versionName-$versionCode"
+        "$versionName.$versionCode"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

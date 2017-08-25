@@ -1,6 +1,5 @@
 package edu.northwestern.langlearn
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -85,7 +84,10 @@ class VolumeActivity : AppCompatActivity() {
         volume_next.isEnabled = false
         seek_bar_sys_stream_volume.progress = sysStreamVolumeProgress
         seek_bar_sys_stream_volume.isFocusable = false
-        seek_bar_sys_stream_volume.onProgressChangeVolume { seekBar, vol -> seekBar.progress = sysStreamVolumeProgress }
+        seek_bar_sys_stream_volume.onProgressChangeVolume { seekBar, vol ->
+            seekBar.progress = sysStreamVolumeProgress
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_SHOW_UI)
+        }
         updateSysStreamProgresRunner = object: Runnable {
             override fun run() {
                 seek_bar_sys_stream_volume.progress = Math.round((am.getStreamVolume(AudioManager.STREAM_MUSIC) / 15f) * 100f)
