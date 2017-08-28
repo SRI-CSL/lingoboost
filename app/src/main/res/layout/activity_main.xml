@@ -8,6 +8,14 @@
               android:paddingRight="16dp"
               android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/text_view_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="28.0sp"
+        android:text="Welcome to LingoBoost" />
+
     <Button
         android:id="@+id/sleep"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
@@ -42,5 +50,21 @@
         android:layout_height="wrap_content"
         android:text="@string/settomgs_button"
         android:textSize="24.0sp" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <!--android:background="@drawable/carefreebgscaledalphajpg" -->
+
+        <TextView
+            android:id="@+id/text_view_sri_international"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:textSize="24.0sp"
+            android:text="SRI International" />
+
+    </RelativeLayout>
 
 </LinearLayout>

@@ -60,6 +60,7 @@ class VolumeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_volume)
         checkSharedPreferences()
+        setVolumeControlStream(AudioManager.STREAM_MUSIC)
 
         Log.d(TAG, "isSleep: $isSleep")
         Log.d(TAG, "isTest: $isTest")
@@ -78,7 +79,8 @@ class VolumeActivity : AppCompatActivity() {
 
         val am = getSystemService(AUDIO_SERVICE) as AudioManager
         val sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC) // 0 .. 15
-        val sysStreamVolumeProgress = Math.round((sysStreamVolume / 15f) * 100f)
+        Log.d(TAG, "MAX: ${ am.getStreamMaxVolume(AudioManager.STREAM_MUSIC) }")
+        val sysStreamVolumeProgress = Math.round((sysStreamVolume / am.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()) * 100f)
 
         Log.d(TAG, "SysStreamVolume: $sysStreamVolume")
         volume_next.isEnabled = false
@@ -90,7 +92,7 @@ class VolumeActivity : AppCompatActivity() {
         }
         updateSysStreamProgresRunner = object: Runnable {
             override fun run() {
-                seek_bar_sys_stream_volume.progress = Math.round((am.getStreamVolume(AudioManager.STREAM_MUSIC) / 15f) * 100f)
+                seek_bar_sys_stream_volume.progress = Math.round((am.getStreamVolume(AudioManager.STREAM_MUSIC) / am.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()) * 100f)
                 updateSysStreamProgressHandler?.postDelayed(this, 200)
             }
         }
