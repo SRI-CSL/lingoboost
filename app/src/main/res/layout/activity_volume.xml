@@ -28,12 +28,22 @@
         android:layout_marginTop="48dp"
         android:background="@android:color/darker_gray" />
 
+    <TextView
+        android:id="@+id/text_view_heading_device_media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bar_heading"
+        android:layout_marginTop="2dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="14.0sp"
+        android:text="Device Media" />
+
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/lay_sys_stream"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/bar_heading"
-                    android:layout_marginTop="8dp"
+                    android:layout_below="@+id/text_view_heading_device_media"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal" >
 
         <ImageView
