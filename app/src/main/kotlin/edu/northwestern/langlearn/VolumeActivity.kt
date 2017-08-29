@@ -37,6 +37,7 @@ fun SharedPreferences.Editor.put(pair: Pair<String, Any>) {
 
     when (value) {
         is String -> putString(key, value as String)
+
         is Int -> putInt(key, value as Int)
         is Boolean -> putBoolean(key, value as Boolean)
         is Long -> putLong(key, value as Long)

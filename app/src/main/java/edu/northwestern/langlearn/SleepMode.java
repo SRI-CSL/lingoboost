@@ -25,6 +25,7 @@ import android.media.MediaPlayer;
 import android.media.AudioManager;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.kittinunf.fuel.Fuel;
@@ -187,7 +188,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         sP.edit().putString(MainActivity.LAST_PRACTICE_TIME_PREF, dateToStr).apply();
         Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
 
-        final int sysStreamVolumePercent = Math.round(((sysStreamVolume / 15f) * 100f));
+        final AudioManager am = (AudioManager)getSystemService(AUDIO_SERVICE);
+        final float maxV = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        final int sysStreamVolumePercent = Math.round(((sysStreamVolume / maxV) * 100f));
         final int whiteNoiseVolumePercent = Math.round(rightAndLeftWhiteNoiseVolume * 100f);
         final int wordsVolumePercent = Math.round(rightAndLeftWordsVolume * 100f);
 
@@ -349,6 +352,24 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime + "?purpose=sleep");
         }
 
+        final Button pauseButton = (Button)findViewById(R.id.pause_sleep);
+
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!resumePlayWords) {
+                    Log.d(TAG, "pause play words");
+                    playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+                    resumePlayWords = true;
+                    pauseButton.setText("Resume");
+                } else {
+                    Log.d(TAG, "resume play words if still");
+                    playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+                    resumePlayWords = false;
+                    pauseButton.setText("Pause");
+                }
+            }
+        });
         wordsProvider.fetchJSONWords(this);
     }
 
@@ -452,19 +473,26 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         debugSensorOrientation.setText(lastSensor.toString());
         debugSensorAceelerationChange.setText(Long.valueOf(magnitude).toString());
         tickSensorHandler.postDelayed(tickSensorRunner, 1000); // 1s
+
+        final String currentDateToStr = new SimpleDateFormat("hh:mm a", Locale.US).format(new Date());
+        final TextView currentTextTime = (TextView)findViewById(R.id.text_view_current_time);
+
+        currentTextTime.setText(currentDateToStr);
     }
 
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
 
-        if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) && lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
-            if (shouldPlayAudioAfterWordsIndexUpdate()) {
-                // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
-                Log.d(TAG, "Playing word " + wordsIndex + " of " + words.size());
-                playAudioUrl();
+        if (!resumePlayWords) {
+            if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) && lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
+                if (shouldPlayAudioAfterWordsIndexUpdate()) {
+                    // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
+                    Log.d(TAG, "Playing word " + wordsIndex + " of " + words.size());
+                    playAudioUrl();
+                }
+            } else {
+                playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
             }
-        } else {
-            playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
         }
     }
 
