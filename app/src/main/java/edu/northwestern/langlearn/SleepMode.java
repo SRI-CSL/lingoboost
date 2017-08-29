@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.anko.ToastsKt;
 import org.jetbrains.annotations.NotNull;
@@ -120,6 +121,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private boolean resumePlayWords;
     private boolean playWhiteNoise;
     private int sysStreamVolume;
+    private long beginMillis;
 
     public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
@@ -330,6 +332,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         debugSensorOrientation = (TextView)findViewById(R.id.debug_sensor_orientation);
         debugSensorAceelerationChange = (TextView)findViewById(R.id.debug_sensor_acceleration_change);
         resumePlayWords = false;
+        beginMillis = new Date().getTime();
         onTickSensor();
 
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -471,12 +474,20 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         magnitudes.add(Long.valueOf(magnitude).intValue());
         // Log.d(TAG, lastSensor.toString());
         debugSensorOrientation.setText(lastSensor.toString());
-        debugSensorAceelerationChange.setText(Long.valueOf(magnitude).toString());
+        debugSensorAceelerationChange.setText(String.format(Locale.US, "%2d", magnitude));
         tickSensorHandler.postDelayed(tickSensorRunner, 1000); // 1s
 
-        final String currentDateToStr = new SimpleDateFormat("hh:mm a", Locale.US).format(new Date());
+        final Date now = new Date();
+        final long diffMillis = now.getTime() - beginMillis;
+        final String elapsedHoursAndMinutes = String.format(Locale.US, "%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(diffMillis),
+                TimeUnit.MILLISECONDS.toSeconds(diffMillis) -  TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(diffMillis))
+        );
+        final String currentDateToStr = new SimpleDateFormat("hh:mm a", Locale.US).format(now);
+        final TextView elapsedTextTime = (TextView)findViewById(R.id.text_view_elapsed_time);
         final TextView currentTextTime = (TextView)findViewById(R.id.text_view_current_time);
 
+        elapsedTextTime.setText(elapsedHoursAndMinutes);
         currentTextTime.setText(currentDateToStr);
     }
 
