@@ -72,7 +72,8 @@
             android:layout_centerHorizontal="true"
             android:textAllCaps="false"
             android:textSize="18.0sp"
-            android:text="Elapsed" />
+            android:text="@string/text_elapsed" />
+        <!--android:textColor="#ff0000"-->
 
         <TextView
             android:id="@+id/text_view_elapsed_time"
@@ -95,7 +96,7 @@
             android:layout_centerHorizontal="true"
             android:textAllCaps="false"
             android:textSize="18.0sp"
-            android:text="Current" />
+            android:text="@string/text_current" />
 
         <TextView
             android:id="@+id/text_view_current_time"
@@ -115,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
-            android:text="Pause"
+            android:text="@string/text_pause"
             android:textSize="24.0sp" />
 
     </RelativeLayout>

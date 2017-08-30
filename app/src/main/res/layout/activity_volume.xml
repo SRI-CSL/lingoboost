@@ -18,7 +18,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:textSize="32.0sp"
-        android:text="Volume" />
+        android:text="@string/text_volume" />
 
     <View
         android:id="@+id/bar_heading"
@@ -36,7 +36,7 @@
         android:layout_marginTop="2dp"
         android:layout_centerHorizontal="true"
         android:textSize="14.0sp"
-        android:text="Device Media" />
+        android:text="@string/text_device_media" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/lay_sys_stream"
@@ -82,7 +82,7 @@
         android:layout_marginTop="24dp"
         android:layout_centerHorizontal="true"
         android:textSize="24.0sp"
-        android:text="White Noise" />
+        android:text="@string/text_white_noise" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/lay_white_noise"
@@ -124,7 +124,7 @@
         android:layout_below="@+id/lay_white_noise"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:text="Set the white noise to a volume that is comfortable for sleeping." />
+        android:text="@string/text_white_desc" />
 
     <View
         android:id="@+id/bar_volume_two"
@@ -142,7 +142,7 @@
         android:layout_marginTop="24dp"
         android:layout_centerHorizontal="true"
         android:textSize="24.0sp"
-        android:text="Spoken Words" />
+        android:text="@string/text_spoken_words" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/lay_words"
@@ -184,7 +184,7 @@
         android:layout_below="@+id/lay_words"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:text="Word Volume" />
+        android:text="@string/text_words_volume" />
 
     <View
         android:layout_width="fill_parent"
@@ -200,7 +200,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:text="Ready for ..."
+        android:text="@string/text_volume_next"
         android:textSize="24.0sp" />
 
 </RelativeLayout>
