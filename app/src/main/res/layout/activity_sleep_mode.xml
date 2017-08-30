@@ -16,11 +16,6 @@
         android:textColor="?android:textColorSecondaryInverse"
         android:textSize="28.0sp" />
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
-
     <TextView
         android:id="@+id/debug_activity"
         android:layout_width="fill_parent"

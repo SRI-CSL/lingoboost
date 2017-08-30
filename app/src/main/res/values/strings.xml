@@ -1,6 +1,6 @@
 <resources>
-    <string name="title_activity_message">Messages</string>
-    <string name="sleep_button">Start Sleep Session</string>
+    <string name="welcome">Welcome to LingoBoost</string>
+    <string name="sleep_button">Start Session</string>
     <string name="settomgs_button">Settings</string>
     <string name="submit_button">Submit</string>
     <string name="test_words_button">Test Words</string>
@@ -8,4 +8,10 @@
     <string name="test_word_text">Wordzzz</string>
     <string name="test_word_edit_hint">Translate this word to English</string>
     <string name="save_button">Save</string>
+    <string name="pause_button">Pause</string>
+    <string name="resume_button">Resume</string>
+    <string name="duolingo_button">Duolingo: Learn\nLanguages Free</string>
+    <string name="text_download">Download</string>
+    <string name="image_duolingo_content_description">Touch to download the Duolingo app</string>
+    <string name="text_sri_international">SRI International</string>
 </resources>

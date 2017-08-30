@@ -58,7 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_toRightOf="@+id/image_music"
+            android:layout_toEndOf="@+id/image_music"
             android:progressTint="#d0d0d0d0"
             android:progressBackgroundTint="#d0d0d0d0"
             android:theme="@style/Theme.AppCompat" />
@@ -110,8 +110,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_toLeftOf="@+id/image_white_noise_up"
-            android:layout_toRightOf="@+id/image_white_noise_off"
+            android:layout_toStartOf="@+id/image_white_noise_up"
+            android:layout_toEndOf="@+id/image_white_noise_off"
             android:progressBackgroundTint="#000000"
             android:theme="@style/Theme.AppCompat" />
 
@@ -170,8 +170,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_toLeftOf="@+id/image_words_up"
-            android:layout_toRightOf="@+id/image_words_off"
+            android:layout_toStartOf="@+id/image_words_up"
+            android:layout_toEndOf="@+id/image_words_off"
             android:progressBackgroundTint="#000000"
             android:theme="@style/Theme.AppCompat" />
 
@@ -199,7 +199,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:text="Ready for ..."
         android:textSize="24.0sp" />
 

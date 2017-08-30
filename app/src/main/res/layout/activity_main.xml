@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:textSize="28.0sp"
-        android:text="Welcome to LingoBoost" />
+        android:text="@string/welcome" />
 
     <Button
         android:id="@+id/sleep"
@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="@string/sleep_button"
+        android:textAllCaps="false"
         android:textSize="24.0sp" />
 
     <View
@@ -36,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/test_words_button"
+        android:textAllCaps="false"
         android:textSize="24.0sp" />
 
     <View
@@ -49,7 +51,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settomgs_button"
+        android:textAllCaps="false"
         android:textSize="24.0sp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_view_heading_app_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="12dp"
+            android:textSize="14.0sp"
+            android:text="@string/text_download" />
+
+        <ImageView
+            android:id="@+id/image_duolingo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view_heading_app_download"
+            android:src="@mipmap/ic_duolingo"
+            android:contentDescription="@string/image_duolingo_content_description" />
+
+        <Button
+            android:id="@+id/duolingo_download"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view_heading_app_download"
+            android:layout_toEndOf="@+id/image_duolingo"
+            android:text="@string/duolingo_button"
+            android:textAllCaps="false"
+            android:gravity="start|top"
+            android:layout_marginTop="-9dp"
+            android:textSize="18.0sp" />
+
+    </RelativeLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
@@ -63,7 +107,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
             android:textSize="24.0sp"
-            android:text="SRI International" />
+            android:text="@string/text_sri_international" />
 
     </RelativeLayout>
 

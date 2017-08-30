@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -102,9 +104,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 .build();
         googleApiClient.connect();
 
-        Button sleepButton = (Button)findViewById(R.id.sleep);
-        Button testButton = (Button)findViewById(R.id.testwords);
-        Button settingsButton = (Button)findViewById(R.id.settings);
+        final Button sleepButton = (Button)findViewById(R.id.sleep);
+        final Button testButton = (Button)findViewById(R.id.testwords);
+        final Button settingsButton = (Button)findViewById(R.id.settings);
+        final ImageView duoLingoImage = (ImageView)findViewById(R.id.image_duolingo);
+        final Button duoLingoButton = (Button)findViewById(R.id.duolingo_download);
+        final View.OnClickListener downloadAppClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("market://details?id=com.duolingo"));
+                startActivity(intent);
+            }
+        };
 
         sleepButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 startActivityForResult(i, SETTINGS);
             }
         });
+        duoLingoImage.setOnClickListener(downloadAppClick);
+        duoLingoButton.setOnClickListener(downloadAppClick);
     }
 
     @Override

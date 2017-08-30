@@ -364,12 +364,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     Log.d(TAG, "pause play words");
                     playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
                     resumePlayWords = true;
-                    pauseButton.setText("Resume");
+                    pauseButton.setText(R.string.resume_button);
                 } else {
                     Log.d(TAG, "resume play words if still");
                     playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
                     resumePlayWords = false;
-                    pauseButton.setText("Pause");
+                    pauseButton.setText(R.string.pause_button);
                 }
             }
         });
