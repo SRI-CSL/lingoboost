@@ -706,10 +706,14 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             TextView s1 = (TextView)findViewById(R.id.debug_activity);
             TextView s2 = (TextView)findViewById(R.id.debug_sensor_orientation);
             TextView s3 = (TextView)findViewById(R.id.debug_sensor_acceleration_change);
+            View v1 = (View)findViewById(R.id.view_slepp_1);
+            View v2 = (View)findViewById(R.id.view_slepp_2);
 
             s1.setVisibility(View.GONE);
             s2.setVisibility(View.GONE);
             s3.setVisibility(View.GONE);
+            v1.setVisibility(View.GONE);
+            v2.setVisibility(View.GONE);
         }
     }
 }
