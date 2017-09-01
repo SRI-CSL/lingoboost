@@ -93,7 +93,8 @@ class VolumeActivity : AppCompatActivity() {
         }
         updateSysStreamProgresRunner = object: Runnable {
             override fun run() {
-                seek_bar_sys_stream_volume.progress = Math.round((am.getStreamVolume(AudioManager.STREAM_MUSIC) / am.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()) * 100f)
+                seek_bar_sys_stream_volume.progress = Math.round(
+                        (am.getStreamVolume(AudioManager.STREAM_MUSIC) / am.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()) * 100f)
                 updateSysStreamProgressHandler?.postDelayed(this, 200)
             }
         }

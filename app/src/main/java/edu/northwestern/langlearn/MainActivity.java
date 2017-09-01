@@ -28,6 +28,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     public static final String USER_PREF = "user";
+    public static final String CUSTOM_SERVER = "custom_server";
+    public static final String SERVER_USER = "server_user";
     public static final String LAST_PRACTICE_TIME_PREF = "lastPracticeTime";
     public static final String RESET_LAST_PRACTICED_PREF = "resetLastPraticed";
     public static final String VOLUME_WORDS_PREF = "volumeWords";
@@ -208,13 +210,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
     private void checkSharedPreferences() {
+        final String defaultUser = "corticalre";
         SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
         Log.d(TAG, LAST_PRACTICE_TIME_PREF + ": " + sP.getString("lastPracticeTime", NA_PREF));
 
         if (sP.getString(USER_PREF, NA_PREF).equalsIgnoreCase(NA_PREF)) {
             Log.d(TAG, "Setting the defualt " + USER_PREF + " in prefs");
-            sP.edit().putString(USER_PREF, "corticalre").apply();
+            sP.edit().putString(USER_PREF, defaultUser).apply();
+        }
+
+        if (sP.getString(SERVER_USER, NA_PREF).equalsIgnoreCase(NA_PREF)) {
+            Log.d(TAG, "Setting the defualt " + SERVER_USER + " in prefs");
+            sP.edit().putString(SERVER_USER, defaultUser).apply();
         }
     }
 

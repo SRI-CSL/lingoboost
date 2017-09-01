@@ -336,7 +336,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         onTickSensor();
 
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final String user = sP.getString(MainActivity.USER_PREF, "NA");
+        final String user = sP.getString(MainActivity.USER_PREF, MainActivity.NA_PREF);
         final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
         final int wordsVolume = sP.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT);
         final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);

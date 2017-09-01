@@ -27,6 +27,8 @@ class PrefActivity : PreferenceActivity() {
     }
 
     class PrefFragment(val version: String) : PreferenceFragment() {
+        private val TAG: String = javaClass.simpleName
+
         constructor():this("undefined")
 
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,12 +43,19 @@ class PrefActivity : PreferenceActivity() {
                 val user = newValue as String
 
                 if (user.indexOf('@') != -1 ) {
-                    val url: String = Regex(Patterns.WEB_URL.toString()).matchEntire(user.split('@').last())?.value ?: ""
+                    val splitUser: List<String> = user.split('@')
+                    val url: String = Regex(Patterns.WEB_URL.toString()).matchEntire(splitUser.last())?.value ?: ""
 
-                    preference.sharedPreferences.edit { put("custom_server" to url) }
-                    Log.d(javaClass.simpleName, "custom_server: $url")
+                    preference.sharedPreferences.edit {
+                        put(MainActivity.CUSTOM_SERVER to url)
+                        put(MainActivity.SERVER_USER to splitUser.first())
+                    }
+                    Log.d(TAG, "custom_server: $url")
                 } else {
-                    preference.sharedPreferences.edit { put("custom_server" to "") }
+                    preference.sharedPreferences.edit {
+                        put(MainActivity.CUSTOM_SERVER to "")
+                        put(MainActivity.SERVER_USER to user)
+                    }
                 }
 
                 true

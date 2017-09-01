@@ -66,17 +66,17 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val am = getSystemService(AUDIO_SERVICE) as AudioManager
         val sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC) // 0 .. 15
 
-        Math.round((sysStreamVolume / 15f) * 100f)
+        Math.round((sysStreamVolume / am.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()) * 100f)
     }
     private val prefsServer: String by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
-        prefs.getString("custom_server", "");
+        prefs.getString(MainActivity.CUSTOM_SERVER, "");
     }
     private val prefsUser: String by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
-        if (prefsServer.isEmpty()) prefs.getString(MainActivity.USER_PREF, "NA") else prefs.getString(MainActivity.USER_PREF, "NA").split("@").first()
+        prefs.getString(MainActivity.SERVER_USER, MainActivity.NA_PREF)
     }
     private val server: String by lazy {
         if (prefsServer.isEmpty()) "cortical.csl.sri.com" else prefsServer
@@ -103,7 +103,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
                 logTestResults(words_edit_word.asString()) { continueWordTesting() }
             }
         })
-
         words_edit_word.afterTextChanged {
             Log.d(TAG, "afterTextChanged")
 
