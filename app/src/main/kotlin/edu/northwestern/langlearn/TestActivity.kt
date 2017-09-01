@@ -3,6 +3,7 @@ package edu.northwestern.langlearn
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.icu.text.MessagePattern
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -57,13 +58,28 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Date())
     }
     private val wordsVolume: Float by lazy {
-        PreferenceManager.getDefaultSharedPreferences(baseContext).getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT) / 100f
+        val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+
+        prefs.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT) / 100f
     }
     private val sysStreamVolumeProgress: Int by lazy {
         val am = getSystemService(AUDIO_SERVICE) as AudioManager
         val sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC) // 0 .. 15
 
         Math.round((sysStreamVolume / 15f) * 100f)
+    }
+    private val prefsServer: String by lazy {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+
+        prefs.getString("custom_server", "");
+    }
+    private val prefsUser: String by lazy {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+
+        if (prefsServer.isEmpty()) prefs.getString(MainActivity.USER_PREF, "NA") else prefs.getString(MainActivity.USER_PREF, "NA").split("@").first()
+    }
+    private val server: String by lazy {
+        if (prefsServer.isEmpty()) "cortical.csl.sri.com" else prefsServer
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,18 +90,18 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         words_edit_word.hint = "Words Updating..."
         writeCSVHeader()
 
-        val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val customServer = prefs.getString("custom_server", "");
-        val user = if (customServer.isEmpty()) {
-            prefs.getString(MainActivity.USER_PREF, "NA")
-        } else {
-            prefs.getString(MainActivity.USER_PREF, "NA").split("@").first()
-        }
-        val server = if (customServer.isEmpty()) "cortical.csl.sri.com" else customServer
+        //val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
+        //val customServer = prefs.getString("custom_server", "");
+        //val user = if (customServer.isEmpty()) {
+        //    prefs.getString(MainActivity.USER_PREF, "NA")
+        //} else {
+        //    prefs.getString(MainActivity.USER_PREF, "NA").split("@").first()
+        //}
+        //val server = if (customServer.isEmpty()) "cortical.csl.sri.com" else customServer
 
-        Log.d(TAG, "Test server user is: $user");
+        Log.d(TAG, "Test server user is: $prefsUser");
         Log.d(TAG, "Test server is: $server");
-        wordsProvider = WordsProvider("https://$server/langlearn/user/$user?purpose=test")
+        wordsProvider = WordsProvider("https://$server/langlearn/user/$prefsUser?purpose=test")
         wordsProvider.fetchJSONWords(this)
 
         submit.setOnClickListener(View.OnClickListener {
