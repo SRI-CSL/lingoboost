@@ -75,9 +75,17 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         writeCSVHeader()
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val user = prefs.getString(MainActivity.USER_PREF, "NA")
+        val customServer = prefs.getString("custom_server", "");
+        val user = if (customServer.isEmpty()) {
+            prefs.getString(MainActivity.USER_PREF, "NA")
+        } else {
+            prefs.getString(MainActivity.USER_PREF, "NA").split("@").first()
+        }
+        val server = if (customServer.isEmpty()) "cortical.csl.sri.com" else customServer
 
-        wordsProvider = WordsProvider("https://cortical.csl.sri.com/langlearn/user/$user?purpose=test")
+        Log.d(TAG, "Test server user is: $user");
+        Log.d(TAG, "Test server is: $server");
+        wordsProvider = WordsProvider("https://$server/langlearn/user/$user?purpose=test")
         wordsProvider.fetchJSONWords(this)
 
         submit.setOnClickListener(View.OnClickListener {

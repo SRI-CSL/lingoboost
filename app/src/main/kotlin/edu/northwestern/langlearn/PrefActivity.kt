@@ -41,8 +41,6 @@ class PrefActivity : PreferenceActivity() {
                 val user = newValue as String
 
                 if (user.indexOf('@') != -1 ) {
-                    //val m = Patterns.WEB_URL.matcher("https://${ user.split('@').last() }")
-                    //val url = if (m.find()) m.group() else ""
                     val url: String = Regex(Patterns.WEB_URL.toString()).matchEntire(user.split('@').last())?.value ?: ""
 
                     preference.sharedPreferences.edit { put("custom_server" to url) }
