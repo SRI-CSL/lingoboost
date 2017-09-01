@@ -90,15 +90,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         words_edit_word.hint = "Words Updating..."
         writeCSVHeader()
 
-        //val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        //val customServer = prefs.getString("custom_server", "");
-        //val user = if (customServer.isEmpty()) {
-        //    prefs.getString(MainActivity.USER_PREF, "NA")
-        //} else {
-        //    prefs.getString(MainActivity.USER_PREF, "NA").split("@").first()
-        //}
-        //val server = if (customServer.isEmpty()) "cortical.csl.sri.com" else customServer
-
         Log.d(TAG, "Test server user is: $prefsUser");
         Log.d(TAG, "Test server is: $server");
         wordsProvider = WordsProvider("https://$server/langlearn/user/$prefsUser?purpose=test")
@@ -180,11 +171,9 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private fun uploadLog() {
         if (IsLogUploaded) return
 
-        val sP = PreferenceManager.getDefaultSharedPreferences(baseContext)
-        val user = sP.getString(MainActivity.USER_PREF, "NA")
         val timeout = 60000 // 1 min
 
-        "https://cortical.csl.sri.com/langlearn/user/$user/upload?purpose=test"
+        "https://$server/langlearn/user/$prefsUser/upload?purpose=test"
                 .httpUpload()
                 .timeout(timeout)
                 .source { request, url -> File(filesDir, "log-test-$logDateToStr.txt") }
@@ -199,7 +188,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
                         Log.e(TAG, (err as FuelError).toString())
                     } else {
                         IsLogUploaded = true
-                        Log.d(TAG, "https://cortical.csl.sri.com/langlearn/user/$user/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+                        Log.d(TAG, "https://$server/langlearn/user/$prefsUser/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
                     }
                 }
     }
