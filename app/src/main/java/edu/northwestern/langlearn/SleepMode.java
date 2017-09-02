@@ -122,6 +122,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private boolean playWhiteNoise;
     private int sysStreamVolume;
     private long beginMillis;
+    private String prefsUser;
+    private String server;
 
     public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
@@ -219,14 +221,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final String user = sP.getString(MainActivity.USER_PREF, "NA");
         final int timeout = 60000; // 1 min
         final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
         final String dateToStr = format.format(new Date());
         final String activityLog = "\"" + lastActivity.toString() + "\"";
 
         writeFileLog(dateToStr + ",," +  activityLog + ",,,,,,\n", true);
-        Fuel.upload("https://cortical.csl.sri.com/langlearn/user/" + user +"/upload?purpose=sleep")
+        Fuel.upload("https://" + server + "/langlearn/user/" + prefsUser + "/upload?purpose=sleep")
                 .timeout(timeout)
                 .source(new Function2<Request, URL, File>() {
                     @Override
@@ -248,7 +249,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     @Override
                     public void success(@NotNull Request request, @NotNull Response response, String data) {
                         Log.d(TAG, request.cUrlString());
-                        Log.d(TAG, "https://cortical.csl.sri.com/langlearn/user/" + user + "/upload " + response.getHttpStatusCode() + ":" + response.getHttpResponseMessage());
+                        Log.d(TAG, "https://" + server + "/user/" + prefsUser + "/upload " + response.getHttpStatusCode() + ":" + response.getHttpResponseMessage());
                     }
                 });
         super.onStop();
@@ -435,13 +436,15 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     private void checkPreferences() {
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final String user = sP.getString(MainActivity.USER_PREF, MainActivity.NA_PREF);
         final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
         final int wordsVolume = sP.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT);
         final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
         final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
         final AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        final String prefsServer = sP.getString(MainActivity.CUSTOM_SERVER, "");
 
+        prefsUser = sP.getString(MainActivity.SERVER_USER, MainActivity.NA_PREF);
+        server = prefsServer.isEmpty()? "cortical.csl.sri.com" : prefsServer;
         playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
         setDelayMillisFromPrefs(delayListValue);
         setWordsVolumeFromPrefs(wordsVolume);
@@ -449,9 +452,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC); // 0 .. 15
 
         if (lastPracticeTime.equalsIgnoreCase("NA")) {
-            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "?purpose=sleep");
+            wordsProvider = new WordsProvider("https://" + server + "/langlearn/user/" + prefsUser + "?purpose=sleep");
         } else {
-            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime + "?purpose=sleep");
+            wordsProvider = new WordsProvider("https://" + server + "/langlearn/user/" + prefsUser + "/since/" + lastPracticeTime + "?purpose=sleep");
         }
     }
 
