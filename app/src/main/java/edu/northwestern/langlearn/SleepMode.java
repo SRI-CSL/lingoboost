@@ -334,26 +334,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         resumePlayWords = false;
         beginMillis = new Date().getTime();
         onTickSensor();
-
-        final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final String user = sP.getString(MainActivity.USER_PREF, MainActivity.NA_PREF);
-        final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
-        final int wordsVolume = sP.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT);
-        final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
-        final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
-        final AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
-        setDelayMillisFromPrefs(delayListValue);
-        setWordsVolumeFromPrefs(wordsVolume);
-        setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
-        sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC); // 0 .. 15
-
-        if (lastPracticeTime.equalsIgnoreCase("NA")) {
-            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "?purpose=sleep");
-        } else {
-            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime + "?purpose=sleep");
-        }
+        checkPreferences();
 
         final Button pauseButton = (Button)findViewById(R.id.pause_sleep);
 
@@ -449,6 +430,28 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                 lastSensor.put("Pitch", Math.round(Math.toDegrees(pitch)));
                 lastSensor.put("Roll", Math.round(Math.toDegrees(roll)));
             }
+        }
+    }
+
+    private void checkPreferences() {
+        final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final String user = sP.getString(MainActivity.USER_PREF, MainActivity.NA_PREF);
+        final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
+        final int wordsVolume = sP.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT);
+        final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
+        final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
+        final AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
+        setDelayMillisFromPrefs(delayListValue);
+        setWordsVolumeFromPrefs(wordsVolume);
+        setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
+        sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC); // 0 .. 15
+
+        if (lastPracticeTime.equalsIgnoreCase("NA")) {
+            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "?purpose=sleep");
+        } else {
+            wordsProvider = new WordsProvider("https://cortical.csl.sri.com/langlearn/user/" + user + "/since/" + lastPracticeTime + "?purpose=sleep");
         }
     }
 

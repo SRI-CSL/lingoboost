@@ -33,7 +33,7 @@ class WordsProvider(val jsonUrl: String) {
         doAsync {
             URL(jsonUrl).readText { text, error ->
                 if (text.isNotEmpty()) {
-                    Log.d(javaClass.simpleName, text.length.toString())
+                    Log.d(TAG, text.length.toString())
                     uiThread { updateImpl.updateJSONWords(text) }
                 } else {
                     uiThread { updateImpl.openMessageActivity(error ?: "The exception message was null") }
