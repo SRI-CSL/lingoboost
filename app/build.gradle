@@ -15,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 0
-        versionName "0.27"
+        versionName "0.28"
         multiDexEnabled true
         resValue "string", "app_name", "LingoBoost"
         resValue "string", "doc_provider_authority", "com.sri.lingoboost.documents"

@@ -13,6 +13,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 
 import java.text.SimpleDateFormat
@@ -42,6 +43,19 @@ inline fun EditText.afterTextChanged(crossinline afterTextChanged: (String) -> U
 }
 
 fun EditText.asString(): String = text.toString()
+
+fun View.showKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    this.requestFocus()
+    imm.showSoftInput(this, 0)
+}
+
+fun View.hideKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    imm.hideSoftInputFromWindow(windowToken, 0)
+}
 
 class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     override val wordsProviderUpdateActivity: AppCompatActivity
@@ -146,6 +160,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         }
 
         words_edit_word.hint = "Translate this word to English"
+        words_edit_word.showKeyboard()
         continueWordTesting()
     }
 
@@ -160,6 +175,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             words_edit_word.text.clear()
         } else {
             uploadLog()
+            words_edit_word.hideKeyboard()
             words_edit_word.text.clear()
             words_edit_word.hint = "Great Job! Your data is sent"
             words_edit_word.isFocusable = false
