@@ -71,6 +71,8 @@ public fun JSONArray.asSequence(): Sequence<Any> {
     }
 }
 
+operator fun JSONArray.iterator(): Iterator<JSONObject> = (0 until length()).asSequence().map { get(it) as JSONObject }.iterator()
+
 //jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
 //jsonObj.getIt<Boolean>("sham") { jsonSham = it }
 //jsonObj.getIt<String>("error") { jsonError = it }
