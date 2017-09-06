@@ -6,6 +6,7 @@ import android.util.Log
 
 import org.json.JSONObject
 import org.json.JSONException
+import org.json.JSONArray
 
 import java.io.FileNotFoundException
 import java.net.URL
@@ -14,7 +15,7 @@ import java.net.UnknownHostException
 typealias ListOfWords = List<Word>
 typealias MutableListOfWords = MutableList<Word>
 
-data class Word(val norm: String, val audio_url: String, val word: String)
+data class Word(val norm: String, val audio_url: String, val translations: Array<String>, val word: String)
 
 interface WordsProviderUpdate {
     val wordsProviderUpdateActivity: AppCompatActivity
@@ -51,6 +52,24 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
     }
 }
 
+public fun JSONArray.asSequence(): Sequence<Any> {
+    return object : Sequence<Any> {
+
+        override fun iterator() = object : Iterator<Any> {
+
+            //val it = (0..this@asSequence.length() - 1).iterator()
+            val it = (0 until this@asSequence.length()).iterator()
+
+            override fun next(): Any {
+                val i = it.next()
+
+                return this@asSequence.get(i)
+            }
+
+            override fun hasNext() = it.hasNext()
+        }
+    }
+}
 
 //jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
 //jsonObj.getIt<Boolean>("sham") { jsonSham = it }
