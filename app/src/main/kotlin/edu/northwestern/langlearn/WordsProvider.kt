@@ -72,7 +72,7 @@ class WordsProvider(val jsonUrl: String) {
             val words = getJSONArray("words")
             var n: String = ""
             var url: String = ""
-            var t: Array<String> = arrayOf()
+            var t: List<String> = listOf()
             var w: String = ""
 
             for (i in 0 until words.length()) {
@@ -84,9 +84,8 @@ class WordsProvider(val jsonUrl: String) {
 
                 words.getJSONObject(i).unless {
                     val trans = getJSONArray("translations")
-                    val l: List<String> = trans.asSequence().toList().filterIsInstance<String>()
-
-                    Log.d(TAG, trans.toString())
+                    val l1: List<String> = trans.asAnySequence().toList().filterIsInstance<String>()
+                    t = trans.asSequence<String>().toList()
                 }
 
                 val word = Word(n, url, t, w)

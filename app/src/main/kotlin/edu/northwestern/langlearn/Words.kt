@@ -15,7 +15,7 @@ import java.net.UnknownHostException
 typealias ListOfWords = List<Word>
 typealias MutableListOfWords = MutableList<Word>
 
-data class Word(val norm: String, val audio_url: String, val translations: Array<String>, val word: String)
+data class Word(val norm: String, val audio_url: String, val translations: List<String>, val word: String)
 
 interface WordsProviderUpdate {
     val wordsProviderUpdateActivity: AppCompatActivity
@@ -52,18 +52,32 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
     }
 }
 
-public fun JSONArray.asSequence(): Sequence<Any> {
-    return object : Sequence<Any> {
-
-        override fun iterator() = object : Iterator<Any> {
-
-            //val it = (0..this@asSequence.length() - 1).iterator()
+inline fun <reified T> JSONArray.asSequence(): Sequence<T> {
+    return object : Sequence<T> {
+        override fun iterator() = object : Iterator<T> {
             val it = (0 until this@asSequence.length()).iterator()
+
+            override fun next(): T {
+                val i = it.next()
+
+                return this@asSequence.get(i).apply { check(this is T) } as T
+            }
+
+            override fun hasNext() = it.hasNext()
+        }
+    }
+}
+
+// Inspired by https://github.com/kittinunf/GithubKotlin/.../JSONArrays.kt
+fun JSONArray.asAnySequence(): Sequence<Any> {
+    return object : Sequence<Any> {
+        override fun iterator() = object : Iterator<Any> {
+            val it = (0 until length()).iterator()
 
             override fun next(): Any {
                 val i = it.next()
 
-                return this@asSequence.get(i)
+                return get(i)
             }
 
             override fun hasNext() = it.hasNext()
