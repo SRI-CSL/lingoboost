@@ -68,23 +68,6 @@ inline fun <reified T> JSONArray.asSequence(): Sequence<T> {
     }
 }
 
-// Inspired by https://github.com/kittinunf/GithubKotlin/.../JSONArrays.kt
-fun JSONArray.asAnySequence(): Sequence<Any> {
-    return object : Sequence<Any> {
-        override fun iterator() = object : Iterator<Any> {
-            val it = (0 until length()).iterator()
-
-            override fun next(): Any {
-                val i = it.next()
-
-                return get(i)
-            }
-
-            override fun hasNext() = it.hasNext()
-        }
-    }
-}
-
 operator fun JSONArray.iterator(): Iterator<JSONObject> = (0 until length()).asSequence().map {
     get(it) as JSONObject
 }.iterator()
