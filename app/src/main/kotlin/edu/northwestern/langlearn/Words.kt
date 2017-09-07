@@ -55,12 +55,12 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
 inline fun <reified T> JSONArray.asSequence(): Sequence<T> {
     return object : Sequence<T> {
         override fun iterator() = object : Iterator<T> {
-            val it = (0 until this@asSequence.length()).iterator()
+            val it = (0 until length()).iterator() //this@asSequence.length()
 
             override fun next(): T {
                 val i = it.next()
 
-                return this@asSequence.get(i).apply { check(this is T) } as T
+                return get(i).apply { check(this is T) } as T
             }
 
             override fun hasNext() = it.hasNext()
@@ -85,7 +85,9 @@ fun JSONArray.asAnySequence(): Sequence<Any> {
     }
 }
 
-operator fun JSONArray.iterator(): Iterator<JSONObject> = (0 until length()).asSequence().map { get(it) as JSONObject }.iterator()
+operator fun JSONArray.iterator(): Iterator<JSONObject> = (0 until length()).asSequence().map {
+    get(it) as JSONObject
+}.iterator()
 
 //jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
 //jsonObj.getIt<Boolean>("sham") { jsonSham = it }
