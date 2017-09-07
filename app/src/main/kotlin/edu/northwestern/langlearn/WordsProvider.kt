@@ -81,7 +81,7 @@ class WordsProvider(val jsonUrl: String) {
                     url = getString("audio_url")
                     w = getString("word")
                 }
-                jObj.unless { t = getJSONArray("translations").asSequence<String>().toList() }
+                jObj.unless { t = getJSONArray("translations").asListOf<String>() }
 
                 val word = Word(n, url, t, w)
 

@@ -52,6 +52,7 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
     }
 }
 
+// The values are evaluated lazily
 inline fun <reified T> JSONArray.asSequence(): Sequence<T> {
     return object : Sequence<T> {
         override fun iterator() = object : Iterator<T> {
@@ -68,9 +69,37 @@ inline fun <reified T> JSONArray.asSequence(): Sequence<T> {
     }
 }
 
+inline fun <reified T> JSONArray.asListOf(): List<T> = asSequence<T>().toList()
+
+
+// to eager ...
+inline fun <reified T> JSONArray.asSequenceOf(): Sequence<T> = (0 until length()).asSequence().map {
+    get(it).apply { check(this is T) } as T
+}
+
+inline fun <reified T> JSONArray.toListOf(): List<T> = (0 until length()).asSequence().map {
+    get(it).apply { check(this is T) } as T
+}.toList()
+
+inline fun <reified T> JSONArray.asFilterIsInstanceListOf(): List<T> = (0 until length()).asSequence().toList().filterIsInstance<T>()
+
+fun JSONArray.asSequenceOfObjects(): Sequence<JSONObject> = (0 until length()).asSequence().map {
+    get(it) as JSONObject
+}
+
+fun JSONArray.asListOfObjects(): List<JSONObject> = (0 until length()).asSequence().map {
+    get(it) as JSONObject
+}.toList()
+
+fun <T> JSONArray.asExpressedSequenceOf(expr: (a: Int) -> T): Sequence<T> = (0 until length()).asSequence().map(expr)
+
+fun <T> JSONArray.asExpressedListOf(expr: (a: Int) -> T): List<T> = (0 until length()).asSequence().map(expr).toList()
+
+
 operator fun JSONArray.iterator(): Iterator<JSONObject> = (0 until length()).asSequence().map {
     get(it) as JSONObject
 }.iterator()
+
 
 //jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
 //jsonObj.getIt<Boolean>("sham") { jsonSham = it }
