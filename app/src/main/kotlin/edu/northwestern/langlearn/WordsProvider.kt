@@ -88,20 +88,6 @@ class WordsProvider(val jsonUrl: String) {
                 Log.d(TAG, "$index $word")
                 Words.add(word)
             }
-
-            //for (jObj in words) {
-            //    jObj.unless {
-            //        n = getString("norm")
-            //        url = getString("audio_url")
-            //        w = getString("word")
-            //    }
-            //    jObj.unless { t = getJSONArray("translations").asSequence<String>().toList() }
-            //
-            //    val word = Word(n, url, t, w)
-            //
-            //    Log.d(TAG, "$word")
-            //    Words.add(word)
-            //}
         }
 
         Log.d(TAG, "Start Delay: $jsonStartDelay")
