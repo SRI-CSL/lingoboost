@@ -64,7 +64,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private val TAG = javaClass.simpleName
     private lateinit var wordsProvider: WordsProvider
     private lateinit var words: ListOfWords
-    private var wordsIndex = 0
+    private var wordsIndex = -1
     private var mediaPlayer: MediaPlayer? = null
     private var IsSubmitEnabled = true
     private var IsLogUploaded = false
@@ -167,7 +167,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private fun showTranslations() {
         if (wordsProvider.jsonFeedback) {
-            val translations: List<String> = words.get(wordsIndex - 1).translations
+            val translations: List<String> = words.get(wordsIndex).translations
 
             words_text_list_of_translations.setText(translations.toString())
             submit.setText(R.string.continue_button)
@@ -191,6 +191,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private fun continueWordTesting() {
         Log.d(TAG, "continueWordTesting")
+        wordsIndex++
 
         if (wordsIndex < words.size) {
             val word = words.get(wordsIndex).word
@@ -239,7 +240,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val dateToStr = format.format(Date())
 
         writeFileLog("$dateToStr,$word,$entry,$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) }\n");
-        wordsIndex++
         next();
     }
 
