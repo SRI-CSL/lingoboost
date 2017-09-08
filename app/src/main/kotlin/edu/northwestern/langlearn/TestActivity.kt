@@ -95,6 +95,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private val server: String by lazy {
         if (prefsServer.isEmpty()) "cortical.csl.sri.com" else prefsServer
     }
+    private lateinit var submitClickListener: View.OnClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,15 +109,18 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         Log.d(TAG, "Test server is: $server");
         wordsProvider = WordsProvider("https://$server/langlearn/user/$prefsUser?purpose=test")
         wordsProvider.fetchJSONWords(this)
-
-        submit.setOnClickListener(View.OnClickListener {
+        submitClickListener = View.OnClickListener {
             Log.d(TAG, "submit OnClickListener")
 
             if (IsSubmitEnabled && words_edit_word.text.isNotEmpty()) {
                 destroyPlayer()
-                logTestResults(words_edit_word.asString()) { continueWordTesting() }
+                logTestResults(words_edit_word.asString()) {
+                    showTranslations()
+                    continueWordTesting()
+                }
             }
-        })
+        }
+        submit.setOnClickListener(submitClickListener)
         words_edit_word.afterTextChanged {
             Log.d(TAG, "afterTextChanged")
 
@@ -162,6 +166,24 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         words_edit_word.hint = "Translate this word to English"
         words_edit_word.showKeyboard()
         continueWordTesting()
+    }
+
+    private fun showTranslations() {
+        if (wordsProvider.jsonFeedback) {
+            val translations: List<String> = words.get(wordsIndex - 1).translations
+
+            words_text_list_of_translations.setText(translations.toString())
+            submit.setText(R.string.continue_button)
+            words_text_translations.visibility = View.VISIBLE
+            words_text_list_of_translations.visibility = View.VISIBLE
+            submit.setOnClickListener(View.OnClickListener {
+                submit.setText(R.string.submit_button)
+                words_text_translations.visibility = View.GONE
+                words_text_list_of_translations.visibility = View.GONE
+                submit.setOnClickListener(submitClickListener)
+                continueWordTesting()
+            })
+        }
     }
 
     private fun continueWordTesting() {

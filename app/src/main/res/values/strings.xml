@@ -3,6 +3,7 @@
     <string name="sleep_button">Start Session</string>
     <string name="settomgs_button">Settings</string>
     <string name="submit_button">Submit</string>
+    <string name="continue_button">Continue</string>
     <string name="test_words_button">Test Words</string>
     <string name="text_sleep_session">Place the phone in a comfortable position near you so that the speakers will remain unobstructed for clear audio.</string>
     <string name="test_word_text">Wordzzz</string>
@@ -14,7 +15,7 @@
     <string name="text_white_desc">Set the white noise to a volume that is comfortable for sleeping.</string>
     <string name="text_spoken_words">Spoken Words</string>
     <string name="text_words_volume">Word Volume</string>
-    <string name="text_volume_next">Ready for ...</string>
+    <string name="text_volume_next">Ready for @#8230;</string>
     <string name="pause_button">Pause</string>
     <string name="resume_button">Resume</string>
     <string name="duolingo_button">Duolingo: Learn\nLanguages Free</string>
@@ -24,4 +25,5 @@
     <string name="text_pause">Pause</string>
     <string name="image_duolingo_content_description">Touch to download the Duolingo app</string>
     <string name="text_sri_international">SRI International</string>
+    <string name="text_english_translations">English Translations:</string>
 </resources>
