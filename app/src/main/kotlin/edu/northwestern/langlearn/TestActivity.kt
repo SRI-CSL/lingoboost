@@ -114,10 +114,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
             if (IsSubmitEnabled && words_edit_word.text.isNotEmpty()) {
                 destroyPlayer()
-                logTestResults(words_edit_word.asString()) {
-                    showTranslations()
-                    continueWordTesting()
-                }
+                logTestResults(words_edit_word.asString()) { showTranslations() }
             }
         }
         submit.setOnClickListener(submitClickListener)
@@ -176,13 +173,19 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             submit.setText(R.string.continue_button)
             words_text_translations.visibility = View.VISIBLE
             words_text_list_of_translations.visibility = View.VISIBLE
+            words_edit_word.hideKeyboard()
+            runOnUiThread { words_edit_word.isEnabled = false }
             submit.setOnClickListener(View.OnClickListener {
                 submit.setText(R.string.submit_button)
                 words_text_translations.visibility = View.GONE
                 words_text_list_of_translations.visibility = View.GONE
                 submit.setOnClickListener(submitClickListener)
+                words_edit_word.showKeyboard()
+                runOnUiThread { words_edit_word.isEnabled = true }
                 continueWordTesting()
             })
+        } else {
+            continueWordTesting()
         }
     }
 
