@@ -167,7 +167,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private fun showTranslations() {
         if (wordsProvider.jsonFeedback) {
-            val translations: List<String> = words.get(wordsIndex).translations
+            val ( _, _, translations ) = words.get(wordsIndex)
 
             words_text_list_of_translations.setText(translations.toString())
             submit.setText(R.string.continue_button)
@@ -194,7 +194,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         wordsIndex++
 
         if (wordsIndex < words.size) {
-            val word = words.get(wordsIndex).word
+            val ( _, _, _, word) = words.get(wordsIndex)
 
             playAudioUrl()
             words_text_word.text = "$word (${ wordsIndex + 1} of ${ words.size })"
@@ -235,7 +235,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     private fun logTestResults(entry:String, next: () -> Unit) {
-        val word = words.get(wordsIndex).word
+        val ( _, _, _, word) = words.get(wordsIndex)
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         val dateToStr = format.format(Date())
 
@@ -271,7 +271,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         Log.d(TAG, "playAudioUrl")
 
         try {
-            val url = words.get(wordsIndex).audio_url
+            val ( _, url ) = words.get(wordsIndex)
 
             Log.d(TAG, words[wordsIndex].audio_url)
             mediaPlayer = MediaPlayer()

@@ -14,6 +14,7 @@ class PrefActivity : PreferenceActivity() {
         val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
         val versionName: String = packageInfo.versionName
         val versionCode: Int = packageInfo.versionCode
+        // val ( versionName, versionCode ) = packageInfo // doesn't work with non-kotlin object? (Needs to implement component1(), ... positional destructure)
 
         "$versionName.$versionCode"
     }
