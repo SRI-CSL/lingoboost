@@ -16,6 +16,11 @@
         android:textSize="28.0sp"
         android:text="@string/welcome" />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
     <Button
         android:id="@+id/sleep"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
@@ -24,12 +29,11 @@
         android:layout_marginTop="40dp"
         android:text="@string/sleep_button"
         android:textAllCaps="false"
+        android:layout_margin="10dp"
+        android:padding="18dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:background="@drawable/button_border"
         android:textSize="24.0sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
 
     <Button
         android:id="@+id/testwords"
@@ -38,12 +42,11 @@
         android:layout_height="wrap_content"
         android:text="@string/test_words_button"
         android:textAllCaps="false"
+        android:layout_margin="10dp"
+        android:padding="18dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:background="@drawable/button_border"
         android:textSize="24.0sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
 
     <Button
         android:id="@+id/settings"
@@ -52,12 +55,11 @@
         android:layout_height="wrap_content"
         android:text="@string/settomgs_button"
         android:textAllCaps="false"
+        android:layout_margin="10dp"
+        android:padding="18dp"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:background="@drawable/button_border"
         android:textSize="24.0sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
