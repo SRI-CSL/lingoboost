@@ -157,9 +157,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
 
         if (!wordsProvider.getJsonSham()) {
-            playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
-
-            if (maxTime > 0) {
+            if (playWordsIfStillHandler != null) {
+                playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+            }
+            if (maxTime > 0 && maxTimeHandler != null) {
                 maxTimeHandler.postDelayed(maxTimeRunner, maxTime * 60 * 1000);
             }
         } else {
