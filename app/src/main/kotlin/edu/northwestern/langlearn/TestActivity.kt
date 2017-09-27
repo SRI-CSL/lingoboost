@@ -1,9 +1,7 @@
 package edu.northwestern.langlearn
 
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.icu.text.MessagePattern
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -65,6 +63,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private lateinit var wordsProvider: WordsProvider
     private lateinit var words: ListOfWords
     private var wordsIndex = -1
+    private var numCorrectGuesses = 0
     private var mediaPlayer: MediaPlayer? = null
     private var IsSubmitEnabled = true
     private var IsLogUploaded = false
@@ -113,6 +112,17 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             Log.d(TAG, "submit OnClickListener")
 
             if (IsSubmitEnabled && words_edit_word.text.isNotEmpty()) {
+                Log.d(TAG, "Submitted: ${words_edit_word.text}. Actual answer(s): ${ words[wordsIndex].translations }")
+                val correctMatches = words[wordsIndex].getMatches(words_edit_word.text.toString())
+
+                if (correctMatches.isNotEmpty()) {
+                    Log.d(TAG, "Correct matches: $correctMatches")
+                    numCorrectGuesses++
+                }
+                else {
+                    Log.d(TAG, "User submitted incorrect guess")
+                }
+
                 destroyPlayer()
                 logTestResults(words_edit_word.asString()) { showTranslations() }
             }
@@ -167,12 +177,16 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private fun showTranslations() {
         if (wordsProvider.jsonFeedback) {
-            val ( _, _, translations ) = words.get(wordsIndex)
+            val translations = words[wordsIndex].translations
 
             words_text_list_of_translations.setText(translations.toString())
             submit.setText(R.string.continue_button)
             words_text_translations.visibility = View.VISIBLE
             words_text_list_of_translations.visibility = View.VISIBLE
+
+            test_score_text.visibility = View.VISIBLE
+            test_score_text.text = "Score: $numCorrectGuesses out of ${ wordsIndex + 1 } correct"
+
             words_edit_word.hideKeyboard()
             runOnUiThread { words_edit_word.isEnabled = false }
             submit.setOnClickListener(View.OnClickListener {
@@ -194,7 +208,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         wordsIndex++
 
         if (wordsIndex < words.size) {
-            val ( _, _, _, word) = words.get(wordsIndex)
+            val word = words[wordsIndex].word
 
             playAudioUrl()
             words_text_word.text = "$word (${ wordsIndex + 1} of ${ words.size })"
@@ -235,7 +249,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     private fun logTestResults(entry:String, next: () -> Unit) {
-        val ( _, _, _, word) = words.get(wordsIndex)
+        val word = words[wordsIndex].word
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         val dateToStr = format.format(Date())
 
@@ -271,7 +285,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         Log.d(TAG, "playAudioUrl")
 
         try {
-            val ( _, url ) = words.get(wordsIndex)
+            val url = words[wordsIndex].audio_url
 
             Log.d(TAG, words[wordsIndex].audio_url)
             mediaPlayer = MediaPlayer()

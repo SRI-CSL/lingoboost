@@ -51,6 +51,14 @@
         android:visibility="gone"
         android:textSize="24.0sp"/>
 
+    <TextView
+        android:id="@+id/test_score_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="munge byte"
+        android:visibility="gone"
+        android:textSize="24.0sp"/>
+
     <Button
         android:id="@+id/submit"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"

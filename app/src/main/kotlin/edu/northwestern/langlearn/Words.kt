@@ -3,11 +3,9 @@ package edu.northwestern.langlearn
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-
-import org.json.JSONObject
-import org.json.JSONException
 import org.json.JSONArray
-
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.net.URL
 import java.net.UnknownHostException
@@ -15,7 +13,30 @@ import java.net.UnknownHostException
 typealias ListOfWords = List<Word>
 typealias MutableListOfWords = MutableList<Word>
 
-data class Word(val norm: String, val audio_url: String, val translations: List<String>, val word: String)
+class Word(val norm: String, val audio_url: String, val translations: List<String>, val word: String) {
+    fun getMatches(guess: String, cutoff: Double = 0.8): List<String> {
+        val preprocessed = preprocessGuess(guess)
+
+        return translations.filter {
+            realQuickRatio(preprocessed, it) >= cutoff
+        }
+    }
+
+    private fun preprocessGuess(guess: String): String = guess.toLowerCase().trim()
+
+    private fun realQuickRatio(guess: String, word: String): Double {
+        val guessLen = guess.length
+        val wordLen = word.length
+
+        if (guessLen == 0 && wordLen == 0) {
+            return 0.0
+        }
+
+        return calculateRatio(minOf(guessLen, wordLen), guessLen + wordLen)
+    }
+
+    private fun calculateRatio(matches: Int, length: Int): Double = 2.0 * matches / length
+}
 
 interface WordsProviderUpdate {
     val wordsProviderUpdateActivity: AppCompatActivity
