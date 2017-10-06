@@ -226,34 +226,44 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
         final String dateToStr = format.format(new Date());
         final String activityLog = "\"" + lastActivity.toString() + "\"";
+        final LanglearnApplication application = (LanglearnApplication) getApplication();
 
-        writeFileLog(dateToStr + ",," +  activityLog + ",,,,,,\n", true);
-        Fuel.upload("https://" + server + "/langlearn/user/" + prefsUser + "/upload?purpose=sleep")
-                .timeout(timeout)
-                .source(new Function2<Request, URL, File>() {
-                    @Override
-                    public File invoke(Request request, URL url) {
-                        return new File(getFilesDir(), "log-sleep-" + logDateToStr + ".txt");
-                    }
-                }).name(new Function0<String>() {
-                    @Override
-                    public String invoke() {
-                        return "app_log_file";
-                    }
-                }).responseString(new com.github.kittinunf.fuel.core.Handler<String>() {
-                    @Override
-                    public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError error) {
-                        Log.e(TAG, response.toString());
-                        Log.e(TAG, error.toString());
-                    }
+        try {
+            final String packageVersion = getPackageManager().getPackageInfo(getPackageName(), 0).packageName;
 
-                    @Override
-                    public void success(@NotNull Request request, @NotNull Response response, String data) {
-                        Log.d(TAG, request.cUrlString());
-                        Log.d(TAG, "https://" + server + "/user/" + prefsUser + "/upload " + response.getHttpStatusCode() + ":" + response.getHttpResponseMessage());
-                    }
-                });
-        super.onStop();
+            writeFileLog(dateToStr + ",," + activityLog + ",,,,,,\n", true);
+            String requestUrl = ServiceRequestUtilsKt.buildRequestUrl(server, prefsUser, "upload",
+                    application.getSessionId(), packageVersion)
+                    .appendQueryParameter("purpose", "sleep").toString();
+            Fuel.upload(requestUrl)
+                    .timeout(timeout)
+                    .source(new Function2<Request, URL, File>() {
+                        @Override
+                        public File invoke(Request request, URL url) {
+                            return new File(getFilesDir(), "log-sleep-" + logDateToStr + ".txt");
+                        }
+                    }).name(new Function0<String>() {
+                @Override
+                public String invoke() {
+                    return "app_log_file";
+                }
+            }).responseString(new com.github.kittinunf.fuel.core.Handler<String>() {
+                @Override
+                public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError error) {
+                    Log.e(TAG, response.toString());
+                    Log.e(TAG, error.toString());
+                }
+
+                @Override
+                public void success(@NotNull Request request, @NotNull Response response, String data) {
+                    Log.d(TAG, request.cUrlString());
+                    Log.d(TAG, "https://" + server + "/user/" + prefsUser + "/upload " + response.getHttpStatusCode() + ":" + response.getHttpResponseMessage());
+                }
+            });
+            super.onStop();
+        } catch (PackageManager.NameNotFoundException ex) {
+            Log.e(TAG, ex.getMessage());
+        }
     }
 
     @Override

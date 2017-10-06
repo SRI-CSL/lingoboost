@@ -1,5 +1,6 @@
 package edu.northwestern.langlearn
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -15,6 +16,7 @@ import android.os.Handler
 import org.jetbrains.anko.startActivity
 
 import kotlinx.android.synthetic.main.activity_volume.*
+import java.util.*
 
 inline fun AppCompatSeekBar.onProgressChangeVolume(crossinline body: (seekBar: SeekBar, progress: Float) -> Unit) {
     this.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -143,6 +145,9 @@ class VolumeActivity : AppCompatActivity() {
             put(MainActivity.VOLUME_WORDS_PREF to seek_bar_words.progress)
             put(MainActivity.VOLUME_WHITE_NOISE_PREF to seek_bar_white_noise.progress)
         }
+
+        val app = application as LanglearnApplication
+        app.sessionId = UUID.randomUUID().toString()
 
         if (isSleep) {
             startActivity<SleepMode>()

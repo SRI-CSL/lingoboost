@@ -18,8 +18,6 @@ import java.text.SimpleDateFormat
 import java.io.IOException
 import java.io.OutputStreamWriter
 import java.io.File
-import java.util.Locale
-import java.util.Date
 
 import com.github.kittinunf.fuel.httpUpload
 import com.github.kittinunf.fuel.core.FuelError
@@ -29,6 +27,7 @@ import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
 
 import kotlinx.android.synthetic.main.activity_words.*
+import java.util.*
 
 inline fun EditText.afterTextChanged(crossinline afterTextChanged: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
@@ -154,8 +153,8 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     override fun onStop() {
         Log.d(TAG, "onStop")
-        super.onStop()
         uploadLog()
+        super.onStop()
     }
 
     override fun updateJSONWords(json: String) {
@@ -227,9 +226,15 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         if (IsLogUploaded) return
 
         val timeout = 60000 // 1 min
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+        val packageVersion = packageInfo.versionName
+        val sessionId = (application as LanglearnApplication).sessionId
+        Log.d(TAG, "https://$server/langlearn/user/$prefsUser/upload?purpose=test&session=$sessionId&version=$packageVersion")
+        var requestUrl: String = buildRequestUrl(server, prefsUser, "upload", sessionId, packageVersion)
+                .appendQueryParameter("purpose", "test")
+                .toString()
 
-        "https://$server/langlearn/user/$prefsUser/upload?purpose=test"
-                .httpUpload()
+        requestUrl.httpUpload()
                 .timeout(timeout)
                 .source { request, url -> File(filesDir, "log-test-$logDateToStr.txt") }
                 .name { "app_log_file" }
@@ -259,6 +264,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     private fun writeFileLog(toLog: String, append: Boolean = true) {
         Log.d(TAG, "writeFileLog")
+        IsLogUploaded = false
 
         try {
             val outputStreamWriter: OutputStreamWriter
