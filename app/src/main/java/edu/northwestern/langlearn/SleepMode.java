@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -229,7 +230,23 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final LanglearnApplication application = (LanglearnApplication) getApplication();
 
         try {
-            final String packageVersion = getPackageManager().getPackageInfo(getPackageName(), 0).packageName;
+            final PackageManager packageManager = getPackageManager();
+            final String packageName = getPackageName();
+            String packageVersion = null;
+
+            if (packageManager != null && packageName != null) {
+                PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+
+                if (packageInfo != null) {
+                    packageVersion = packageInfo.versionName;
+                }
+                else {
+                    Log.e(TAG, "Unable to retrieve package version from PackageInfo");
+                }
+            }
+            else {
+                Log.e(TAG, "Unable to retrieve package version");
+            }
 
             writeFileLog(dateToStr + ",," + activityLog + ",,,,,,\n", true);
             String requestUrl = ServiceRequestUtilsKt.buildRequestUrl(server, prefsUser, "upload",

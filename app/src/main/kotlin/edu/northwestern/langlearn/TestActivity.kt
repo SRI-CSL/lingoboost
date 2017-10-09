@@ -229,7 +229,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
         val packageVersion = packageInfo.versionName
         val sessionId = (application as LanglearnApplication).sessionId
-        Log.d(TAG, "https://$server/langlearn/user/$prefsUser/upload?purpose=test&session=$sessionId&version=$packageVersion")
         var requestUrl: String = buildRequestUrl(server, prefsUser, "upload", sessionId, packageVersion)
                 .appendQueryParameter("purpose", "test")
                 .toString()
