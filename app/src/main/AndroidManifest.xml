@@ -25,6 +25,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".SleepMode"
             android:screenOrientation="portrait"/>
         <activity android:name=".PrefActivity"/>

@@ -1,5 +1,8 @@
 <resources>
     <string name="welcome">Welcome to LingoBoost</string>
+    <string name="login_button">Login</string>
+    <string name="username_edit_hint">Enter your username here.</string>
+    <string name="username_empty_msg">Username must not be empty</string>
     <string name="sleep_button">Start Session</string>
     <string name="settomgs_button">Settings</string>
     <string name="submit_button">Submit</string>

@@ -83,7 +83,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private val prefsServer: String by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
-        prefs.getString(MainActivity.CUSTOM_SERVER, "");
+        prefs.getString(MainActivity.CUSTOM_SERVER, "")
     }
     private val prefsUser: String by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)

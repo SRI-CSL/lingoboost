@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         enableUpNavigationInToolbar();
-        checkSharedPreferences();
         createReceiver();
 
         if (!checkPlayServices()) {
@@ -150,6 +149,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         });
         duoLingoImage.setOnClickListener(downloadAppClick);
         duoLingoButton.setOnClickListener(downloadAppClick);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        Log.d(TAG, "Username shared prefs: " + sharedPreferences.getAll());
+
+        if (!sharedPreferences.contains(USER_PREF)
+                ||sharedPreferences.getString(USER_PREF, NA_PREF).equalsIgnoreCase(NA_PREF)) {
+            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+        }
     }
 
     @Override
@@ -207,23 +215,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         return true;
-    }
-
-    private void checkSharedPreferences() {
-        final String defaultUser = "corticalre";
-        SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-
-        Log.d(TAG, LAST_PRACTICE_TIME_PREF + ": " + sP.getString("lastPracticeTime", NA_PREF));
-
-        if (sP.getString(USER_PREF, NA_PREF).equalsIgnoreCase(NA_PREF)) {
-            Log.d(TAG, "Setting the defualt " + USER_PREF + " in prefs");
-            sP.edit().putString(USER_PREF, defaultUser).apply();
-        }
-
-        if (sP.getString(SERVER_USER, NA_PREF).equalsIgnoreCase(NA_PREF)) {
-            Log.d(TAG, "Setting the defualt " + SERVER_USER + " in prefs");
-            sP.edit().putString(SERVER_USER, defaultUser).apply();
-        }
     }
 
     private void createReceiver() {

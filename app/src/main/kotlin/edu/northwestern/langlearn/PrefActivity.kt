@@ -54,7 +54,7 @@ class PrefActivity : PreferenceActivity() {
                     Log.d(TAG, "custom_server: $url")
                 } else {
                     preference.sharedPreferences.edit {
-                        put(MainActivity.CUSTOM_SERVER to "")
+                        put(MainActivity.CUSTOM_SERVER to "lingoboost-dev.csl.sri.com")
                         put(MainActivity.SERVER_USER to user)
                     }
                 }
