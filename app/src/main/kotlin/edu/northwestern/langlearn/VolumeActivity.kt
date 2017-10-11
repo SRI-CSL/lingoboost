@@ -171,7 +171,6 @@ class VolumeActivity : AppCompatActivity() {
     private fun createPlayer() {
         if (isSleep) {
             mediaPlayerWhiteNoise = MediaPlayer.create(this, R.raw.bnoise3)
-            mediaPlayerWhiteNoise?.seekTo(45000)
             mediaPlayerWhiteNoise?.setLooping(true)
             mediaPlayerWhiteNoise?.setVolume(seek_bar_white_noise.progress / 100f, seek_bar_white_noise.progress / 100f)
             mediaPlayerWhiteNoise?.start()
