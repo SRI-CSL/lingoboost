@@ -29,6 +29,10 @@ class LoginActivity : AppCompatActivity() {
                 val sharedPrefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(baseContext)
                 val user: String = username_edit.text.toString().trim()
 
+                sharedPrefs.edit {
+                    put(MainActivity.USER_PREF to user)
+                }
+
                 if (user.indexOf('@') != -1) {
                     val splitUser: List<String> = user.split('@')
                     val url: String = Regex(Patterns.WEB_URL.toString()).matchEntire(splitUser.last())?.value ?: ""
@@ -37,14 +41,12 @@ class LoginActivity : AppCompatActivity() {
                     sharedPrefs.edit {
                         put(MainActivity.CUSTOM_SERVER to url)
                         put(MainActivity.SERVER_USER to username)
-                        put(MainActivity.USER_PREF to username)
                     }.apply {  }
                     Log.d(TAG, "custom_server: $url")
                 } else {
                     sharedPrefs.edit {
-                        put(MainActivity.CUSTOM_SERVER to "lingoboost-dev.csl.sri.com")
+                        put(MainActivity.CUSTOM_SERVER to getString(R.string.default_server))
                         put(MainActivity.SERVER_USER to user)
-                        put(MainActivity.USER_PREF to user)
                     }.apply {  }
                 }
 

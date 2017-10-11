@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         duoLingoButton.setOnClickListener(downloadAppClick);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        Log.d(TAG, "Username shared prefs: " + sharedPreferences.getAll());
 
         if (!sharedPreferences.contains(USER_PREF)
                 ||sharedPreferences.getString(USER_PREF, NA_PREF).equalsIgnoreCase(NA_PREF)) {

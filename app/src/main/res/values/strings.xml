@@ -29,4 +29,6 @@
     <string name="image_duolingo_content_description">Touch to download the Duolingo app</string>
     <string name="text_sri_international">SRI International</string>
     <string name="text_english_translations">English Translations:</string>
+
+    <string name="default_server">lingoboost.csl.sri.com</string>
 </resources>
