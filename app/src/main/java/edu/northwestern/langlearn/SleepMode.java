@@ -119,6 +119,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private Sensor magnetometer;
     private float[] gravity;
     private float[] geomagnetic;
+    private boolean isSleepPaused = false;
     private boolean resumePlayWords;
     private boolean playWhiteNoise;
     private int sysStreamVolume;
@@ -295,18 +296,20 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
         wl.acquire();
 
-        if (resumePlayWords) {
-            Log.d(TAG, "resume play words if still");
-            playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
-            resumePlayWords = false;
-        }
+        if (!isSleepPaused) {
+            if (resumePlayWords) {
+                Log.d(TAG, "resume play words if still");
+                playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+                resumePlayWords = false;
+            }
 
-        if (playWhiteNoise) {
-            playWhiteNoiseRaw();
-        }
+            if (playWhiteNoise) {
+                playWhiteNoiseRaw();
+            }
 
-        if (words != null) {
-            checkAndPlayWordsIfStill();
+            if (words != null) {
+                checkAndPlayWordsIfStill();
+            }
         }
 
         onTickSensor();
@@ -370,16 +373,25 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!resumePlayWords) {
+                if (!isSleepPaused) {
                     Log.d(TAG, "pause play words");
+                    isSleepPaused = true;
                     playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
                     resumePlayWords = true;
                     pauseButton.setText(R.string.resume_button);
+                    whiteNoisePlayer.pause();
                 } else {
                     Log.d(TAG, "resume play words if still");
+                    isSleepPaused = false;
                     playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
                     resumePlayWords = false;
                     pauseButton.setText(R.string.pause_button);
+
+                    if (whiteNoisePlayer != null) {
+                        whiteNoisePlayer.start();
+                    } else {
+                        playWhiteNoiseRaw();
+                    }
                 }
             }
         });
