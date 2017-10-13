@@ -22,11 +22,14 @@
     <string name="text_volume_next">Ready for @#8230;</string>
     <string name="pause_button">Pause</string>
     <string name="resume_button">Resume</string>
+    <string name="cancel">Cancel</string>
     <string name="duolingo_button">Duolingo: Learn\nLanguages Free</string>
     <string name="text_download">Download</string>
     <string name="text_elapsed">Elapsed</string>
     <string name="text_current">Current</string>
     <string name="text_pause">Pause</string>
+    <string name="text_quit">Quit</string>
+    <string name="sleep_quit_confirmation">Quit this sleep session?</string>
     <string name="image_duolingo_content_description">Touch to download the Duolingo app</string>
     <string name="text_sri_international">SRI International</string>
     <string name="text_english_translations">English Translations:</string>

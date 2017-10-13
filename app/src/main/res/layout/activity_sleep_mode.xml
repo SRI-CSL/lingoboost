@@ -109,15 +109,31 @@
             android:textColor="?android:textColorSecondaryInverse"
             android:text="12:00 am" />
 
-        <Button
-            android:id="@+id/pause_sleep"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
-            android:text="@string/text_pause"
-            android:textSize="24.0sp" />
+            android:gravity="center"
+            android:weightSum="1" >
+
+            <Button
+                android:id="@+id/quit_sleep"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_quit"
+                android:textSize="24.0sp"
+                android:layout_weight="0.5"/>
+
+            <Button
+                android:id="@+id/pause_sleep"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_pause"
+                android:textSize="24.0sp"
+                android:layout_weight="0.5"/>
+        </LinearLayout>
 
     </RelativeLayout>
 </LinearLayout>

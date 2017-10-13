@@ -2,6 +2,7 @@ package edu.northwestern.langlearn;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -375,36 +377,32 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             public void onClick(View v) {
                 if (!isSleepPaused) {
                     Log.d(TAG, "pause play words");
-                    isSleepPaused = true;
-                    playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
-                    resumePlayWords = true;
+                    pauseSleepMode();
                     pauseButton.setText(R.string.resume_button);
-                    whiteNoisePlayer.pause();
                 } else {
                     Log.d(TAG, "resume play words if still");
-                    isSleepPaused = false;
-                    playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
-                    resumePlayWords = false;
+                    unpauseSleepMode();
                     pauseButton.setText(R.string.pause_button);
-
-                    if (whiteNoisePlayer != null) {
-                        whiteNoisePlayer.start();
-                    } else {
-                        playWhiteNoiseRaw();
-                    }
                 }
             }
         });
+
+        final Button quitButton = (Button)findViewById(R.id.quit_sleep);
+
+        quitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "Quit clicked");
+                showQuitConfirmationDialog();
+            }
+        });
+
         wordsProvider.fetchJSONWords(this);
     }
 
     @Override
     public void onBackPressed() {
-        final Intent i = new Intent(SleepMode.this, MainActivity.class);
-
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
-        finish();
+        showQuitConfirmationDialog();
     }
 
     @Override
@@ -535,6 +533,25 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         elapsedTextTime.setText(elapsedHoursAndMinutes);
         currentTextTime.setText(currentDateToStr);
+    }
+
+    private void pauseSleepMode() {
+        isSleepPaused = true;
+        playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+        resumePlayWords = true;
+        whiteNoisePlayer.pause();
+    }
+
+    private void unpauseSleepMode() {
+        isSleepPaused = false;
+        playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+        resumePlayWords = false;
+
+        if (whiteNoisePlayer != null) {
+            whiteNoisePlayer.start();
+        } else {
+            playWhiteNoiseRaw();
+        }
     }
 
     private void checkAndPlayWordsIfStill() {
@@ -760,5 +777,39 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             v1.setVisibility(View.GONE);
             v2.setVisibility(View.GONE);
         }
+    }
+
+    private void showQuitConfirmationDialog() {
+        pauseSleepMode();
+
+        new AlertDialog.Builder(SleepMode.this)
+                .setTitle(getString(R.string.sleep_quit_confirmation))
+                .setPositiveButton(R.string.text_quit, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d(TAG, "Confirmed quitting sleep mode");
+                        final Intent intent = new Intent(SleepMode.this, MainActivity.class);
+
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d(TAG, "Canceling quit option");
+                        dialogInterface.cancel();
+                        unpauseSleepMode();
+                    }
+                })
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        Log.d(TAG, "Canceling quit confirmation dialog");
+                        unpauseSleepMode();
+                    }
+                })
+                .show();
     }
 }
