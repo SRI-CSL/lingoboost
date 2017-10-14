@@ -82,6 +82,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private boolean feedback;
 
     private long repeatDelay;
+    private long nextWordPlayTimeMillis;
     private long maxLoops;
     private Handler repeatDelayHandler = new Handler();
     private Handler maxTimeHandler = new Handler();
@@ -252,8 +253,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             }
 
             writeFileLog(dateToStr + ",," + activityLog + ",,,,,,\n", true);
-            String requestUrl = ServiceRequestUtilsKt.buildRequestUrl(server, prefsUser, "upload",
-                    application.getSessionId(), packageVersion)
+            String requestUrl = ServiceRequestUtilsKt.buildRequestUrl(server, getString(R.string.server_root_path),
+                    prefsUser, "upload", application.getSessionId(), packageVersion)
                     .appendQueryParameter("purpose", "sleep").toString();
             Fuel.upload(requestUrl)
                     .timeout(timeout)
@@ -367,8 +368,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         debugSensorAceelerationChange = (TextView)findViewById(R.id.debug_sensor_acceleration_change);
         resumePlayWords = false;
         beginMillis = new Date().getTime();
+
         onTickSensor();
         checkPreferences();
+
+        // Set initial last played timestamp to the now + delayMillis to prevent words from starting to play before initial delay is reached
+        nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
 
         final Button pauseButton = (Button)findViewById(R.id.pause_sleep);
 
@@ -490,9 +495,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC); // 0 .. 15
 
         if (lastPracticeTime.equalsIgnoreCase("NA")) {
-            wordsProvider = new WordsProvider("https://" + server + "/langlearn/user/" + prefsUser + "?purpose=sleep");
+            wordsProvider = new WordsProvider("https://" + server + "/" + getString(R.string.server_root_path)
+                    + "/user/" + prefsUser + "?purpose=sleep");
         } else {
-            wordsProvider = new WordsProvider("https://" + server + "/langlearn/user/" + prefsUser + "/since/" + lastPracticeTime + "?purpose=sleep");
+            wordsProvider = new WordsProvider("https://" + server + "/" + getString(R.string.server_root_path)
+                    + "/user/" + prefsUser + "/since/" + lastPracticeTime + "?purpose=sleep");
         }
     }
 
@@ -544,6 +551,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     private void unpauseSleepMode() {
         isSleepPaused = false;
+        // Clicking Pause should reset the initial delay
+        nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
         playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
         resumePlayWords = false;
 
@@ -557,7 +566,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void checkAndPlayWordsIfStill() {
         Log.d(TAG, "checkAndPlayWordsIfStill");
 
-        if (!resumePlayWords) {
+        if (!resumePlayWords && System.currentTimeMillis() >= nextWordPlayTimeMillis) {
             if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) && lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
                 if (shouldPlayAudioAfterWordsIndexUpdate()) {
                     // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
@@ -606,11 +615,17 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(url);
-            mediaPlayer.prepare();
-            mediaPlayer.setVolume(rightAndLeftWordsVolume, rightAndLeftWordsVolume);
-            mediaPlayer.start();
+            mediaPlayer.prepareAsync();
             mediaPlayer.setOnCompletionListener(this);
-        } catch (IOException ex) {
+            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    mediaPlayer.setVolume(rightAndLeftWordsVolume, rightAndLeftWordsVolume);
+                    mediaPlayer.start();
+                }
+            });
+            nextWordPlayTimeMillis = System.currentTimeMillis() + delayBetweenWords;
+        } catch (IOException | IllegalStateException ex) {
             ex.printStackTrace();
         }
     }

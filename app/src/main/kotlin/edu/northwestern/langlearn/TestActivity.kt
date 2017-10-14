@@ -105,7 +105,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
         Log.d(TAG, "Test server user is: $prefsUser");
         Log.d(TAG, "Test server is: $server");
-        wordsProvider = WordsProvider("https://$server/langlearn/user/$prefsUser?purpose=test")
+        wordsProvider = WordsProvider("https://$server/${ getString(R.string.server_root_path) }/user/$prefsUser?purpose=test")
         wordsProvider.fetchJSONWords(this)
         submitClickListener = View.OnClickListener {
             Log.d(TAG, "submit OnClickListener")
@@ -229,7 +229,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
         val packageVersion = packageInfo.versionName
         val sessionId = (application as LanglearnApplication).sessionId
-        var requestUrl: String = buildRequestUrl(server, prefsUser, "upload", sessionId, packageVersion)
+        var requestUrl: String = buildRequestUrl(server, getString(R.string.server_root_path), prefsUser, "upload", sessionId, packageVersion)
                 .appendQueryParameter("purpose", "test")
                 .toString()
 
@@ -247,7 +247,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
                         Log.e(TAG, (err as FuelError).toString())
                     } else {
                         IsLogUploaded = true
-                        Log.d(TAG, "https://$server/langlearn/user/$prefsUser/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
+                        Log.d(TAG, "https://$server/${ getString(R.string.server_root_path) }/user/$prefsUser/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
                     }
                 }
     }
