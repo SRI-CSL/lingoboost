@@ -112,15 +112,17 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
             if (IsSubmitEnabled && words_edit_word.text.isNotEmpty()) {
                 Log.d(TAG, "Submitted: ${words_edit_word.text}. Actual answer(s): ${ words[wordsIndex].translations }")
-                val correctMatches = words[wordsIndex].getMatches(words_edit_word.text.toString())
 
-                if (correctMatches.isNotEmpty()) {
-                    Log.d(TAG, "Correct matches: $correctMatches")
-                    numCorrectGuesses++
-                }
-                else {
-                    Log.d(TAG, "User submitted incorrect guess")
-                }
+                // TODO: Temporarily(?) removed until correctness algorithm is finalized
+//                val correctMatches = words[wordsIndex].getMatches(words_edit_word.text.toString())
+//
+//                if (correctMatches.isNotEmpty()) {
+//                    Log.d(TAG, "Correct matches: $correctMatches")
+//                    numCorrectGuesses++
+//                }
+//                else {
+//                    Log.d(TAG, "User submitted incorrect guess")
+//                }
 
                 destroyPlayer()
                 logTestResults(words_edit_word.asString()) { showTranslations() }
@@ -183,8 +185,9 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             words_text_translations.visibility = View.VISIBLE
             words_text_list_of_translations.visibility = View.VISIBLE
 
-            test_score_text.visibility = View.VISIBLE
-            test_score_text.text = "Score: $numCorrectGuesses out of ${ wordsIndex + 1 } correct"
+            // TODO: Temporarily(?) removed until correctness algorithm is finalized
+//            test_score_text.visibility = View.VISIBLE
+//            test_score_text.text = "Score: $numCorrectGuesses out of ${ wordsIndex + 1 } correct"
 
             words_edit_word.hideKeyboard()
             runOnUiThread { words_edit_word.isEnabled = false }
