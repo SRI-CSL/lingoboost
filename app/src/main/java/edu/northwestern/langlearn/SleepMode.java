@@ -69,7 +69,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private PowerManager.WakeLock wl;
     private WordsProvider wordsProvider;
     private MediaPlayer mediaPlayer;
-    private MediaPlayer whiteNoisePlayer;
+    private LoopingMediaPlayer whiteNoisePlayer;
     private String jsonWords;
     private List<Word> words;
     private Handler playWordsIfStillHandler = new Handler();
@@ -137,6 +137,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         if (wordsProvider.getJsonStartDelay() != DEFAULT_START_WORDS_DELAY_MILLIS) {
             delayMillis = wordsProvider.getJsonStartDelay();
+            nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
+
             Log.d(TAG, "delayMillis: " + delayMillis);
         }
 
@@ -632,9 +634,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     private void playWhiteNoiseRaw() {
         Log.d(TAG, "playWhiteNoiseRaw");
-        whiteNoisePlayer = MediaPlayer.create(SleepMode.this, R.raw.bnoise3);
-        whiteNoisePlayer.setVolume(rightAndLeftWhiteNoiseVolume, rightAndLeftWhiteNoiseVolume);
-        whiteNoisePlayer.setLooping(true);
+        whiteNoisePlayer = LoopingMediaPlayer.create(SleepMode.this, R.raw.bnoise5);
+        whiteNoisePlayer.setVolume(rightAndLeftWhiteNoiseVolume);
         whiteNoisePlayer.start();
     }
 

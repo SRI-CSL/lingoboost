@@ -51,7 +51,7 @@ fun SharedPreferences.Editor.put(pair: Pair<String, Any>) {
 class VolumeActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
     private var mediaPlayer: MediaPlayer? = null
-    private var mediaPlayerWhiteNoise: MediaPlayer? = null
+    private var mediaPlayerWhiteNoise: LoopingMediaPlayer? = null
     private var hasWhiteNoiseBeenAdjusted = false
     private var hasWhordsBeenAdjusted = false
     private lateinit var updateSysStreamProgresRunner: Runnable
@@ -105,7 +105,7 @@ class VolumeActivity : AppCompatActivity() {
         if (isTest) showWordsVolume()
 
         seek_bar_white_noise.onProgressChangeVolume { seekBar, vol ->
-            enableNextTouch(whiteNoiseAdjusted = true) { mediaPlayerWhiteNoise?.setVolume(vol, vol) }
+            enableNextTouch(whiteNoiseAdjusted = true) { mediaPlayerWhiteNoise?.setVolume(vol) }
         }
         seek_bar_words.onProgressChangeVolume { seekBar, vol ->
             enableNextTouch(wordsAdjusted = true) { changeVolumeAndPlay(vol) }
@@ -170,9 +170,8 @@ class VolumeActivity : AppCompatActivity() {
 
     private fun createPlayer() {
         if (isSleep) {
-            mediaPlayerWhiteNoise = MediaPlayer.create(this, R.raw.bnoise3)
-            mediaPlayerWhiteNoise?.setLooping(true)
-            mediaPlayerWhiteNoise?.setVolume(seek_bar_white_noise.progress / 100f, seek_bar_white_noise.progress / 100f)
+            mediaPlayerWhiteNoise = LoopingMediaPlayer.create(this, R.raw.bnoise5)
+            mediaPlayerWhiteNoise?.setVolume(seek_bar_white_noise.progress / 100f)
             mediaPlayerWhiteNoise?.start()
         }
 
