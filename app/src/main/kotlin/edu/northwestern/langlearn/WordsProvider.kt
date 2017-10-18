@@ -18,6 +18,8 @@ class WordsProvider(val jsonUrl: String) {
         private set
     var jsonError: String = SleepMode.JSON_ERROR_MESSAGE
         private set
+    var jsonVolumeDampening: Float = SleepMode.DEFAULT_WHITENOISE_DAMPENING
+        private set
     var jsonFeedback: Boolean = false
         private set
     var jsonRepeatDelay: Long = 0L
@@ -63,6 +65,7 @@ class WordsProvider(val jsonUrl: String) {
             jsonFeedback = getBoolean("feedback")
         }
         // These could be missing, so do them one at a time due to missing exception
+        jsonObj.unless { jsonVolumeDampening = getInt("volume_dampening") / 100f }
         jsonObj.unless { jsonSham = getBoolean("sham") }
         jsonObj.unless { jsonError = getString("error") }
         jsonObj.unless { jsonRepeatDelay = getLong("repeat_delay") }

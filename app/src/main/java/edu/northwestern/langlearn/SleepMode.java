@@ -62,9 +62,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     public static final boolean PLAY_WHITE_NOISE = true;
     public static final String INACTIVITY_OPTION_PREF_DEFAULT = "1";
     public static final String MESSAGE_INTENT_EXTRA = "message";
+    public static final float DEFAULT_WHITENOISE_DAMPENING = 0.3f;
 
     private static final String TAG = "SleepMode";
     private static final int BASE_STILL_ACCEPTANCE_CONFIDENCE = 60;
+    private static final int WHITENOISE_DAMPENING_DURATION = 250;
 
     private PowerManager.WakeLock wl;
     private WordsProvider wordsProvider;
@@ -72,6 +74,19 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private LoopingMediaPlayer whiteNoisePlayer;
     private String jsonWords;
     private List<Word> words;
+
+    private float whiteNoiseVolumeDampening = DEFAULT_WHITENOISE_DAMPENING;
+    private Handler whiteNoiseDampeningHandler = new Handler();
+    private Runnable whiteNoiseDampeningRunner = new Runnable() {
+        @Override
+        public void run() {
+            if (whiteNoisePlayer != null) {
+                whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume * whiteNoiseVolumeDampening,
+                        WHITENOISE_DAMPENING_DURATION);
+            }
+        }
+    };
+
     private Handler playWordsIfStillHandler = new Handler();
     private Handler pauseBetweenWordsHandler = new Handler();
     private Handler tickSensorHandler = new Handler();
@@ -152,6 +167,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         feedback = wordsProvider.getJsonFeedback();
         repeatDelay = wordsProvider.getJsonRepeatDelay();
         maxLoops = wordsProvider.getJsonMaxLoops();
+        whiteNoiseVolumeDampening = wordsProvider.getJsonVolumeDampening();
         final long maxTime = wordsProvider.getJsonMaxTime();
 
 
@@ -165,7 +181,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         if (!wordsProvider.getJsonSham()) {
             if (playWordsIfStillHandler != null) {
-                playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+                scheduleNextWordPlay(delayMillis);
             }
             if (maxTime > 0 && maxTimeHandler != null) {
                 maxTimeHandler.postDelayed(maxTimeRunner, maxTime * 60 * 1000);
@@ -212,8 +228,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         wordsIndex++;
 
         if (!resumePlayWords) {
-            pauseBetweenWordsHandler.postDelayed(checkPlayWordsIfStillRunner, delayBetweenWords);
+            scheduleNextWordPlay(delayBetweenWords);
         }
+        whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_DAMPENING_DURATION);
     }
 
     @Override
@@ -304,7 +321,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         if (!isSleepPaused) {
             if (resumePlayWords) {
                 Log.d(TAG, "resume play words if still");
-                playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+                scheduleNextWordPlay(delayMillis);
                 resumePlayWords = false;
             }
 
@@ -329,7 +346,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             wl.release();
         }
 
-        playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+        cancelNextWordPlayHandler();
         pauseBetweenWordsHandler.removeCallbacks(checkPlayWordsIfStillRunner);
         tickSensorHandler.removeCallbacks(tickSensorRunner);
         repeatDelayHandler.removeCallbacks(checkPlayWordsIfStillRunner);
@@ -506,8 +523,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     private void onTickSensor() {
-        // Log.d(TAG, "onTickSensor");
-
         final float x = lastAccel.get("x");
         final float y = lastAccel.get("y");
         final float z = lastAccel.get("z");
@@ -520,12 +535,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final double accelChangeMagnitude = Math.sqrt(sqx + sqy + sqz);
         final long magnitude = Math.round(accelChangeMagnitude);
 
-        // Log.d(TAG, "Accel Change Mag: " + magnitude);
         lastAccel.put("lastx", x);
         lastAccel.put("lasty", y);
         lastAccel.put("lastz", z);
         magnitudes.add(Long.valueOf(magnitude).intValue());
-        // Log.d(TAG, lastSensor.toString());
         debugSensorOrientation.setText(lastSensor.toString());
         debugSensorAceelerationChange.setText(String.format(Locale.US, "%2d", magnitude));
         tickSensorHandler.postDelayed(tickSensorRunner, 1000); // 1s
@@ -546,7 +559,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     private void pauseSleepMode() {
         isSleepPaused = true;
-        playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+        cancelNextWordPlayHandler();
         resumePlayWords = true;
         whiteNoisePlayer.pause();
     }
@@ -555,7 +568,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         isSleepPaused = false;
         // Clicking Pause should reset the initial delay
         nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
-        playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+        scheduleNextWordPlay(delayMillis);
         resumePlayWords = false;
 
         if (whiteNoisePlayer != null) {
@@ -563,6 +576,16 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         } else {
             playWhiteNoiseRaw();
         }
+    }
+
+    private void scheduleNextWordPlay(long delay) {
+        playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delay);
+        whiteNoiseDampeningHandler.postDelayed(whiteNoiseDampeningRunner, delay - WHITENOISE_DAMPENING_DURATION);
+    }
+
+    private void cancelNextWordPlayHandler() {
+        playWordsIfStillHandler.removeCallbacks(checkPlayWordsIfStillRunner);
+        whiteNoiseDampeningHandler.removeCallbacks(whiteNoiseDampeningRunner);
     }
 
     private void checkAndPlayWordsIfStill() {
@@ -576,7 +599,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     playAudioUrl();
                 }
             } else {
-                playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delayMillis);
+                scheduleNextWordPlay(delayMillis);
             }
         }
     }
@@ -598,7 +621,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
                 if (repeatDelay > 0) {
                     Log.d(TAG, "Pausing play, repeat delay");
-                    repeatDelayHandler.postDelayed(checkPlayWordsIfStillRunner, repeatDelay * 60 * 1000);
+                    scheduleNextWordPlay(repeatDelay * 60 * 1000);
                     shouldPlay = false;
                 }
             }
