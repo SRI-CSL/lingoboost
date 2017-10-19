@@ -215,11 +215,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final String activityLog = "\"" + lastActivity.toString() + "\"";
         final String sensorLog = "\"" + lastSensor.toString() + "\"";
         final String accelLog = "\"" + magnitudes.toString() + "\"";
+        final AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         sP.edit().putString(MainActivity.LAST_PRACTICE_TIME_PREF, dateToStr).apply();
         Log.d(TAG, MainActivity.LAST_PRACTICE_TIME_PREF + ": " + dateToStr);
+        sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC); // 0 .. 15
 
-        final AudioManager am = (AudioManager)getSystemService(AUDIO_SERVICE);
         final float maxV = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         final int sysStreamVolumePercent = Math.round(((sysStreamVolume / maxV) * 100f));
         final int whiteNoiseVolumePercent = Math.round(rightAndLeftWhiteNoiseVolume * 100f);
