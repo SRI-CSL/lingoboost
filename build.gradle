@@ -4,7 +4,7 @@ buildscript {
     ext.app_compat = '25.3.1'
     ext.constraint_layout = '1.0.2'
     ext.play_services = '8.4.0'
-    ext.kotlin_version = '1.1.50'
+    ext.kotlin_version = '1.1.51'
     ext.anko_version = '0.10.1'
     ext.annotations = '25.3.1'
     ext.fuel_version = '1.8.0'
