@@ -59,6 +59,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private static final String TAG = "SleepMode";
     private static final int BASE_STILL_ACCEPTANCE_CONFIDENCE = 60;
     private static final int WHITENOISE_DAMPENING_DURATION = 250;
+    private static final int WHITENOISE_RAMP_UP_DURATION = 1000;
 
     private PowerManager.WakeLock wl;
     private WordsProvider wordsProvider;
@@ -228,7 +229,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         if (!resumePlayWords) {
             scheduleNextWordPlay(delayBetweenWords);
         }
-        whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_DAMPENING_DURATION);
+        whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_RAMP_UP_DURATION);
     }
 
     @Override
@@ -595,12 +596,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                 && now.getTime() - beginMillis < stimulationStopMillis) {
             if (lastActivity.containsKey(ActivityRecognizedIntentServices.STILL) && lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
                 if (shouldPlayAudioAfterWordsIndexUpdate()) {
-                    // ToastsKt.longToast(SleepMode.this, "Playing " + words.get(wordsIndex).getWord());
                     Log.d(TAG, "Playing word " + wordsIndex + " of " + words.size());
                     playAudioUrl();
                 }
             } else {
-                whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_DAMPENING_DURATION);
+                whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_RAMP_UP_DURATION);
                 whiteNoiseDampeningHandler.removeCallbacks(whiteNoiseDampeningRunner);
                 scheduleNextWordPlay(delayMillis);
             }
