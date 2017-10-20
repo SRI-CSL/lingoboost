@@ -13,46 +13,37 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
-import android.media.MediaPlayer;
-import android.media.AudioManager;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.github.kittinunf.fuel.Fuel;
-import com.github.kittinunf.fuel.core.FuelError;
-import com.github.kittinunf.fuel.core.Request;
-import com.github.kittinunf.fuel.core.Response;
+import org.jetbrains.anko.ToastsKt;
 
-import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.URL;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import org.jetbrains.anko.ToastsKt;
-import org.jetbrains.annotations.NotNull;
-
-import kotlin.jvm.functions.Function0;
-import kotlin.jvm.functions.Function2;
+import edu.northwestern.langlearn.log.CSVEventLogger;
+import edu.northwestern.langlearn.log.LogEventAction;
 
 public class SleepMode extends AppCompatActivity implements WordsProviderUpdate, OnCompletionListener, SensorEventListener {
     public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
@@ -75,6 +66,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private LoopingMediaPlayer whiteNoisePlayer;
     private String jsonWords;
     private List<Word> words;
+
+    private CSVEventLogger csvLogger;
 
     private float whiteNoiseVolumeDampening = DEFAULT_WHITENOISE_DAMPENING;
     private Handler whiteNoiseDampeningHandler = new Handler();
@@ -130,7 +123,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             onTickSensor();
         }
     };
-    private String logDateToStr;
     private TextView debugActivity;
     private TextView debugSensorOrientation;
     private TextView debugSensorAceelerationChange;
@@ -225,9 +217,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final int whiteNoiseVolumePercent = Math.round(rightAndLeftWhiteNoiseVolume * 100f);
         final int wordsVolumePercent = Math.round(rightAndLeftWordsVolume * 100f);
 
-        writeFileLog(dateToStr + "," + words.get(wordsIndex).getWord() + ","  + activityLog + "," + words.get(wordsIndex).getAudio_url()
+        csvLogger.logRow(dateToStr + "," + words.get(wordsIndex).getWord() + ","  + activityLog + "," + words.get(wordsIndex).getAudio_url()
                 + "," + sysStreamVolumePercent + "," + whiteNoiseVolumePercent + "," + wordsVolumePercent
-                + "," + sensorLog + "," + accelLog + "\n", true);
+                + "," + sensorLog + "," + accelLog, true);
         wordsIndex++;
 
         if (!resumePlayWords) {
@@ -241,6 +233,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "onStart");
         super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(ActivityRecognizedIntentServices.ACTIVITY_NOTIFICATION));
+        logEvent(LogEventAction.SYSTEM_EVENT_ONSTART);
     }
 
     @Override
@@ -251,7 +244,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final int timeout = 60000; // 1 min
         final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
-        final String dateToStr = format.format(new Date());
         final String activityLog = "\"" + lastActivity.toString() + "\"";
         final LanglearnApplication application = (LanglearnApplication) getApplication();
 
@@ -265,44 +257,18 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
                 if (packageInfo != null) {
                     packageVersion = packageInfo.versionName;
-                }
-                else {
+                } else {
+                    packageVersion = "UNKNOWN";
                     Log.e(TAG, "Unable to retrieve package version from PackageInfo");
                 }
-            }
-            else {
+            } else {
                 Log.e(TAG, "Unable to retrieve package version");
             }
 
-            writeFileLog(dateToStr + ",," + activityLog + ",,,,,,\n", true);
-            String requestUrl = ServiceRequestUtilsKt.buildRequestUrl(server, getString(R.string.server_root_path),
-                    prefsUser, "upload", application.getSessionId(), packageVersion)
-                    .appendQueryParameter("purpose", "sleep").toString();
-            Fuel.upload(requestUrl)
-                    .timeout(timeout)
-                    .source(new Function2<Request, URL, File>() {
-                        @Override
-                        public File invoke(Request request, URL url) {
-                            return new File(getFilesDir(), "log-sleep-" + logDateToStr + ".txt");
-                        }
-                    }).name(new Function0<String>() {
-                @Override
-                public String invoke() {
-                    return "app_log_file";
-                }
-            }).responseString(new com.github.kittinunf.fuel.core.Handler<String>() {
-                @Override
-                public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError error) {
-                    Log.e(TAG, response.toString());
-                    Log.e(TAG, error.toString());
-                }
-
-                @Override
-                public void success(@NotNull Request request, @NotNull Response response, String data) {
-                    Log.d(TAG, request.cUrlString());
-                    Log.d(TAG, "https://" + server + "/user/" + prefsUser + "/upload " + response.getHttpStatusCode() + ":" + response.getHttpResponseMessage());
-                }
-            });
+            logEvent(LogEventAction.SYSTEM_EVENT_ONSTOP, activityLog);
+            csvLogger.tryUploadLog(server, getString(R.string.server_root_path),
+                    prefsUser, application.getSessionId(), packageVersion, "sleep",
+                    timeout, null, null);
             super.onStop();
         } catch (PackageManager.NameNotFoundException ex) {
             Log.e(TAG, ex.getMessage());
@@ -337,6 +303,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             }
         }
 
+        logEvent(LogEventAction.SYSTEM_EVENT_ONRESUME);
         onTickSensor();
     }
 
@@ -356,6 +323,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         resumePlayWords = true;
         destroyWordsPlayer();
         destroyWhiteNoisePlayer();
+
+        logEvent(LogEventAction.SYSTEM_EVENT_ONPAUSE);
+
         super.onPause();
     }
 
@@ -380,7 +350,14 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         lastAccel.put("lasty", 0.0f);
         lastAccel.put("lastz", 0.0f);
         createReceiver();
-        writeCSVHeader();
+
+        csvLogger = new CSVEventLogger("sleep", getBaseContext());
+        // "timestamp,word,activity,audio_url,system_volume,white_noise_volume,words_volume,orientation,acceleration
+        csvLogger.writeHeader(Arrays.asList("timestamp", "word", "activity", "audio_url", "system_volume",
+                "white_noise_volume", "words_volume", "orientation", "acceleration"));
+        final String activityLog = "\"" + lastActivity.toString() + "\"";
+        logEvent(LogEventAction.SYSTEM_EVENT_ONCREATE, activityLog);
+
         sensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -394,6 +371,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         onTickSensor();
         checkPreferences();
 
+        delayMillis = 10000;
+
         // Set initial last played timestamp to the now + delayMillis to prevent words from starting to play before initial delay is reached
         nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
 
@@ -402,14 +381,19 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+                final String dateToStr = format.format(new Date());
+
                 if (!isSleepPaused) {
                     Log.d(TAG, "pause play words");
                     pauseSleepMode();
                     pauseButton.setText(R.string.resume_button);
+                    logEvent(LogEventAction.USER_EVENT_PAUSE);
                 } else {
                     Log.d(TAG, "resume play words if still");
                     unpauseSleepMode();
                     pauseButton.setText(R.string.pause_button);
+                    logEvent(LogEventAction.USER_EVENT_RESUME);
                 }
             }
         });
@@ -429,6 +413,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     @Override
     public void onBackPressed() {
+        logEvent(LogEventAction.USER_EVENT_BACK_BUTTON);
         showQuitConfirmationDialog();
     }
 
@@ -460,6 +445,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         if (whiteNoiseDampeningHandler != null) {
             whiteNoiseDampeningHandler.removeCallbacks(whiteNoiseDampeningRunner);
             whiteNoiseDampeningHandler = null;
+        }
+
+        if (csvLogger != null) {
+            csvLogger = null;
         }
 
         destroyWordsPlayer();
@@ -721,34 +710,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
          mediaPlayer.start();
     }
 
-    private void writeFileLog(String toLog, boolean append) {
-        Log.d(TAG, "writeFileLog");
-
-        try {
-            OutputStreamWriter outputStreamWriter;
-
-            if (append) {
-                outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep-" + logDateToStr + ".txt", Context.MODE_APPEND));
-                outputStreamWriter.append(toLog);
-            } else {
-                outputStreamWriter = new OutputStreamWriter(getBaseContext().openFileOutput("log-sleep-" + logDateToStr + ".txt", Context.MODE_PRIVATE));
-                outputStreamWriter.write(toLog);
-            }
-
-            outputStreamWriter.close();
-        } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
-    }
-
-    private void writeCSVHeader() {
-        final String activityLog = "\"" + lastActivity.toString() + "\"";
-
-        logDateToStr = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(new Date());
-        writeFileLog("timestamp,word,activity,audio_url,system_volume,white_noise_volume,words_volume,orientation,acceleration\n", false);
-        writeFileLog(logDateToStr + ",," +  activityLog + ",,,,,,\n", true);
-    }
-
     @SuppressWarnings("unchecked")
     private void createReceiver() {
         receiver = new BroadcastReceiver() {
@@ -844,8 +805,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Log.d(TAG, "Confirmed quitting sleep mode");
-                        final Intent intent = new Intent(SleepMode.this, MainActivity.class);
+                        logEvent(LogEventAction.USER_EVENT_QUIT);
 
+                        final Intent intent = new Intent(SleepMode.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
@@ -855,6 +817,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Log.d(TAG, "Canceling quit option");
+                        logEvent(LogEventAction.USER_EVENT_CANCEL_QUIT);
                         dialogInterface.cancel();
                         unpauseSleepMode();
                     }
@@ -863,9 +826,24 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
                         Log.d(TAG, "Canceling quit confirmation dialog");
+                        logEvent(LogEventAction.USER_EVENT_CANCEL_QUIT);
                         unpauseSleepMode();
                     }
                 })
                 .show();
     }
+
+    private void logEvent(LogEventAction event) {
+        logEvent(event, null);
+    }
+
+    private void logEvent(LogEventAction event, String activityLog) {
+        if (csvLogger != null) {
+            final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+            final String dateToStr = format.format(new Date());
+            csvLogger.logRow(dateToStr + "," + event.getEventString() + ","
+                    + (activityLog != null ? activityLog : "") + ",,,,,,", true);
+        }
+    }
+
 }

@@ -16,11 +16,9 @@ import android.widget.EditText
 
 import java.text.SimpleDateFormat
 import java.io.IOException
-import java.io.OutputStreamWriter
-import java.io.File
 
-import com.github.kittinunf.fuel.httpUpload
-import com.github.kittinunf.fuel.core.FuelError
+import edu.northwestern.langlearn.log.CSVEventLogger
+import edu.northwestern.langlearn.log.LogEventAction
 
 import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.intentFor
@@ -93,6 +91,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private val server: String by lazy {
         if (prefsServer.isEmpty()) "cortical.csl.sri.com" else prefsServer
     }
+    private var eventLogger: CSVEventLogger? = null
     private lateinit var submitClickListener: View.OnClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,7 +100,11 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         setContentView(R.layout.activity_words)
         words_text_word.text = ""
         words_edit_word.hint = "Words Updating..."
-        writeCSVHeader()
+        eventLogger = CSVEventLogger("test", baseContext)
+        eventLogger?.writeHeader(listOf("timestamp", "word", "entry",
+                "system_volume", "words_volume"))
+
+        logEvent(LogEventAction.SYSTEM_EVENT_ONCREATE)
 
         Log.d(TAG, "Test server user is: $prefsUser");
         Log.d(TAG, "Test server is: $server");
@@ -143,6 +146,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        logEvent(LogEventAction.USER_EVENT_BACK_BUTTON)
         startActivity(intentFor<MainActivity>().newTask().clearTask())
         finish()
     }
@@ -155,6 +159,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     override fun onStop() {
         Log.d(TAG, "onStop")
+        logEvent(LogEventAction.SYSTEM_EVENT_ONSTOP)
         uploadLog()
         super.onStop()
     }
@@ -232,27 +237,9 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
         val packageVersion = packageInfo.versionName
         val sessionId = (application as LanglearnApplication).sessionId
-        var requestUrl: String = buildRequestUrl(server, getString(R.string.server_root_path), prefsUser, "upload", sessionId, packageVersion)
-                .appendQueryParameter("purpose", "test")
-                .toString()
 
-        requestUrl.httpUpload()
-                .timeout(timeout)
-                .source { request, url -> File(filesDir, "log-test-$logDateToStr.txt") }
-                .name { "app_log_file" }
-                .progress { writtenBytes, totalBytes -> Log.d(TAG, "Upload: ${ writtenBytes.toFloat().toString() } Total: ${ totalBytes.toFloat().toString() }") }
-                .responseString { request, response, result ->
-                    Log.d(TAG, request.cUrlString())
-                    val (data: String?, err: FuelError?) = result
-
-                    if (err != null) {
-                        Log.e(TAG, response.toString())
-                        Log.e(TAG, (err as FuelError).toString())
-                    } else {
-                        IsLogUploaded = true
-                        Log.d(TAG, "https://$server/${ getString(R.string.server_root_path) }/user/$prefsUser/upload ${ response.httpStatusCode.toString() }:${ response.httpResponseMessage }")
-                    }
-                }
+        eventLogger?.tryUploadLog(server, getString(R.string.server_root_path), prefsUser,
+                sessionId, packageVersion, "test", timeout)
     }
 
     private fun logTestResults(entry:String, next: () -> Unit) {
@@ -260,33 +247,15 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         val dateToStr = format.format(Date())
 
-        writeFileLog("$dateToStr,$word,$entry,$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) }\n");
-        next();
+        // Sleep headers:  timestamp,word,activity,audio_url,system_volume,white_noise_volume,words_volume,orientation,acceleration
+        eventLogger?.logRow("$dateToStr,$word,$entry,$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) }")
+        next()
     }
 
-    private fun writeFileLog(toLog: String, append: Boolean = true) {
-        Log.d(TAG, "writeFileLog")
-        IsLogUploaded = false
-
-        try {
-            val outputStreamWriter: OutputStreamWriter
-
-            if (append) {
-                outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test-$logDateToStr.txt", Context.MODE_APPEND))
-                outputStreamWriter.append(toLog)
-            } else {
-                outputStreamWriter = OutputStreamWriter(baseContext.openFileOutput("log-test-$logDateToStr.txt", Context.MODE_PRIVATE))
-                outputStreamWriter.write(toLog)
-            }
-
-            outputStreamWriter.close()
-        } catch (e: IOException) {
-            Log.e("Exception", "File write failed: ${ e.toString() }")
-        }
-    }
-
-    private fun writeCSVHeader() {
-        writeFileLog("timestamp,word,entry,system_volume,words_volume\n", false)
+    private fun logEvent(event: LogEventAction) {
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
+        val dateToStr = format.format(Date())
+        eventLogger?.logRow("$dateToStr,${ event.eventString },,,")
     }
 
     private fun playAudioUrl() {
