@@ -75,7 +75,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private Runnable whiteNoiseDampeningRunner = new Runnable() {
         @Override
         public void run() {
-            if (whiteNoisePlayer != null &&  lastActivity != null
+            if (whiteNoisePlayer != null && playWhiteNoise && lastActivity != null
                     && lastActivity.containsKey(ActivityRecognizedIntentServices.STILL)
                     && lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
                 whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume * whiteNoiseVolumeDampening,
@@ -229,7 +229,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         if (!resumePlayWords) {
             scheduleNextWordPlay(delayBetweenWords);
         }
-        whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_RAMP_UP_DURATION);
+        if (whiteNoisePlayer != null && playWhiteNoise) {
+            whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_RAMP_UP_DURATION);
+        }
     }
 
     @Override
@@ -554,7 +556,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         isSleepPaused = true;
         cancelNextWordPlayHandler();
         resumePlayWords = true;
-        whiteNoisePlayer.pause();
+
+        if (whiteNoisePlayer != null) {
+            whiteNoisePlayer.pause();
+        }
     }
 
     private void unpauseSleepMode() {
@@ -564,7 +569,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         scheduleNextWordPlay(delayMillis);
         resumePlayWords = false;
 
-        if (whiteNoisePlayer != null) {
+        if (whiteNoisePlayer != null && playWhiteNoise) {
             whiteNoisePlayer.start();
         } else {
             playWhiteNoiseRaw();
@@ -600,7 +605,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     playAudioUrl();
                 }
             } else {
-                whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_RAMP_UP_DURATION);
+                if (whiteNoisePlayer != null) {
+                    whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_RAMP_UP_DURATION);
+                }
+
                 whiteNoiseDampeningHandler.removeCallbacks(whiteNoiseDampeningRunner);
                 scheduleNextWordPlay(delayMillis);
             }
@@ -659,10 +667,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     private void playWhiteNoiseRaw() {
-        Log.d(TAG, "playWhiteNoiseRaw");
-        whiteNoisePlayer = LoopingMediaPlayer.create(SleepMode.this, R.raw.bnoise5);
-        whiteNoisePlayer.setVolume(rightAndLeftWhiteNoiseVolume);
-        whiteNoisePlayer.start();
+        if (playWhiteNoise) {
+            Log.d(TAG, "playWhiteNoiseRaw");
+            whiteNoisePlayer = LoopingMediaPlayer.create(SleepMode.this, R.raw.bnoise5);
+            whiteNoisePlayer.setVolume(rightAndLeftWhiteNoiseVolume);
+            whiteNoisePlayer.start();
+        }
     }
 
     private void destroyWordsPlayer() {
