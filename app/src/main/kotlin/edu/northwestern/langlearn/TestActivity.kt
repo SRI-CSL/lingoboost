@@ -64,9 +64,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private var mediaPlayer: MediaPlayer? = null
     private var IsSubmitEnabled = true
     private var IsLogUploaded = false
-    private val logDateToStr by lazy {
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Date())
-    }
     private val wordsVolume: Float by lazy {
         val prefs = PreferenceManager.getDefaultSharedPreferences(baseContext)
 
@@ -178,6 +175,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
         words_edit_word.hint = "Translate this word to English"
         words_edit_word.showKeyboard()
+        submit.isEnabled = true
         continueWordTesting()
     }
 
@@ -246,9 +244,9 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val word = words[wordsIndex].word
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         val dateToStr = format.format(Date())
+        val entryRemovedQuotes: String = entry.replace("\"", "'")
 
-        // Sleep headers:  timestamp,word,activity,audio_url,system_volume,white_noise_volume,words_volume,orientation,acceleration
-        eventLogger?.logRow("$dateToStr,$word,$entry,$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) }")
+        eventLogger?.logRow("$dateToStr,\"$word\",\"$entryRemovedQuotes\",$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) }")
         next()
     }
 

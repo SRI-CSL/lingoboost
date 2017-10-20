@@ -47,6 +47,7 @@ class CSVEventLogger(private val filePrefix: String, private val context: Contex
         logRow(columns.joinToString(","), false)
     }
 
+    // TODO: refactor to take in map of keys to values to allow better error checking / sanitization
     fun logRow(toLog: String, append: Boolean = true) {
         Log.d(TAG, "logRow")
         isLogUploaded = false
@@ -54,13 +55,14 @@ class CSVEventLogger(private val filePrefix: String, private val context: Contex
         var outputStreamWriter: OutputStreamWriter? = null
 
         try {
+            val sanitizedRow: String = toLog.replace("\n", "\\n")
 
             if (append) {
                 outputStreamWriter = OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_APPEND))
-                outputStreamWriter.append("$toLog\n")
+                outputStreamWriter.append("$sanitizedRow\n")
             } else {
                 outputStreamWriter = OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE))
-                outputStreamWriter.write("$toLog\n")
+                outputStreamWriter.write("$sanitizedRow\n")
             }
 
         } catch (e: IOException) {

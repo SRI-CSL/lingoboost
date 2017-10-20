@@ -74,7 +74,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private Runnable whiteNoiseDampeningRunner = new Runnable() {
         @Override
         public void run() {
-            if (whiteNoisePlayer != null) {
+            if (whiteNoisePlayer != null &&  lastActivity != null
+                    && lastActivity.containsKey(ActivityRecognizedIntentServices.STILL)
+                    && lastActivity.get(ActivityRecognizedIntentServices.STILL) > BASE_STILL_ACCEPTANCE_CONFIDENCE) {
                 whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume * whiteNoiseVolumeDampening,
                         WHITENOISE_DAMPENING_DURATION);
             }
@@ -242,9 +244,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "onStop");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
-        final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         final int timeout = 60000; // 1 min
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
         final String activityLog = "\"" + lastActivity.toString() + "\"";
         final LanglearnApplication application = (LanglearnApplication) getApplication();
 
@@ -600,6 +600,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     playAudioUrl();
                 }
             } else {
+                whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_DAMPENING_DURATION);
+                whiteNoiseDampeningHandler.removeCallbacks(whiteNoiseDampeningRunner);
                 scheduleNextWordPlay(delayMillis);
             }
         }

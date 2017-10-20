@@ -45,7 +45,7 @@
         </activity>
         <service android:name=".ActivityRecognizedIntentServices" />
         <provider
-            android:name="edu.northwestern.langlearn.LogDocumentsProvider"
+            android:name="edu.northwestern.langlearn.log.LogDocumentsProvider"
             android:authorities="@string/doc_provider_authority"
             android:exported="true"
             android:grantUriPermissions="true"

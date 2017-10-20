@@ -1,4 +1,4 @@
-package edu.northwestern.langlearn
+package edu.northwestern.langlearn.log
 
 import android.content.Context
 import android.database.Cursor
@@ -11,6 +11,7 @@ import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.webkit.MimeTypeMap
 import android.os.Handler
+import edu.northwestern.langlearn.R
 
 import java.io.File
 import java.io.FileNotFoundException
