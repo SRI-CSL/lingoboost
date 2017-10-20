@@ -31,13 +31,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     public static final String CUSTOM_SERVER = "custom_server";
     public static final String SERVER_USER = "server_user";
     public static final String LAST_PRACTICE_TIME_PREF = "lastPracticeTime";
-    public static final String RESET_LAST_PRACTICED_PREF = "resetLastPraticed";
     public static final String VOLUME_WORDS_PREF = "volumeWords";
     public static final String VOLUME_WHITE_NOISE_PREF = "volumeWhiteNoise";
-    public static final String PLAY_WHITE_NOISE_PREF = "playWhitenoise";
     public static final int WORDS_VOLUME_PREF_DEFAULT = 50;
     public static final int WHITE_NOISE_VOLUME_PREF_DEFAULT = 10;
-    public static final String INACTIVITY_DELAY_PREF = "inactivityDelay";
     public static final String NA_PREF = "NA";
 
     private static final String TAG = "MainActivity";
@@ -173,28 +170,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         }
 
         super.onDestroy();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case SETTINGS:
-                SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                String user = sP.getString(USER_PREF, NA_PREF);
-                boolean resetLastPraticed = sP.getBoolean(RESET_LAST_PRACTICED_PREF, false);
-
-                Log.d(TAG, "Settings User: " + user);
-
-                if (resetLastPraticed) {
-                    sP.edit().putString(LAST_PRACTICE_TIME_PREF, NA_PREF).apply();
-                    Log.d(TAG, "Settings " + LAST_PRACTICE_TIME_PREF + ": " + NA_PREF);
-                    sP.edit().putBoolean(RESET_LAST_PRACTICED_PREF, false).apply();
-                }
-
-                break;
-        }
     }
 
     private boolean checkPlayServices() {

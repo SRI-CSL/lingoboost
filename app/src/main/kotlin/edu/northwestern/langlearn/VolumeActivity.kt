@@ -2,6 +2,7 @@ package edu.northwestern.langlearn
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -61,6 +62,7 @@ class VolumeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_volume)
         checkSharedPreferences()
         setVolumeControlStream(AudioManager.STREAM_MUSIC)

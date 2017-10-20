@@ -51,7 +51,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     public static final boolean PLAY_ONLY_WHITE_NOISE_SHAM = false;
     public static final String JSON_ERROR_MESSAGE = "";
     public static final boolean PLAY_WHITE_NOISE = true;
-    public static final String INACTIVITY_OPTION_PREF_DEFAULT = "1";
     public static final String MESSAGE_INTENT_EXTRA = "message";
     public static final float DEFAULT_WHITENOISE_DAMPENING = 0.3f;
     public static final int DEFAULT_SIMULATION_STOP_SECONDS = 18000;
@@ -136,7 +135,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private float[] geomagnetic;
     private boolean isSleepPaused = false;
     private boolean resumePlayWords;
-    private boolean playWhiteNoise;
+    private boolean playWhiteNoise = PLAY_WHITE_NOISE;
     private int sysStreamVolume;
     private long beginMillis;
     private String prefsUser;
@@ -167,7 +166,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         whiteNoiseVolumeDampening = wordsProvider.getJsonVolumeDampening();
         stimulationStopMillis = wordsProvider.getJsonStimulationStopSeconds() * 1000;
         final long maxTime = wordsProvider.getJsonMaxTime();
+        playWhiteNoise = wordsProvider.getJsonPlayWhiteNoise();
 
+        // Only stop white noise once we receive playWhiteNoise = false from the server
+        if (!playWhiteNoise) {
+            destroyWhiteNoisePlayer();
+        }
 
         ToastsKt.longToast(SleepMode.this, "Words Updated");
         Log.d(TAG, "words.size: " + words.size());
@@ -493,7 +497,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     private void checkPreferences() {
         final SharedPreferences sP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final String delayListValue = sP.getString(MainActivity.INACTIVITY_DELAY_PREF, INACTIVITY_OPTION_PREF_DEFAULT);
         final int wordsVolume = sP.getInt(MainActivity.VOLUME_WORDS_PREF, MainActivity.WORDS_VOLUME_PREF_DEFAULT);
         final int whiteNoiseVolume = sP.getInt(MainActivity.VOLUME_WHITE_NOISE_PREF, MainActivity.WHITE_NOISE_VOLUME_PREF_DEFAULT);
         final String lastPracticeTime = sP.getString(MainActivity.LAST_PRACTICE_TIME_PREF, MainActivity.NA_PREF);
@@ -502,8 +505,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         prefsUser = sP.getString(MainActivity.SERVER_USER, MainActivity.NA_PREF);
         server = prefsServer.isEmpty()? "cortical.csl.sri.com" : prefsServer;
-        playWhiteNoise = sP.getBoolean(MainActivity.PLAY_WHITE_NOISE_PREF, PLAY_WHITE_NOISE);
-        setDelayMillisFromPrefs(delayListValue);
         setWordsVolumeFromPrefs(wordsVolume);
         setWhiteNoiseVolumeFromPrefs(whiteNoiseVolume);
         sysStreamVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC); // 0 .. 15
@@ -581,7 +582,10 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         if (now.getTime() - beginMillis + delay < stimulationStopMillis) {
             playWordsIfStillHandler.postDelayed(checkPlayWordsIfStillRunner, delay);
-            whiteNoiseDampeningHandler.postDelayed(whiteNoiseDampeningRunner, delay - WHITENOISE_DAMPENING_DURATION);
+
+            if (playWhiteNoise) {
+                whiteNoiseDampeningHandler.postDelayed(whiteNoiseDampeningRunner, delay - WHITENOISE_DAMPENING_DURATION);
+            }
         } else {
             Log.d(TAG, "Stimulation stop time reached; no longer playing words");
             cancelNextWordPlayHandler();
@@ -605,11 +609,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     playAudioUrl();
                 }
             } else {
-                if (whiteNoisePlayer != null) {
+                if (whiteNoisePlayer != null && playWhiteNoise) {
                     whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_RAMP_UP_DURATION);
+                    whiteNoiseDampeningHandler.removeCallbacks(whiteNoiseDampeningRunner);
                 }
 
-                whiteNoiseDampeningHandler.removeCallbacks(whiteNoiseDampeningRunner);
                 scheduleNextWordPlay(delayMillis);
             }
         }
@@ -663,6 +667,30 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             nextWordPlayTimeMillis = System.currentTimeMillis() + delayBetweenWords;
         } catch (IOException | IllegalStateException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private void pauseAudio() {
+        cancelNextWordPlayHandler();
+
+        if (whiteNoisePlayer != null && whiteNoisePlayer.isPlaying()) {
+            whiteNoisePlayer.pause();
+        }
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    private void resumeAudio() {
+        if (!isSleepPaused) {
+            if (whiteNoisePlayer != null && playWhiteNoise) {
+                whiteNoisePlayer.start();
+            }
+            if (mediaPlayer != null) {
+                mediaPlayer.start();
+            } else {
+                scheduleNextWordPlay(delayMillis);
+            }
         }
     }
 
@@ -736,28 +764,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         };
     }
 
-    private void setDelayMillisFromPrefs(String delayListValue) {
-        long minutes;
-
-        switch (delayListValue) {
-            case "2":
-                minutes = 45;
-                break;
-            case "3":
-                minutes = 15;
-                break;
-            case "4":
-                minutes = 5;
-                break;
-            default: // "1"
-                minutes = 30;
-                // minutes = 1; // local testing
-        }
-
-        delayMillis = minutes * 60 * 1000;
-        Log.d(TAG, "delayMillis: " + delayMillis);
-    }
-
     private void setWordsVolumeFromPrefs(int volume) {
         rightAndLeftWordsVolume = volume / 100f;
         Log.d(TAG, "rightAndLeftWordsVolume: " + rightAndLeftWordsVolume);
@@ -804,7 +810,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     }
 
     private void showQuitConfirmationDialog() {
-        pauseSleepMode();
+        pauseAudio();
 
         new AlertDialog.Builder(SleepMode.this)
                 .setTitle(getString(R.string.sleep_quit_confirmation))
@@ -826,7 +832,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                         Log.d(TAG, "Canceling quit option");
                         logEvent(LogEventAction.USER_EVENT_CANCEL_QUIT);
                         dialogInterface.cancel();
-                        unpauseSleepMode();
+                        resumeAudio();
                     }
                 })
                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -834,7 +840,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
                     public void onCancel(DialogInterface dialogInterface) {
                         Log.d(TAG, "Canceling quit confirmation dialog");
                         logEvent(LogEventAction.USER_EVENT_CANCEL_QUIT);
-                        unpauseSleepMode();
+                        resumeAudio();
                     }
                 })
                 .show();

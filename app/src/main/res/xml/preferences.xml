@@ -7,21 +7,4 @@
       android:title="User"
       android:key="user"
       android:summary="Please provide a user" />
-  <CheckBoxPreference
-      android:title="Play White Noise"
-      android:defaultValue="true"
-      android:summary="This option if selected will play whitenoise between words."
-      android:key="playWhitenoise" />
-  <ListPreference
-      android:title="Inactivity Delay"
-      android:summary="Select the inactivity period before word play"
-      android:key="inactivityDelay"
-      android:defaultValue="1"
-      android:entries="@array/delayListArray"
-      android:entryValues="@array/delayListValues" />
-  <CheckBoxPreference
-      android:title="Reset Last Practiced Date"
-      android:defaultValue="false"
-      android:summary="This option if selected will request all words"
-      android:key="resetLastPraticed" />
 </PreferenceScreen>

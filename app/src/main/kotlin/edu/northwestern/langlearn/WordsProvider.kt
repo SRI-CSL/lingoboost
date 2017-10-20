@@ -22,6 +22,8 @@ class WordsProvider(val jsonUrl: String) {
         private set
     var jsonStimulationStopSeconds: Int = SleepMode.DEFAULT_SIMULATION_STOP_SECONDS
         private set
+    var jsonPlayWhiteNoise: Boolean = SleepMode.PLAY_WHITE_NOISE
+        private set
     var jsonFeedback: Boolean = false
         private set
     var jsonRepeatDelay: Long = 0L
@@ -74,6 +76,7 @@ class WordsProvider(val jsonUrl: String) {
         jsonObj.unless { jsonMaxLoops = getLong("max_loops") }
         jsonObj.unless { jsonMaxTime = getLong("max_time") }
         jsonObj.unless { jsonStimulationStopSeconds = getInt("stimulation_stop") }
+        jsonObj.unless { jsonPlayWhiteNoise = getBoolean("white_noise") }
         jsonObj.unless {
             val words = getJSONArray("words")
             var n: String = ""
