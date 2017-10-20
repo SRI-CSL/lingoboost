@@ -353,7 +353,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         createReceiver();
 
         csvLogger = new CSVEventLogger("sleep", getBaseContext());
-        // "timestamp,word,activity,audio_url,system_volume,white_noise_volume,words_volume,orientation,acceleration
         csvLogger.writeHeader(Arrays.asList("timestamp", "word", "activity", "audio_url", "system_volume",
                 "white_noise_volume", "words_volume", "orientation", "acceleration"));
         final String activityLog = "\"" + lastActivity.toString() + "\"";
@@ -372,8 +371,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         onTickSensor();
         checkPreferences();
 
-        delayMillis = 10000;
-
         // Set initial last played timestamp to the now + delayMillis to prevent words from starting to play before initial delay is reached
         nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
 
@@ -382,9 +379,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
-                final String dateToStr = format.format(new Date());
-
                 if (!isSleepPaused) {
                     Log.d(TAG, "pause play words");
                     pauseSleepMode();
