@@ -22,9 +22,7 @@ class Word(val norm: String, val audio_url: String, val translations: List<Strin
         }
     }
 
-    override fun toString(): String {
-        return """ { "norm": "$norm", "audio_url": "$audio_url", "translations": $translations, "word": "$word" } """
-    }
+    override fun toString(): String = """ { "norm": "$norm", "audio_url": "$audio_url", "translations": $translations, "word": "$word" } """
 
     private fun preprocessGuess(guess: String): String = guess.toLowerCase().trim()
 
