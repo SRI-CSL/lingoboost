@@ -32,6 +32,10 @@ class WordsProvider(val jsonUrl: String) {
         private set
     var jsonMaxTime: Long = -1L
         private set
+    var jsonSessionStartDelay: Long = SleepMode.DEFAULT_SESSION_START_DELAY_MILLIS
+        private set
+    var jsonPauseDelay: Long = SleepMode.DEFAULT_PAUSE_DELAY_MILLIS
+        private set
 
     private val TAG = javaClass.simpleName
 
@@ -63,8 +67,8 @@ class WordsProvider(val jsonUrl: String) {
         val Words = mutableListOfWords()
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
+        jsonObj.unless { jsonStartDelay = getLong("start_delay") * 1000L }
         jsonObj.unless {
-            jsonStartDelay = getLong("start_delay") * 1000L
             jsonWordDelay = getLong("word_delay") * 1000L
             jsonFeedback = getBoolean("feedback")
         }
@@ -77,6 +81,15 @@ class WordsProvider(val jsonUrl: String) {
         jsonObj.unless { jsonMaxTime = getLong("max_time") }
         jsonObj.unless { jsonStimulationStopSeconds = getInt("stimulation_stop") }
         jsonObj.unless { jsonPlayWhiteNoise = getBoolean("white_noise") }
+        jsonObj.unless {
+            jsonSessionStartDelay = -1L // TODO: Remove when backend has this
+            jsonPauseDelay = -1L // TODO: Remove when backend has this
+            jsonSessionStartDelay = getLong("session_start_delay") * 1000L
+            jsonPauseDelay = getLong("pause_delay") * 1000L
+        }
+        // TODO: Remove this when the backend starts supporting these values for now sleep does, so we need to set them to something reasonable
+        jsonSessionStartDelay = if (jsonSessionStartDelay == -1L) jsonStartDelay else jsonSessionStartDelay
+        jsonPauseDelay = if (jsonPauseDelay == -1L) jsonSessionStartDelay else jsonPauseDelay
         jsonObj.unless {
             val words = getJSONArray("words")
             var n: String = ""
@@ -99,7 +112,8 @@ class WordsProvider(val jsonUrl: String) {
             }
         }
 
-        Log.d(TAG, "Start Delay: $jsonStartDelay")
+        Log.d(TAG, "Session Start Delay: $jsonSessionStartDelay")
+        Log.d(TAG, "Pause Delay: $jsonPauseDelay")
         Log.d(TAG, "Word Delay: $jsonWordDelay")
         Log.d(TAG, "Feedback: $jsonFeedback")
         return Words

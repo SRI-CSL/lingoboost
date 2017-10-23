@@ -48,6 +48,8 @@ import edu.northwestern.langlearn.log.LogEventAction;
 public class SleepMode extends AppCompatActivity implements WordsProviderUpdate, OnCompletionListener, SensorEventListener {
     public static final long DEFAULT_START_WORDS_DELAY_MILLIS = 1800000; // 30m
     public static final long DEFAULT_BETWEEN_WORDS_DELAY_MILLIS = 5000; // 5s
+    public static final long DEFAULT_SESSION_START_DELAY_MILLIS = 1800000; // 30m
+    public static final long DEFAULT_PAUSE_DELAY_MILLIS = 300000; // 5m
     public static final boolean PLAY_ONLY_WHITE_NOISE_SHAM = false;
     public static final String JSON_ERROR_MESSAGE = "";
     public static final boolean PLAY_WHITE_NOISE = true;
@@ -86,13 +88,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private Handler playWordsIfStillHandler = new Handler();
     private Handler pauseBetweenWordsHandler = new Handler();
     private Handler tickSensorHandler = new Handler();
-    private long delayMillis = DEFAULT_START_WORDS_DELAY_MILLIS;
+    private long delayMillis = DEFAULT_SESSION_START_DELAY_MILLIS;
     private long delayBetweenWords = DEFAULT_BETWEEN_WORDS_DELAY_MILLIS;
     private int stimulationStopMillis;
-
-    // TODO: In progress fields
-    private boolean feedback;
-
     private long repeatDelay;
     private long nextWordPlayTimeMillis;
     private long maxLoops;
@@ -146,8 +144,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         jsonWords = json;
         words = wordsProvider.parseJSONWords(jsonWords);
 
-        if (wordsProvider.getJsonStartDelay() != DEFAULT_START_WORDS_DELAY_MILLIS) {
-            delayMillis = wordsProvider.getJsonStartDelay();
+        if (wordsProvider.getJsonSessionStartDelay() != DEFAULT_SESSION_START_DELAY_MILLIS) {
+            delayMillis = wordsProvider.getJsonSessionStartDelay();
             nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
 
             Log.d(TAG, "delayMillis: " + delayMillis);
@@ -158,9 +156,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             Log.d(TAG, "delayBetweenWords: " + delayBetweenWords);
         }
 
-
-        // TODO: Handle defaults, if checks
-        feedback = wordsProvider.getJsonFeedback();
         repeatDelay = wordsProvider.getJsonRepeatDelay();
         maxLoops = wordsProvider.getJsonMaxLoops();
         whiteNoiseVolumeDampening = wordsProvider.getJsonVolumeDampening();

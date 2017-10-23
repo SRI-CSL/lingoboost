@@ -31,7 +31,7 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
         private set
 
     override fun onCreate() {
-        Log.d(TAG, "onCreate")
+        //Log.d(TAG, "onCreate")
         super.onCreate()
         setIntentRedelivery(true)
 
@@ -42,12 +42,12 @@ class ActivityRecognizedIntentServices : IntentService(ActivityRecognizedIntentS
     }
 
     override fun onDestroy() {
-        Log.d(TAG, "onDestroy")
+        //Log.d(TAG, "onDestroy")
         super.onDestroy()
     }
 
     override fun onHandleIntent(intent: Intent?): Unit  {
-        Log.d(TAG, "onHandleIntent")
+        //Log.d(TAG, "onHandleIntent")
 
         if (ActivityRecognitionResult.hasResult(intent)) {
             val result: ActivityRecognitionResult = ActivityRecognitionResult.extractResult(intent)
