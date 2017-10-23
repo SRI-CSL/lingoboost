@@ -112,10 +112,21 @@ class WordsProvider(val jsonUrl: String) {
             }
         }
 
-        Log.d(TAG, "Session Start Delay: $jsonSessionStartDelay")
-        Log.d(TAG, "Pause Delay: $jsonPauseDelay")
-        Log.d(TAG, "Word Delay: $jsonWordDelay")
-        Log.d(TAG, "Feedback: $jsonFeedback")
+        Log.d(TAG, """
+            "Session Start Delay: $jsonSessionStartDelay"
+            "Pause Delay: $jsonPauseDelay"
+            "Word Delay: $jsonWordDelay"
+            "Feedback: $jsonFeedback"
+            "Volume Dampening": $jsonVolumeDampening
+            "Sham": $jsonSham
+            "Error": $jsonError
+            "Repeat Delay": $jsonRepeatDelay
+            "Max Loops": $jsonMaxLoops
+            "MaxTime": $jsonMaxTime
+            "Stimulation Stop Seconds": $jsonStimulationStopSeconds
+            "Play White Noise": $jsonPlayWhiteNoise
+        """.trimIndent())
+
         return Words
     }
 }

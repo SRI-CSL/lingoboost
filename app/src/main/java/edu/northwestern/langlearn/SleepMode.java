@@ -88,8 +88,9 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private Handler playWordsIfStillHandler = new Handler();
     private Handler pauseBetweenWordsHandler = new Handler();
     private Handler tickSensorHandler = new Handler();
-    private long delayMillis = DEFAULT_SESSION_START_DELAY_MILLIS;
-    private long delayBetweenWords = DEFAULT_BETWEEN_WORDS_DELAY_MILLIS;
+    private long delayMillis;
+    private long pauseDelayMillis;
+    private long delayBetweenWords;
     private int stimulationStopMillis;
     private long repeatDelay;
     private long nextWordPlayTimeMillis;
@@ -144,18 +145,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         jsonWords = json;
         words = wordsProvider.parseJSONWords(jsonWords);
 
-        if (wordsProvider.getJsonSessionStartDelay() != DEFAULT_SESSION_START_DELAY_MILLIS) {
-            delayMillis = wordsProvider.getJsonSessionStartDelay();
-            nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
-
-            Log.d(TAG, "delayMillis: " + delayMillis);
-        }
-
-        if (wordsProvider.getJsonWordDelay() != DEFAULT_BETWEEN_WORDS_DELAY_MILLIS) {
-            delayBetweenWords = wordsProvider.getJsonWordDelay();
-            Log.d(TAG, "delayBetweenWords: " + delayBetweenWords);
-        }
-
+        delayMillis = wordsProvider.getJsonSessionStartDelay();
+        nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
+        Log.d(TAG, "nextWordPlayTimeMillis: " + nextWordPlayTimeMillis);
+        pauseDelayMillis = wordsProvider.getJsonPauseDelay();
+        delayBetweenWords = wordsProvider.getJsonWordDelay();
         repeatDelay = wordsProvider.getJsonRepeatDelay();
         maxLoops = wordsProvider.getJsonMaxLoops();
         whiteNoiseVolumeDampening = wordsProvider.getJsonVolumeDampening();
