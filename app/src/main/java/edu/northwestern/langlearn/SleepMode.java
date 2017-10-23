@@ -554,9 +554,8 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     private void unpauseSleepMode() {
         isSleepPaused = false;
-        // Clicking Pause should reset the initial delay
-        nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;
-        scheduleNextWordPlay(delayMillis);
+        nextWordPlayTimeMillis = System.currentTimeMillis() + pauseDelayMillis;
+        scheduleNextWordPlay(pauseDelayMillis);
         resumePlayWords = false;
 
         if (whiteNoisePlayer != null && playWhiteNoise) {
