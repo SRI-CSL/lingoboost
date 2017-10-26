@@ -9,7 +9,8 @@ import java.io.File
 import java.io.IOException
 import java.io.OutputStreamWriter
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Created by bcooper on 10/19/17.
@@ -64,13 +65,10 @@ class CSVEventLogger(private val filePrefix: String, private val context: Contex
                 outputStreamWriter = OutputStreamWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE))
                 outputStreamWriter.write("$sanitizedRow\n")
             }
-
         } catch (e: IOException) {
             Log.e("Exception", "File write failed: " + e.toString())
         } finally {
-            if (outputStreamWriter != null) {
-                outputStreamWriter.close()
-            }
+            outputStreamWriter?.close()
         }
     }
 
@@ -90,7 +88,7 @@ class CSVEventLogger(private val filePrefix: String, private val context: Contex
 
             requestUrl.httpUpload()
                     .timeout(timeout)
-                    .source { request, url -> File(context.filesDir, fileName) }
+                    .source { _, _ -> File(context.filesDir, fileName) }
                     .name { "app_log_file" }
                     .progress { writtenBytes, totalBytes -> Log.d(TAG, "Upload: ${writtenBytes.toFloat()} Total: ${totalBytes.toFloat()}") }
                     .responseString { request, response, result ->
@@ -101,15 +99,11 @@ class CSVEventLogger(private val filePrefix: String, private val context: Contex
                             Log.d(TAG, "https://$server/$serverRootPath/user/$username/upload " +
                                     "${response.httpStatusCode}:${response.httpResponseMessage}")
 
-                            if (onSuccess != null) {
-                                onSuccess(data)
-                            }
+                            onSuccess?.invoke(data ?: "")
                         } else {
                             isLogUploaded = true
 
-                            if (onError != null) {
-                                onError(error)
-                            }
+                            onError?.invoke(error as FuelError)
                         }
                     }
         }

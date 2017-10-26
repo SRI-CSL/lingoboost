@@ -60,7 +60,7 @@ class LogDocumentsProvider : DocumentsProvider() {
         row.add(Root.COLUMN_ICON, R.mipmap.ic_launcher)
         row.add(Root.COLUMN_TITLE, context!!.getString(R.string.app_name)) // COLUMN_TITLE is the root title (e.g. what will be displayed to identify your provider).
         row.add(Root.COLUMN_FLAGS, Root.FLAG_LOCAL_ONLY)
-        row.add(Root.COLUMN_MIME_TYPES, getChildMimeTypes(baseDir));
+        row.add(Root.COLUMN_MIME_TYPES, getChildMimeTypes());
         row.add(Root.COLUMN_DOCUMENT_ID, getDocIdForFile(baseDir)) // Unique and consistent across time. The system picker UI may save it and refer to it later.
         return result
     }
@@ -109,10 +109,9 @@ class LogDocumentsProvider : DocumentsProvider() {
         } else {
             return ParcelFileDescriptor.open(file, accessMode)
         }
-
     }
 
-    private fun getChildMimeTypes(parent: File): String {
+    private fun getChildMimeTypes(): String {
         val mimeTypes = HashSet<String>()
         val mimeTypesString = StringBuilder()
 

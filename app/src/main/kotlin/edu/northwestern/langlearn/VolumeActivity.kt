@@ -40,7 +40,6 @@ fun SharedPreferences.Editor.put(pair: Pair<String, Any>) {
 
     when (value) {
         is String -> putString(key, value as String)
-
         is Int -> putInt(key, value as Int)
         is Boolean -> putBoolean(key, value as Boolean)
         is Long -> putLong(key, value as Long)
@@ -91,7 +90,7 @@ class VolumeActivity : AppCompatActivity() {
         volume_next.isEnabled = false
         seek_bar_sys_stream_volume.progress = sysStreamVolumeProgress
         seek_bar_sys_stream_volume.isFocusable = false
-        seek_bar_sys_stream_volume.onProgressChangeVolume { seekBar, vol ->
+        seek_bar_sys_stream_volume.onProgressChangeVolume { seekBar, _ ->
             seekBar.progress = sysStreamVolumeProgress
             am.setStreamVolume(AudioManager.STREAM_MUSIC, am.getStreamVolume(AudioManager.STREAM_MUSIC), AudioManager.FLAG_SHOW_UI)
         }
@@ -106,10 +105,10 @@ class VolumeActivity : AppCompatActivity() {
 
         if (isTest) showWordsVolume()
 
-        seek_bar_white_noise.onProgressChangeVolume { seekBar, vol ->
+        seek_bar_white_noise.onProgressChangeVolume { _, vol ->
             enableNextTouch(whiteNoiseAdjusted = true) { mediaPlayerWhiteNoise?.setVolume(vol) }
         }
-        seek_bar_words.onProgressChangeVolume { seekBar, vol ->
+        seek_bar_words.onProgressChangeVolume { _, vol ->
             enableNextTouch(wordsAdjusted = true) { changeVolumeAndPlay(vol) }
         }
         volume_next.setOnClickListener {

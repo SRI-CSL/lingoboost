@@ -142,6 +142,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
     public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
+
+        if (resumePlayWords) {
+            Log.d(TAG, "Finish was called app stopped prior to word fetch, ignore these words");
+            return; // user bailed out of the app and we went back to main
+        }
+
         jsonWords = json;
         words = wordsProvider.parseJSONWords(jsonWords);
 
@@ -239,6 +245,16 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     protected void onStop() {
         Log.d(TAG, "onStop");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+
+        if (words == null) {
+            Log.d(TAG, "Calling finish app stopped prior to word fetch, so we start at the begining");
+            final Intent intent = new Intent(SleepMode.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish(); // go back to the main activity, user left prior to starting, so we start from the beginning due to async task
+            super.onStop();
+            return;
+        }
 
         final int timeout = 60000; // 1 min
         final String activityLog = "\"" + lastActivity.toString() + "\"";
