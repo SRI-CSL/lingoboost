@@ -133,12 +133,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private float[] gravity;
     private float[] geomagnetic;
     private boolean isSleepPaused = false;
-    private boolean resumePlayWords;
+    private boolean resumePlayWords = false;
     private boolean playWhiteNoise = PLAY_WHITE_NOISE;
     private int sysStreamVolume;
     private long beginMillis;
     private String prefsUser;
     private String server;
+    private boolean shamMode = false;
 
     public void updateJSONWords(@NonNull String json) {
         Log.d(TAG, "updateJSONWords");
@@ -180,11 +181,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             if (playWordsIfStillHandler != null) {
                 scheduleNextWordPlay(delayMillis);
             }
+
             if (maxTime > 0 && maxTimeHandler != null) {
                 maxTimeHandler.postDelayed(maxTimeRunner, maxTime * 60 * 1000);
             }
         } else {
             Log.i(TAG, "Playing only white noise, sham was true");
+            shamMode = true;
         }
     }
 
@@ -228,6 +231,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         if (!resumePlayWords) {
             scheduleNextWordPlay(delayBetweenWords);
         }
+
         if (whiteNoisePlayer != null && playWhiteNoise) {
             whiteNoisePlayer.linearRampVolume(rightAndLeftWhiteNoiseVolume, WHITENOISE_RAMP_UP_DURATION);
         }
@@ -300,19 +304,24 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "LangLearnSleepLock");
         wl.acquire();
 
-        if (!isSleepPaused) {
-            if (resumePlayWords) {
-                Log.d(TAG, "resume play words if still");
-                scheduleNextWordPlay(delayMillis);
+        if (!isSleepPaused) { // activity pause button check
+            if (resumePlayWords) { // app onPause fired->onRestart, now resumed check
+                Log.d(TAG, "resume play words or whitenoise or both");
+
+                if (!shamMode && words != null) {
+                    scheduleNextWordPlay(delayMillis);
+                } else {
+                    Log.d(TAG, "resumed shamMode or words was null");
+                }
+
                 resumePlayWords = false;
             }
 
-            if (playWhiteNoise) {
+            // app onStart fired now resumed activity up and running
+            if (playWhiteNoise && whiteNoisePlayer != null) {
+                whiteNoisePlayer.start();
+            } else {
                 playWhiteNoiseRaw();
-            }
-
-            if (words != null) {
-                checkAndPlayWordsIfStill();
             }
         }
 
@@ -392,12 +401,12 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             @Override
             public void onClick(View v) {
                 if (!isSleepPaused) {
-                    Log.d(TAG, "pause play words");
+                    Log.d(TAG, "paused");
                     pauseSleepMode();
                     pauseButton.setText(R.string.resume_button);
                     logEvent(LogEventAction.USER_EVENT_PAUSE);
                 } else {
-                    Log.d(TAG, "resume play words if still");
+                    Log.d(TAG, "resumed");
                     unpauseSleepMode();
                     pauseButton.setText(R.string.pause_button);
                     logEvent(LogEventAction.USER_EVENT_RESUME);
@@ -571,7 +580,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void unpauseSleepMode() {
         isSleepPaused = false;
         nextWordPlayTimeMillis = System.currentTimeMillis() + pauseDelayMillis;
-        scheduleNextWordPlay(pauseDelayMillis);
+
+        if (!shamMode && words != null) {
+            scheduleNextWordPlay(pauseDelayMillis);
+        }
+
         resumePlayWords = false;
 
         if (whiteNoisePlayer != null && playWhiteNoise) {
@@ -690,10 +703,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             if (whiteNoisePlayer != null && playWhiteNoise) {
                 whiteNoisePlayer.start();
             }
+
             if (mediaPlayer != null) {
                 mediaPlayer.start();
             } else {
-                scheduleNextWordPlay(delayMillis);
+                if (!shamMode && words != null) {
+                    scheduleNextWordPlay(delayMillis);
+                }
             }
         }
     }
