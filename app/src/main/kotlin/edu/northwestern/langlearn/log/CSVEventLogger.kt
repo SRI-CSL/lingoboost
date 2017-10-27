@@ -103,7 +103,7 @@ class CSVEventLogger(private val filePrefix: String, private val context: Contex
                         } else {
                             isLogUploaded = true
 
-                            onError?.invoke(error as FuelError)
+                            onError?.invoke(error)
                         }
                     }
         }

@@ -39,11 +39,11 @@ fun SharedPreferences.Editor.put(pair: Pair<String, Any>) {
     val value = pair.second
 
     when (value) {
-        is String -> putString(key, value as String)
-        is Int -> putInt(key, value as Int)
-        is Boolean -> putBoolean(key, value as Boolean)
-        is Long -> putLong(key, value as Long)
-        is Float -> putFloat(key, value as Float)
+        is String -> putString(key, value)
+        is Int -> putInt(key, value)
+        is Boolean -> putBoolean(key, value)
+        is Long -> putLong(key, value)
+        is Float -> putFloat(key, value)
         else -> error("Only primitive types can be stored in SharedPreferences")
     }
 }
