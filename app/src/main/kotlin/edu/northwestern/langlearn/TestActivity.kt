@@ -57,7 +57,9 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         get() = this
 
     private val TAG = javaClass.simpleName
-    private lateinit var wordsProvider: WordsProvider
+    private val wordsProvider: WordsProvider by lazy {
+        WordsProvider("https://$server/${ getString(R.string.server_root_path) }/user/$prefsUser?purpose=test")
+    }
     private lateinit var words: ListOfWords
     private var wordsIndex = -1
     private var numCorrectGuesses = 0
@@ -88,7 +90,12 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     private val server: String by lazy {
         if (prefsServer.isEmpty()) "cortical.csl.sri.com" else prefsServer
     }
-    private var eventLogger: CSVEventLogger? = null
+    private val eventLogger: CSVEventLogger by lazy {
+        val el = CSVEventLogger("test", baseContext)
+
+        el.writeHeader(listOf("timestamp", "word", "entry", "system_volume", "words_volume", "total_words"))
+        el
+    }
     private lateinit var submitClickListener: View.OnClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,15 +104,9 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         setContentView(R.layout.activity_words)
         words_text_word.text = ""
         words_edit_word.hint = "Words Updating..."
-        eventLogger = CSVEventLogger("test", baseContext)
-        eventLogger?.writeHeader(listOf("timestamp", "word", "entry",
-                "system_volume", "words_volume"))
-
         logEvent(LogEventAction.SYSTEM_EVENT_ONCREATE)
-
         Log.d(TAG, "Test server user is: $prefsUser");
         Log.d(TAG, "Test server is: $server");
-        wordsProvider = WordsProvider("https://$server/${ getString(R.string.server_root_path) }/user/$prefsUser?purpose=test")
         wordsProvider.fetchJSONWords(this)
         submitClickListener = View.OnClickListener {
             Log.d(TAG, "submit OnClickListener")
@@ -236,7 +237,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val packageVersion = packageInfo.versionName
         val sessionId = (application as LanglearnApplication).sessionId
 
-        eventLogger?.tryUploadLog(server, getString(R.string.server_root_path), prefsUser,
+        eventLogger.tryUploadLog(server, getString(R.string.server_root_path), prefsUser,
                 sessionId, packageVersion, "test", timeout)
     }
 
@@ -246,14 +247,14 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         val dateToStr = format.format(Date())
         val entryRemovedQuotes: String = entry.replace("\"", "'")
 
-        eventLogger?.logRow("$dateToStr,\"$word\",\"$entryRemovedQuotes\",$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) }")
+        eventLogger.logRow("$dateToStr,\"$word\",\"$entryRemovedQuotes\",$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) },${ words.size }")
         next()
     }
 
     private fun logEvent(event: LogEventAction) {
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         val dateToStr = format.format(Date())
-        eventLogger?.logRow("$dateToStr,${ event.eventString },,,")
+        eventLogger.logRow("$dateToStr,${ event.eventString },,,,")
     }
 
     private fun playAudioUrl() {
