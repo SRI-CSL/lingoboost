@@ -717,7 +717,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
     private void playWhiteNoiseRaw() {
         if (playWhiteNoise) {
             Log.d(TAG, "playWhiteNoiseRaw");
-            whiteNoisePlayer = LoopingMediaPlayer.create(SleepMode.this, R.raw.bnoise5);
+            whiteNoisePlayer = LoopingMediaPlayer.create(SleepMode.this, R.raw.bnoise3);
             whiteNoisePlayer.setVolume(rightAndLeftWhiteNoiseVolume);
             whiteNoisePlayer.start();
         }
