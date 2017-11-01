@@ -1,4 +1,6 @@
-# LingoBoost 
+# lingoBoost 
+ <!--- Banner Hotlink Test ---> 
+![lingoBoost](http://cortical.csl.sri.com/images/lingoBoost_banner_v2.png)
 
 ## Global Parameters
 These are parameters that are passed from the server to the client. The value and default global value is provided. These values can be overridden at the user level, so that the client may see values that differ from those below.
@@ -15,6 +17,14 @@ These are parameters that are passed from the server to the client. The value an
 | session_start_delay | 1800	| Time, in seconds, that should elapse after beginning a sleep session before stimulation starts |
 | pause_delay | 300	| Time, in seconds, that should elapse after resuming a sleep session after a pause |
 | all_words | True	| Boolean; If True, Duolingo users will have all the words they have ever trained sent during the Sleep session (recent\*3 + old) |
+
+## Uploading Word Lists 
+Format: comma-delimited with word wav file, matched wav file (semantic), and word. No header!
+If no "matched" sound is needed, it can be ignored. See the following example;
+ld1.wav,,lucid1
+ld2.wav,,lucid2
+ld3.wav,,lucid3
+ld4.wav,,lucid4
 
 
 # Development
