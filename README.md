@@ -1,4 +1,3 @@
-# lingoBoost 
  <!--- Banner Hotlink Test ---> 
 ![lingoBoost](http://cortical.csl.sri.com/images/lingoBoost_banner_v2.png)
 
@@ -21,9 +20,13 @@ These are parameters that are passed from the server to the client. The value an
 ## Uploading Word Lists 
 Format: comma-delimited with word wav file, matched wav file (semantic), and word. No header!
 If no "matched" sound is needed, it can be ignored. See the following example;
+
 ld1.wav,,lucid1
+
 ld2.wav,,lucid2
+
 ld3.wav,,lucid3
+
 ld4.wav,,lucid4
 
 
