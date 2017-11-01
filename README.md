@@ -14,7 +14,7 @@ These are parameters that are passed from the server to the client. The value an
 | stimulation_stop | 18000 | Time, in seconds, when stimulation should **stop** after the Sleep Session began |
 | session_start_delay | 1800	| Time, in seconds, that should elapse after beginning a sleep session before stimulation starts |
 | pause_delay | 300	| Time, in seconds, that should elapse after resuming a sleep session after a pause |
-| all_words | True	| Boolean; If True, Duolingo users will have all the words they have ever trained sent during the Sleep session (recent*/3 + old) |
+| all_words | True	| Boolean; If True, Duolingo users will have all the words they have ever trained sent during the Sleep session (recent\*3 + old) |
 
 
 # Development
