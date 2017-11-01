@@ -22,11 +22,8 @@ Format: comma-delimited with word wav file, matched wav file (semantic), and wor
 If no "matched" sound is needed, it can be ignored. See the following example;
 
 ld1.wav,,lucid1
-
 ld2.wav,,lucid2
-
 ld3.wav,,lucid3
-
 ld4.wav,,lucid4
 
 
