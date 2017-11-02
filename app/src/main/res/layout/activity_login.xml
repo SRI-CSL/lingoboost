@@ -8,14 +8,20 @@
     android:paddingRight="16dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_view_welcome"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:textSize="28.0sp"
-        android:gravity="center"
-        android:text="@string/welcome" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+        <ImageView
+            android:id="@+id/image_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            android:src="@drawable/lingoboostbanner" />
+
+    </RelativeLayout>
 
     <View
         android:layout_width="fill_parent"
