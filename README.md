@@ -3,6 +3,7 @@
 
 ## Starting Up
 When users first start the lingoBoost app, they should enter the username that is assigned by the researcher.
+
 ![startup screen](https://user-images.githubusercontent.com/6577692/32380349-1c5d7450-c06d-11e7-9748-d1a0bad3613f.png)
 
 If users need to adjust their username, they can do so later from the Settings menu.
