@@ -12,7 +12,7 @@ If users need to adjust their username, they can do so later from the Settings m
 lingoBoost was developed to integrate with foreign language learning applications, so testing vocabulary performance on a regular basis is a must! Test Session will retrieve all of the words the user has trained on, to date, and test them with a basic recall test (stimulus = foreign word, response = user's English translation).  Users must first set a preferred volume following the on-screen instructions before starting the test.
 
 ## Sleep Session
-Sleep session is the core of the app, providing a "TMR Lite" experience.  Users will be prompted to select the volume for the white noise and spoken words/sounds to ensure that words/sounds are audible through the white noise. After pressing *READY FOR SLEEP*, a popup (Android Toast) will briefly let the user know that the words (or sounds) have been updated from the server.
+Sleep session is the core of the app, providing a "TMR Lite" experience.  This portion of the app should be run when users are ready for bed.  Users will be prompted to select the volume for the white noise and spoken words/sounds to ensure that words/sounds are audible through the white noise. After pressing *READY FOR SLEEP*, a popup (Android Toast) will briefly let the user know that the words (or sounds) have been updated from the server.
 
 ## Global Parameters
 These are parameters that are passed from the server to the client, using the langlearn-api (separate, private repo). 
