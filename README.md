@@ -5,7 +5,7 @@
 ### mTurk User Site 
 https://lingoboost.csl.sri.com/lingoturk/turk/
 
-This site has instructions for the LingoTurk experiment we are running. This is also where users can check their current participation ![status](https://lingoboost.csl.sri.com/lingoturk/turk/status). Status is a bit messy right now as we work on cleaning the system logs (e.g., we need to remove incomplete logs).
+This site has instructions for the LingoTurk experiment we are running. This is also where users can check their current participation [status](https://lingoboost.csl.sri.com/lingoturk/turk/status). Status is a bit messy right now as we work on cleaning the system logs (e.g., we need to remove incomplete logs).
 
 ### Admin Site
 https://lingoboost.csl.sri.com/lingoturk/admin/
