@@ -1,6 +1,17 @@
  <!--- Banner Hotlink Test ---> 
 ![lingoBoost](http://cortical.csl.sri.com/images/lingoBoost_banner_v2.png)
 
+## Websites
+### mTurk User Site 
+https://lingoboost.csl.sri.com/lingoturk/turk/
+
+This site has instructions for the LingoTurk experiment we are running. This is also where users can check their current participation ![status](https://lingoboost.csl.sri.com/lingoturk/turk/status). Status is a bit messy right now as we work on cleaning the system logs (e.g., we need to remove incomplete logs).
+
+### Admin Site
+https://lingoboost.csl.sri.com/lingoturk/admin/
+
+This site requires a login and is where the researchers login to setup their experiments and user parameters.
+
 ## App Distribution
 We have two distribution models.
 
