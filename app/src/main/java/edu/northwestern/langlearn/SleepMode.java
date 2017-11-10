@@ -321,7 +321,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             if (playWhiteNoise && whiteNoisePlayer != null) {
                 whiteNoisePlayer.start();
             } else {
-                playWhiteNoiseRaw();
+                playWhiteNoiseRaw(true);
             }
         }
 
@@ -590,7 +590,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         if (whiteNoisePlayer != null && playWhiteNoise) {
             whiteNoisePlayer.start();
         } else {
-            playWhiteNoiseRaw();
+            playWhiteNoiseRaw(false);
         }
     }
 
@@ -714,11 +714,16 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         }
     }
 
-    private void playWhiteNoiseRaw() {
+    private void playWhiteNoiseRaw(boolean sleepSessionStart) {
         if (playWhiteNoise) {
             Log.d(TAG, "playWhiteNoiseRaw");
             whiteNoisePlayer = LoopingMediaPlayer.create(SleepMode.this, R.raw.bnoise3);
             whiteNoisePlayer.setVolume(rightAndLeftWhiteNoiseVolume);
+
+            if (sleepSessionStart) {
+                whiteNoisePlayer.seekTo(45000);
+            }
+
             whiteNoisePlayer.start();
         }
     }

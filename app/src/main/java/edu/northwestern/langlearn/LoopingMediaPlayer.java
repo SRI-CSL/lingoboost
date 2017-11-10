@@ -135,6 +135,10 @@ public class LoopingMediaPlayer {
         mCurrentPlayer.pause();
     }
 
+    public void seekTo(int msec) {
+        mCurrentPlayer.seekTo(msec);
+    }
+
     public void release() {
         if (mCurrentPlayer != null) {
             mCurrentPlayer.release();
