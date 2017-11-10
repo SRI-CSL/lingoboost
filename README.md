@@ -1,6 +1,17 @@
  <!--- Banner Hotlink Test ---> 
 ![lingoBoost](http://cortical.csl.sri.com/images/lingoBoost_banner_v2.png)
 
+## Websites
+### mTurk User Site 
+https://lingoboost.csl.sri.com/lingoturk/turk/
+
+This site has instructions for the LingoTurk experiment we are running. This is also where users can check their current participation [status](https://lingoboost.csl.sri.com/lingoturk/turk/status). Status is a bit messy right now as we work on cleaning the system logs (e.g., we need to remove incomplete logs).
+
+### Admin Site
+https://lingoboost.csl.sri.com/lingoturk/admin/
+
+This site requires a login and is where the researchers login to setup their experiments and user parameters.
+
 ## App Distribution
 We have two distribution models.
 
@@ -59,6 +70,27 @@ ld3.wav,,lucid3
 
 ld4.wav,,lucid4
 
+## Data!
+We have glorious data output links on the admin page that will output csv's for both the test logs and sleep logs (Test Summary, Sleep Summary).
+
+The examples and lists below represent the current setup. **Two new variables will be added in subsequent test logs. These variables represent test length, so that we can easily determine if a test log is complete, and whether a test session is actually the pre (first test, prior to training) or post (final test, after all test and training) tests.
+
+### Time
+All timestamps have been converted to match the user's local time. All the durations are represented in seconds.
+
+### Test Summary
+#### Headers
+nickname,log_type,session_hash,session_start,session_end,session_duration,log_event_time,trained_word,test_response,closest_translation,string_score,duolingo_first_practiced
+
+#### Example
+corticalre,test,8a46affe-c6e9-48bb-b4ac-dde3a6475a12,2017-10-28 20:43:04-04:00,2017-10-28 20:57:20-04:00,856.0,2017-10-28 20:43:22-04:00,nötkött,beef,beef,1.0,2017-10-27 21:32:03-04:00
+
+### Sleep Summary
+#### Headers
+nickname,log_type,session_hash,session_start,session_end,session_duration,log_event_time,trained_word,system_volume,white_noise_volume,word_volume
+
+##### Example
+corticalre,sleep,1b19955a-1cf2-4ced-a173-78450153e600,2017-10-20 14:01:19-07:00,2017-10-20 14:02:31-07:00,72.0,2017-10-20 14:01:30-07:00,saltet,80,18,45
 
 # Development
 * Android Studio 3
