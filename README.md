@@ -82,12 +82,41 @@ All timestamps have been converted to match the user's local time. All the durat
 #### Headers
 nickname,log_type,session_hash,session_start,session_end,session_duration,log_event_time,trained_word,test_response,closest_translation,string_score,duolingo_first_practiced
 
+| column name | type | description |
+| --- | --- | --- |
+| nickname | string | unique participant ID |
+| log_type | string | 'test' or 'sleep' to differentiate the logs if/when joined |
+| session_hash | string | unique ID to label the test/sleep sessions |
+| session_start | time stamp | the first timestamp in the log |
+| session_end | time stamp | the final timestamp in the log |
+| session_duration | integer:seconds | difference between session_end and session_start |
+| log_event_time | time stamp | this is the timestamp of the actual responses/events within the log |
+| trained_word | string | the unique word being trained in the foreign vocabulary |
+| test_response | string | the participants response to the foreign word |
+| closest_translation | string | the closest translation (from translations provided by Duolingo) match to the response |
+| string_score | float | string comparison between the response and closest translation based on change needed to match the items; 1 = perfect match and no string distance |
+| duolingo_first_practiced | time stamp | the first time that the word was practiced |
+
 #### Example
 corticalre,test,8a46affe-c6e9-48bb-b4ac-dde3a6475a12,2017-10-28 20:43:04-04:00,2017-10-28 20:57:20-04:00,856.0,2017-10-28 20:43:22-04:00,nötkött,beef,beef,1.0,2017-10-27 21:32:03-04:00
 
 ### Sleep Summary
 #### Headers
 nickname,log_type,session_hash,session_start,session_end,session_duration,log_event_time,trained_word,system_volume,white_noise_volume,word_volume
+
+| column name | type | description |
+| --- | --- | --- |
+| nickname | string | unique participant ID |
+| log_type | string | 'test' or 'sleep' to differentiate the logs if/when joined |
+| session_hash | string | unique ID to label the test/sleep sessions |
+| session_start | time stamp | the first timestamp in the log |
+| session_end | time stamp | the final timestamp in the log |
+| session_duration | integer:seconds | difference between session_end and session_start |
+| log_event_time | time stamp | this is the timestamp of the actual responses/events within the log |
+| trained_word | string | the unique word being trained in the foreign vocabulary |
+| system_volume | integer | user-set volume level for Android Media, adjustable throughout sleep |
+| white_noise_volume | integer | user-set volume for the white noise, adjustable before sleep session start | 
+| word_volume | integer | user-set volume for the spoken foreign words, adjustable before sleep session start |
 
 ##### Example
 corticalre,sleep,1b19955a-1cf2-4ced-a173-78450153e600,2017-10-20 14:01:19-07:00,2017-10-20 14:02:31-07:00,72.0,2017-10-20 14:01:30-07:00,saltet,80,18,45
