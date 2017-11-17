@@ -6,6 +6,7 @@
     <string name="sleep_button">Start Sleep</string>
     <string name="settomgs_button">Settings</string>
     <string name="submit_button">Submit</string>
+    <string name="skip_button">Skip</string>
     <string name="continue_button">Continue</string>
     <string name="test_words_button">Language Test</string>
     <string name="text_sleep_session">Place the phone in a comfortable position near you so that the speakers will remain unobstructed for clear audio.</string>
