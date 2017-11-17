@@ -22,6 +22,7 @@ enum class LogEventAction(val eventString: String) {
     USER_EVENT_CANCEL_QUIT("event.user.CancelQuit"),
     USER_EVENT_PAUSE("event.user.Pause"),
     USER_EVENT_RESUME("event.user.Resume"),
+    USER_EVENT_SKIP("event.trial.Skip"),
 
     SYSTEM_EVENT_ONCREATE("event.system.onCreate"),
     SYSTEM_EVENT_ONSTART("event.system.onStart"),

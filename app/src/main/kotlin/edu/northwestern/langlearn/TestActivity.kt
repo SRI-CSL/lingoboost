@@ -97,6 +97,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         el
     }
     private lateinit var submitClickListener: View.OnClickListener
+    private lateinit var skipClickListener: View.OnClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,6 +131,16 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             }
         }
         submit.setOnClickListener(submitClickListener)
+        skipClickListener = View.OnClickListener {
+            Log.d(TAG, "skip OnClickListener")
+
+            if (IsSubmitEnabled) {
+                destroyPlayer()
+                logEvent(LogEventAction.USER_EVENT_SKIP)
+                continueWordTesting()
+            }
+        }
+        skip.setOnClickListener(skipClickListener)
         words_edit_word.afterTextChanged {
             Log.d(TAG, "afterTextChanged")
 
@@ -177,6 +188,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         words_edit_word.hint = "Translate this word to English"
         words_edit_word.showKeyboard()
         submit.isEnabled = true
+        skip.isEnabled = true
         continueWordTesting()
     }
 
@@ -186,6 +198,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
             words_text_list_of_translations.setText(translations.toString())
             submit.setText(R.string.continue_button)
+            skip.visibility = View.GONE
             words_text_translations.visibility = View.VISIBLE
             words_text_list_of_translations.visibility = View.VISIBLE
 
@@ -197,6 +210,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             runOnUiThread { words_edit_word.isEnabled = false }
             submit.setOnClickListener(View.OnClickListener {
                 submit.setText(R.string.submit_button)
+                skip.visibility = View.VISIBLE
                 words_text_translations.visibility = View.GONE
                 words_text_list_of_translations.visibility = View.GONE
                 submit.setOnClickListener(submitClickListener)
@@ -225,6 +239,8 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             words_edit_word.text.clear()
             words_edit_word.hint = "Great Job! Your data is sent"
             words_edit_word.isFocusable = false
+            submit.visibility = View.GONE
+            skip.visibility = View.GONE
             IsSubmitEnabled = false
         }
     }
