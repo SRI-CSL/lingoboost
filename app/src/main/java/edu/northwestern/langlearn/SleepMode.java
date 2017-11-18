@@ -149,6 +149,11 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             return; // user bailed out of the app and we went back to main
         }
 
+        if (!wordsProvider.getJsonError().isEmpty()) {
+            openMessageActivity(wordsProvider.getJsonError());
+            return;
+        }
+
         jsonWords = json;
         words = wordsProvider.parseJSONWords(jsonWords);
 
@@ -171,11 +176,6 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
 
         ToastsKt.longToast(SleepMode.this, "Words Updated");
         Log.d(TAG, "words.size: " + words.size());
-
-        if (!wordsProvider.getJsonError().isEmpty()) {
-            openMessageActivity(wordsProvider.getJsonError());
-            return;
-        }
 
         if (!wordsProvider.getJsonSham()) {
             if (playWordsIfStillHandler != null) {
@@ -250,7 +250,7 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
         Log.d(TAG, "onStop");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 
-        if (words == null) {
+        if (wordsProvider.getJsonError().isEmpty() && words == null) { // Don't leave because of net error, only if user exits
             Log.d(TAG, "Calling finish app stopped prior to word fetch, so we start at the begining");
             final Intent intent = new Intent(SleepMode.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

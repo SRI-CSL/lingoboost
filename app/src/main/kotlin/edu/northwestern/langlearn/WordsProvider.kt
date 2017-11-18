@@ -46,7 +46,12 @@ class WordsProvider(val jsonUrl: String) {
                     Log.d(TAG, text.length.toString())
                     uiThread { updateImpl.updateJSONWords(text) }
                 } else {
-                    uiThread { updateImpl.openMessageActivity(error ?: "The exception message was null") }
+                    uiThread {
+                        jsonError = error ?: "The exception message was null"
+                        Log.d(TAG, jsonError)
+                        updateImpl.updateJSONWords(text)
+                        // updateImpl.openMessageActivity(error ?: "The exception message was null") // Abandoned, the caller needs to know an error happened.
+                    }
                 }
             }
         }

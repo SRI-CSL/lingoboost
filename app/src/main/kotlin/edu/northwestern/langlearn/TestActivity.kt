@@ -175,15 +175,16 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     override fun updateJSONWords(json: String) {
         Log.d(TAG, "updateJSONWords")
-        words = wordsProvider.parseJSONWords(json)
-
-        // longToast("Words Updated")
-        Log.d(TAG, "words.size: ${ words.size }")
 
         if (wordsProvider.jsonError.isNotEmpty()) {
             openMessageActivity(wordsProvider.jsonError)
             return
         }
+
+        words = wordsProvider.parseJSONWords(json)
+
+        // longToast("Words Updated")
+        Log.d(TAG, "words.size: ${ words.size }")
 
         words_edit_word.hint = "Translate this word to English"
         words_edit_word.showKeyboard()
@@ -291,7 +292,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
                 destroyPlayer()
             }
         } catch (ex: IOException) {
-            Log.e("Exception", "File write failed: $ex.toString()")
+            Log.e("Exception", "Audio failed: $ex.toString()")
         }
     }
 

@@ -9,6 +9,7 @@ import org.json.JSONObject
 import java.io.FileNotFoundException
 import java.net.URL
 import java.net.UnknownHostException
+import java.net.ConnectException
 
 typealias ListOfWords = List<Word>
 typealias MutableListOfWords = MutableList<Word>
@@ -70,6 +71,12 @@ inline fun URL.readText(block: (text: String, error: String?) -> Unit) {
         Log.e("${ javaClass.simpleName }KEx", e.message)
         block("", "No Internet Available. Please connect to the internet and try again")
     } catch (e: FileNotFoundException) {
+        Log.e("${ javaClass.simpleName }KEx", e.message)
+        block("", e.message)
+    } catch (e: ConnectException) {
+        Log.e("${ javaClass.simpleName }KEx", e.message)
+        block("", e.message)
+    } catch (e: Exception) {
         Log.e("${ javaClass.simpleName }KEx", e.message)
         block("", e.message)
     }
