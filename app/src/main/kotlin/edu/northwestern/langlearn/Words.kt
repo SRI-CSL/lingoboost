@@ -14,6 +14,8 @@ import java.net.ConnectException
 typealias ListOfWords = List<Word>
 typealias MutableListOfWords = MutableList<Word>
 
+fun mutableListOfWords(): MutableListOfWords = mutableListOf()
+
 class Word(val norm: String, val audio_url: String, val translations: List<String>, val word: String) {
     fun getMatches(guess: String, cutoff: Double = 0.8): List<String> {
         val preprocessed = preprocessGuess(guess)
@@ -53,8 +55,6 @@ interface WordsProviderUpdate {
         wordsProviderUpdateActivity.startActivity(msgIntent)
     }
 }
-
-fun mutableListOfWords(): MutableListOfWords = ArrayList()
 
 inline fun JSONObject.unless(func: JSONObject.() -> Unit) {
     try {
@@ -101,7 +101,6 @@ inline fun <reified T> JSONArray.asSequence(): Sequence<T> {
 
 inline fun <reified T> JSONArray.asListOf(): List<T> = asSequence<T>().toList()
 
-
 // to eager ...
 inline fun <reified T> JSONArray.asSequenceOf(): Sequence<T> = (0 until length()).asSequence().map {
     get(it).apply { check(this is T) } as T
@@ -125,50 +124,6 @@ fun <T> JSONArray.asExpressedSequenceOf(expr: (a: Int) -> T): Sequence<T> = (0 u
 
 fun <T> JSONArray.asExpressedListOf(expr: (a: Int) -> T): List<T> = (0 until length()).asSequence().map(expr).toList()
 
-
 operator fun JSONArray.iterator(): Iterator<JSONObject> = (0 until length()).asSequence().map {
     get(it) as JSONObject
 }.iterator()
-
-
-//jsonObj.getIt<Int>("word_delay") { jsonWordDelay = it.toLong() * 1000 }
-//jsonObj.getIt<Boolean>("sham") { jsonSham = it }
-//jsonObj.getIt<String>("error") { jsonError = it }
-//inline fun <reified T> JSONObject.getIt(key: String, block: (value: T) -> Unit) {
-//    try {
-//        block(this.get(key) as T)
-//    } catch (e: JSONException) {
-//        Log.w("${ javaClass.simpleName }KEx", e.message)
-//    }
-//}
-
-// NOTE: Cannot inline currently an optional function parameter (see below = null)
-//fun <T> JSONObject.getEx(key: String, block: ((value: T) -> T?)? = null): T? {
-//    var r: T? = null
-//
-//    try {
-//        r = if (block != null) block(this.get(key) as T) else this.get(key) as T
-//    } catch (e: JSONException) {
-//        Log.w("${ javaClass.simpleName }KEx", e.message)
-//    }
-//
-//    return r
-//}
-
-//jsonObj.getIt<Boolean>("sham", JSONObject::getBoolean) { jsonSham = it }
-//jsonObj.getIt<String>("error", JSONObject::getString) { jsonError = it }
-//inline fun <T> JSONObject.getIt(key: String, accessor: JSONObject.(String) -> T, block: (T) -> Unit) {
-//    try {
-//        accessor(key).let(block)
-//    } catch (e: JSONException) {
-//        Log.w("${ javaClass.simpleName }KEx", e.message)
-//    }
-//}
-
-//inline fun JSONObject.getItLong(key: String, block: (value: Long) -> Unit) {
-//    try {
-//        block(this.getLong(key))
-//    } catch (e: JSONException) {
-//        Log.w("${ javaClass.simpleName }KEx", e.message)
-//    }
-//}

@@ -149,13 +149,13 @@ public class SleepMode extends AppCompatActivity implements WordsProviderUpdate,
             return; // user bailed out of the app and we went back to main
         }
 
+        jsonWords = json;
+        words = wordsProvider.parseJSONWords(jsonWords);
+
         if (!wordsProvider.getJsonError().isEmpty()) {
             openMessageActivity(wordsProvider.getJsonError());
             return;
         }
-
-        jsonWords = json;
-        words = wordsProvider.parseJSONWords(jsonWords);
 
         delayMillis = wordsProvider.getJsonSessionStartDelay();
         nextWordPlayTimeMillis = System.currentTimeMillis() + delayMillis;

@@ -49,27 +49,19 @@ class WordsProvider(val jsonUrl: String) {
                     uiThread {
                         jsonError = error ?: "The exception message was null"
                         Log.d(TAG, jsonError)
-                        updateImpl.updateJSONWords(text)
-                        // updateImpl.openMessageActivity(error ?: "The exception message was null") // Abandoned, the caller needs to know an error happened.
+                        updateImpl.updateJSONWords(text) // the caller needs to know an error happened by checking and open the message activity etc.
                     }
                 }
             }
         }
     }
 
-    fun parseJSONWords(wordsJSON: String?): List<Word> {
-        val json = wordsJSON ?: """
-        {
-            "words": [
-                {
-                    "norm": "velvet",
-                    "audio_url": "http://someplace.cool",
-                    "word": "velvet"
-                }
-            ]
-        }
-        """
+    fun parseJSONWords(wordsJSON: String?): ListOfWords {
+        val json: String = wordsJSON ?: ""
         val Words = mutableListOfWords()
+
+        if (json.isEmpty()) return Words
+
         val jsonObj = JSONObject(json.substring(json.indexOf("{"), json.lastIndexOf("}") + 1))
 
         jsonObj.unless { jsonStartDelay = getLong("start_delay") * 1000L }
