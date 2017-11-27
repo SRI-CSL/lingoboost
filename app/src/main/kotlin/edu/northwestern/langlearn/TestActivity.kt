@@ -101,7 +101,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         setContentView(R.layout.activity_words)
         words_text_word.text = ""
         words_edit_word.hint = "Words Updating..."
@@ -116,15 +116,15 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
                 Log.d(TAG, "Submitted: ${words_edit_word.text}. Actual answer(s): ${ words[wordsIndex].translations }")
 
                 // TODO: Temporarily(?) removed until correctness algorithm is finalized
-//                val correctMatches = words[wordsIndex].getMatches(words_edit_word.text.toString())
-//
-//                if (correctMatches.isNotEmpty()) {
-//                    Log.d(TAG, "Correct matches: $correctMatches")
-//                    numCorrectGuesses++
-//                }
-//                else {
-//                    Log.d(TAG, "User submitted incorrect guess")
-//                }
+                //  val correctMatches = words[wordsIndex].getMatches(words_edit_word.text.toString())
+                //
+                //  if (correctMatches.isNotEmpty()) {
+                //      Log.d(TAG, "Correct matches: $correctMatches")
+                //      numCorrectGuesses++
+                //  }
+                //  else {
+                //      Log.d(TAG, "User submitted incorrect guess")
+                //  }
 
                 destroyPlayer()
                 logTestResults(words_edit_word.asString()) { showTranslations() }
@@ -136,8 +136,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
             if (IsSubmitEnabled) {
                 destroyPlayer()
-                logEvent(LogEventAction.USER_EVENT_SKIP)
-                continueWordTesting()
+                logTestResults(LogEventAction.USER_EVENT_SKIP.eventString) { continueWordTesting() }
             }
         }
         skip.setOnClickListener(skipClickListener)
@@ -204,8 +203,8 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             words_text_list_of_translations.visibility = View.VISIBLE
 
             // TODO: Temporarily(?) removed until correctness algorithm is finalized
-//            test_score_text.visibility = View.VISIBLE
-//            test_score_text.text = "Score: $numCorrectGuesses out of ${ wordsIndex + 1 } correct"
+            //  test_score_text.visibility = View.VISIBLE
+            //  test_score_text.text = "Score: $numCorrectGuesses out of ${ wordsIndex + 1 } correct"
 
             words_edit_word.hideKeyboard()
             runOnUiThread { words_edit_word.isEnabled = false }
@@ -259,12 +258,12 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
     }
 
     private fun logTestResults(entry:String, next: () -> Unit) {
-        val word = words[wordsIndex].word
+        val word = words[ wordsIndex ].word
         val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
         val dateToStr = format.format(Date())
         val entryRemovedQuotes: String = entry.replace("\"", "'")
 
-        eventLogger.logRow("$dateToStr,\"$word\",\"$entryRemovedQuotes\",$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) },${ words.size }")
+        eventLogger.logRow("""$dateToStr,"$word","$entryRemovedQuotes",$sysStreamVolumeProgress,${ Math.round(wordsVolume * 100f) },${ words.size }""")
         next()
     }
 
