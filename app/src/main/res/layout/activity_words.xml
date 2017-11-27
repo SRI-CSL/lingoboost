@@ -78,7 +78,7 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
             android:text="@string/skip_button"
             android:textSize="24.0sp"
             android:enabled="false" />
