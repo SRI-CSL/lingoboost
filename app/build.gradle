@@ -14,8 +14,8 @@ android {
         applicationId "com.sri.lingoboost"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 144
-        versionName "1.4.4"
+        versionCode 145
+        versionName "1.4.5"
         multiDexEnabled true
         resValue "string", "app_name", "LingoBoost"
         resValue "string", "doc_provider_authority", "com.sri.lingoboost.documents"

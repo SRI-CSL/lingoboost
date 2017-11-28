@@ -105,6 +105,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         setContentView(R.layout.activity_words)
         words_text_word.text = ""
         words_edit_word.hint = "Words Updating..."
+        runOnUiThread { words_edit_word.isEnabled = false }
         logEvent(LogEventAction.SYSTEM_EVENT_ONCREATE)
         Log.d(TAG, "Test server user is: $prefsUser");
         Log.d(TAG, "Test server is: $server");
@@ -182,10 +183,13 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         }
 
         Log.d(TAG, "words.size: ${ words.size }")
-        words_edit_word.hint = "Translate this word to English"
-        words_edit_word.showKeyboard()
-        submit.isEnabled = true
-        skip.isEnabled = true
+        runOnUiThread {
+            words_edit_word.hint = "Translate this word to English"
+            words_edit_word.isEnabled = true
+            words_edit_word.showKeyboard()
+            submit.isEnabled = true
+            skip.isEnabled = true
+        }
         continueWordTesting()
     }
 
