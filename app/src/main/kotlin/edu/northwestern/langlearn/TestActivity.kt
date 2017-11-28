@@ -136,7 +136,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
 
             if (IsSubmitEnabled) {
                 destroyPlayer()
-                logTestResults(LogEventAction.USER_EVENT_SKIP.eventString) { continueWordTesting() }
+                logTestResults(LogEventAction.USER_EVENT_SKIP.eventString) { showTranslations(true) }
             }
         }
         skip.setOnClickListener(skipClickListener)
@@ -181,7 +181,6 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             return
         }
 
-        // longToast("Words Updated")
         Log.d(TAG, "words.size: ${ words.size }")
         words_edit_word.hint = "Translate this word to English"
         words_edit_word.showKeyboard()
@@ -190,7 +189,7 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
         continueWordTesting()
     }
 
-    private fun showTranslations() {
+    private fun showTranslations(skipped: Boolean = false) {
         if (wordsProvider.jsonFeedback) {
             val translations = words[wordsIndex].translations
 
@@ -201,10 +200,13 @@ class TestActivity : WordsProviderUpdate, AppCompatActivity() {
             words_text_list_of_translations.visibility = View.VISIBLE
 
             // TODO: Temporarily(?) removed until correctness algorithm is finalized
-            //  test_score_text.visibility = View.VISIBLE
-            //  test_score_text.text = "Score: $numCorrectGuesses out of ${ wordsIndex + 1 } correct"
+            // test_score_text.visibility = View.VISIBLE
+            // test_score_text.text = "Score: $numCorrectGuesses out of ${ wordsIndex + 1 } correct"
 
             words_edit_word.hideKeyboard()
+
+            if (skipped) words_edit_word.setText("TRIAL SKIPPED")
+
             runOnUiThread { words_edit_word.isEnabled = false }
             submit.setOnClickListener(View.OnClickListener {
                 submit.setText(R.string.submit_button)

@@ -69,6 +69,7 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:text="@string/submit_button"
             android:textSize="24.0sp"
             android:enabled="false" />
@@ -78,9 +79,10 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
             android:text="@string/skip_button"
             android:textSize="24.0sp"
+            android:textColor="#ff0000"
             android:enabled="false" />
 
     </RelativeLayout>
